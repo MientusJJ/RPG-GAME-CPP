@@ -26,6 +26,7 @@ public:
 	int getvitalityModifier();
 	int getdefenseModifier();
 	string getmainStatName();
+	string getProfName();
 	string getspecialAbility();
 
 protected:
@@ -88,7 +89,7 @@ public:
 	int getdefense();
 	int getDamage(int);
 	virtual void chooseClass() {}
-	virtual string getName() { return ""; }
+	string getName();
 	virtual void setName() {}
 	bool useSpecialEffect(Character *opponent);
 	int useSpecialAttack();
@@ -101,6 +102,7 @@ protected:
 	int currentHealth;
 	int maxHealth;
 	int defense;
+	string name;
 	double criticalChance;
 	CharacterClass *Class;
 };
@@ -112,21 +114,19 @@ public:
 	static Hero *getInstance();
 	Hero(Hero &other) = delete;
 	void operator=(const Hero &) = delete;
-	/*void showStatistics();
+	void showStatistics();
 	void chooseClass();
-	void death();
 	void setmaxHealth(int);
 	void setdefense(int);
 	void setlevel(int);
 	void setminimalAttack(int);
 	void setmaximalAttack(int);
-	void setName(string);
-	string getName();*/
+	void setName();
+	void levelup();
 private:
 	Hero();
 	static Hero *hero;
 	int money;
-	string nick;
 	Equipment *EQ;
 };
 
@@ -144,6 +144,6 @@ public:
 	void setminimalAttack();
 	void setmaximalAttack();
 	void setName();
+	
 private:
-	string name;
 };

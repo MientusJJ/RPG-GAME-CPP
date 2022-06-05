@@ -3,6 +3,7 @@ string namesforMonsters[]
 {
 	"The Rainbow Mutant","The Crying Doll","The Icy Snake","The Night Worm","The Young Babbler","The Bruised Gorilla","The Venom Serpent"
 };
+const int sizenamesforMonsters = 7;
 double chance()
 {
 	return rand() % 100;
@@ -43,6 +44,10 @@ int Character::getdefense()
 {
 	return this->defense;
 }
+string Character::getName()
+{
+	return this->name;
+}
 int Character::getDamage(int d)
 {
 	if (d >= this->getcurrentHealth())
@@ -80,9 +85,10 @@ void Character::attackOpponent(Character * opponent)
 	}
 	int damage = rand() % this->getmaximalAttack() + this->getminimalAttack();
 	damage = damage * this->useSpecialAttack() - opponent->getdefense();
+	if (damage < 1) damage = 1;
 	opponent->getDamage(damage);
 	cout << this->getName() << " dealt " << damage << " damage to " << opponent->getName() << endl;
-	cout << "Current health of " << opponent->getName() << " is " << opponent->getcurrentHealth();
+	cout << "Current health of " << opponent->getName() << " is " << opponent->getcurrentHealth() << endl;;
 	return;
 }
 ////////////jeszcze nie zrobione
@@ -105,7 +111,7 @@ bool Character::useSpecialEffect(Character *opponent)
 	{
 		if (chance() <= block)
 		{
-			cout << opponent->getName() << " block the hit from " << this->getName() << endl;
+			cout << opponent->getName() << " blocked the hit from " << this->getName() << endl;
 			return false;
 		}
 		return true;
@@ -182,6 +188,21 @@ void CharacterClass::setmainStatName(string sm)
 {
 	this->mainStatName = sm;
 	return;
+}
+string CharacterClass::getProfName()
+{
+	if (this->getProf() == warrior)
+	{
+		return "Warrior";
+	}
+	else if (this->getProf() == scout)
+	{
+		return "Scout";
+	}
+	else
+	{
+		return "Mage";
+	}
 }
 
 Scout::Scout()
@@ -269,7 +290,7 @@ void monster::setmaximalAttack()
 }
 void monster::setName()
 {
-	int r = rand() % namesforMonsters->size();
+	int r = rand() % sizenamesforMonsters;
 	this->name = namesforMonsters[r];
 	return;
 }
@@ -299,9 +320,88 @@ Hero *Hero::getInstance()
 }
 Hero::Hero()
 {
+	setName();
+	chooseClass();
+	setlevel(1);
 }
 Hero::~Hero()
 {
 	delete EQ;
 }
+void Hero::chooseClass()
+{
+	bool p;
+	cout << "Choose class of " << this->getName() << "Write 1 if you want warrior \n Write 2 if you want scout \n Write 3 if you want mage \n ";
+	int ch;
+	cin >> ch;
+	while (ch<1 || ch >3)
+	{
+		cout << "Bad Number. Choose number between 1 and 3\n";
+		cin >> ch;
+	}
+	cout << "Your class for the whole game is: ";
+	if (ch == 1)
+	{
+		this->Class = new Warrior;
+		cout << "Warrior\n";
+	}
+	else if (ch == 2)
+	{
+		this->Class = new Scout;
+		cout << "Scout\n";
+	}
+	else
+	{
+		this->Class = new Mage;
+		cout << "Mage\n";
+	}
 
+}
+void Hero::setmaxHealth(int) { return; }
+void Hero::setdefense(int s) { return; }
+void Hero::setlevel(int s )
+{
+	this->level = s;
+}
+
+void Hero::setminimalAttack(int s) { return; }
+void Hero::setmaximalAttack(int s) { return; }
+void Hero::setName()
+{
+	cout << "Write name of your hero: ";
+	string n;
+	cin >> n;
+	this->name = n;
+	return;
+}
+void Hero::levelup()
+{
+	++this->level;
+	return;
+}
+void Hero::showStatistics()
+{
+	cout << "Statistics of your hero" << endl;
+	cout << "Name: " << this->getName() << endl;
+	cout << "Class: " << this->Class->getProfName() << endl;
+	cout << "Main Stat: " << this->Class->getmainStatName() << endl;
+	cout << "Skill: " << this->Class->getspecialAbility() << endl;
+	cout << "Level: " << this->getlevel() << endl;
+	cout << "Max health: " << this->getmaxHealth() << endl;
+	cout << "Current health" << this->getcurrentHealth() << endl;
+	cout << "Minimal damage: " << this->getminimalAttack() << endl;
+	cout << "Maximal damage: " << this->getmaximalAttack() << endl;
+	cout << "Critical chance: " << this->getcriticalChance() << "%" << endl;
+	cout << "Defence: " << this->getdefense() << endl;
+	cout << "Amount of money: " << this->getMoney() << endl;
+	return;
+}
+void Hero::setMoney(int m)
+{
+	this->money = m;
+	return;
+}
+int Hero::getMoney()
+{
+	return this->money;
+}
