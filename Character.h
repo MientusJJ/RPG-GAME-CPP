@@ -112,7 +112,7 @@ public:
 	static Hero *getInstance();
 	Hero(Hero &other) = delete;
 	void operator=(const Hero &) = delete;
-	void showStatistics();
+	/*void showStatistics();
 	void chooseClass();
 	void death();
 	void setmaxHealth(int);
@@ -121,7 +121,7 @@ public:
 	void setminimalAttack(int);
 	void setmaximalAttack(int);
 	void setName(string);
-	string getName();
+	string getName();*/
 private:
 	Hero();
 	static Hero *hero;

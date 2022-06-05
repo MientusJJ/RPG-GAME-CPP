@@ -288,7 +288,7 @@ monster::~monster()
 {
 	delete Class;
 }
-Hero Hero::*hero = nullptr;
+Hero *Hero::hero = nullptr;
 Hero *Hero::getInstance()
 {
 	if (hero == nullptr)
