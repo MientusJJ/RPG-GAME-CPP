@@ -1,7 +1,8 @@
 #pragma once
-#include "items.h"
+#include "items.cpp"
 class Equipment
 {
-
+	Item *weapon;
+	weapon
 };
 

@@ -123,6 +123,8 @@ public:
 	void setmaximalAttack(int);
 	void setName();
 	void levelup();
+	void setMoney(int);
+	int getMoney();
 private:
 	Hero();
 	static Hero *hero;
