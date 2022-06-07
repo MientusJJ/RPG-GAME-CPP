@@ -6,14 +6,7 @@
 #include <stdlib.h>
 #include "Equipment.h"
 const double dodge = 33.0;
-const double block = 20.;
 using namespace std;
-enum Profession
-{
-	warrior = 1,
-	scout = 2,
-	mage = 3
-};
 
 class CharacterClass
 {
@@ -84,6 +77,8 @@ public:
 	double getcriticalChance();
 	void setcriticalChance(double);
 	int getmaxHealth();
+	virtual void setBlockChance() {};
+	double getBlockChance();
 	virtual void setmaxHealth() {}
 	virtual void setdefense() {}
 	int getdefense();
@@ -102,6 +97,7 @@ protected:
 	int currentHealth;
 	int maxHealth;
 	int defense;
+	double blockChance;
 	string name;
 	double criticalChance;
 	CharacterClass *Class;
@@ -115,16 +111,22 @@ public:
 	Hero(Hero &other) = delete;
 	void operator=(const Hero &) = delete;
 	void showStatistics();
+	void showEQ();
+	void setAllStats();
 	void chooseClass();
 	void setmaxHealth(int);
 	void setdefense(int);
 	void setlevel(int);
 	void setminimalAttack(int);
 	void setmaximalAttack(int);
+	void setAttack(int, int,int);
 	void setName();
 	void levelup();
+	void setBlockChance();
 	void setMoney(int);
 	int getMoney();
+	void ChangeEQ(Item *, ItemType);
+	bool fight(Character *);
 private:
 	Hero();
 	static Hero *hero;
@@ -146,6 +148,6 @@ public:
 	void setminimalAttack();
 	void setmaximalAttack();
 	void setName();
-	
+	void setBlockChance();
 private:
 };

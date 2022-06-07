@@ -4,10 +4,22 @@ string namesforMonsters[]
 	"The Rainbow Mutant","The Crying Doll","The Icy Snake","The Night Worm","The Young Babbler","The Bruised Gorilla","The Venom Serpent"
 };
 const int sizenamesforMonsters = 7;
-double chance()
+static double chance()
 {
 	return rand() % 100;
 }
+const int defaultHealth = 50;
+const double defaultCriticalChance = 3.;
+const int defaultAttackMin = 2;
+const int defaultAttackMax = 5;
+const int counterAttackMin = 2;
+const int counterAttackMax = 3;
+const int defaultMonsterDefense = 5;
+const double defaultMonsterCriticalChance = 33.;
+const int defaultHealthMonster = 120;
+const int defaultAttackMonsterMin = 30;
+const int defaultAttackMonsterMax = 50;
+
 Character::Character() {
 
 }
@@ -64,6 +76,10 @@ double Character::getcriticalChance()
 {
 	return this->criticalChance;
 }
+double Character::getBlockChance()
+{
+	return this->blockChance;
+}
 void Character::setcriticalChance(double c)
 {
 	this->criticalChance = c;
@@ -91,7 +107,6 @@ void Character::attackOpponent(Character * opponent)
 	cout << "Current health of " << opponent->getName() << " is " << opponent->getcurrentHealth() << endl;;
 	return;
 }
-////////////jeszcze nie zrobione
 bool Character::useSpecialEffect(Character *opponent)
 {
 	if (this->Class->getProf() == mage || opponent->Class->getProf() == mage)
@@ -109,7 +124,7 @@ bool Character::useSpecialEffect(Character *opponent)
 	}
 	if (opponent->Class->getProf() == warrior)
 	{
-		if (chance() <= block)
+		if (chance() <= opponent->getBlockChance())
 		{
 			cout << opponent->getName() << " blocked the hit from " << this->getName() << endl;
 			return false;
@@ -264,13 +279,13 @@ void monster::chooseClass()
 }
 void monster::setmaxHealth()
 {
-	this->maxHealth = 20 * this->getlevel()*this->Class->getvitalityModifier();
+	this->maxHealth = defaultHealthMonster * this->getlevel()*this->Class->getvitalityModifier();
 	this->setcurrentHealth(this->maxHealth);
 	return;
 }
 void monster::setdefense()
 {
-	this->defense = 3 * this->getlevel()*this->Class->getdefenseModifier();
+	this->defense = defaultMonsterDefense * this->getlevel()*this->Class->getdefenseModifier();
 	return;
 }
 void monster::setlevel(int l)
@@ -278,14 +293,26 @@ void monster::setlevel(int l)
 	this->level = l;
 	return;
 }
+void monster::setBlockChance()
+{
+	if (this->Class->getProf() == warrior)
+	{
+		this->blockChance = 15.;
+	}
+	else
+	{
+		this->blockChance = 0.;
+	}
+	return;
+}
 void monster::setminimalAttack()
 {
-	this->minimalAttack = 2 * this->getlevel()*this->Class->getattackModifier();
+	this->minimalAttack = defaultAttackMonsterMin * this->getlevel()*this->Class->getattackModifier();
 	return;
 }
 void monster::setmaximalAttack()
 {
-	this->maximalAttack = 5 * this->getlevel()*this->Class->getattackModifier();
+	this->maximalAttack = defaultAttackMonsterMax * this->getlevel()*this->Class->getattackModifier();
 	return;
 }
 void monster::setName()
@@ -303,7 +330,7 @@ monster::monster(int lvl)
 	this->setdefense();
 	this->setminimalAttack();
 	this->setmaximalAttack();
-	this->setcriticalChance(33);
+	this->setcriticalChance(defaultMonsterCriticalChance);
 }
 monster::~monster()
 {
@@ -320,9 +347,14 @@ Hero *Hero::getInstance()
 }
 Hero::Hero()
 {
-	setName();
-	chooseClass();
-	setlevel(1);
+	this->setName();
+	this->chooseClass();
+	this->setlevel(1);
+	this->setMoney(0);
+	EQ = new Equipment(this->getlevel(), this->Class->getProf());
+	this->setAllStats();
+	this->setcurrentHealth(this->getmaxHealth());
+
 }
 Hero::~Hero()
 {
@@ -330,8 +362,7 @@ Hero::~Hero()
 }
 void Hero::chooseClass()
 {
-	bool p;
-	cout << "Choose class of " << this->getName() << "Write 1 if you want warrior \n Write 2 if you want scout \n Write 3 if you want mage \n ";
+	cout << "Choose class of " << this->getName() << " \nWrite 1 if you want warrior \nWrite 2 if you want scout \nWrite 3 if you want mage \n";
 	int ch;
 	cin >> ch;
 	while (ch<1 || ch >3)
@@ -357,15 +388,21 @@ void Hero::chooseClass()
 	}
 
 }
-void Hero::setmaxHealth(int) { return; }
-void Hero::setdefense(int s) { return; }
 void Hero::setlevel(int s )
 {
 	this->level = s;
 }
 
-void Hero::setminimalAttack(int s) { return; }
-void Hero::setmaximalAttack(int s) { return; }
+void Hero::setminimalAttack(int s) 
+{ 
+	this->minimalAttack = (s + defaultAttackMin * this->getlevel())*this->Class->getattackModifier();
+	return; 
+}
+void Hero::setmaximalAttack(int s)
+{ 
+	this->maximalAttack = (s + defaultAttackMax*this->getlevel())*this->Class->getattackModifier();
+	return; 
+}
 void Hero::setName()
 {
 	cout << "Write name of your hero: ";
@@ -377,23 +414,80 @@ void Hero::setName()
 void Hero::levelup()
 {
 	++this->level;
+	this->setAllStats();
 	return;
 }
 void Hero::showStatistics()
 {
-	cout << "Statistics of your hero" << endl;
+	cout << endl <<  "Statistics of your hero:" << endl;
 	cout << "Name: " << this->getName() << endl;
 	cout << "Class: " << this->Class->getProfName() << endl;
 	cout << "Main Stat: " << this->Class->getmainStatName() << endl;
 	cout << "Skill: " << this->Class->getspecialAbility() << endl;
 	cout << "Level: " << this->getlevel() << endl;
 	cout << "Max health: " << this->getmaxHealth() << endl;
-	cout << "Current health" << this->getcurrentHealth() << endl;
+	cout << "Current health: " << this->getcurrentHealth() << endl;
 	cout << "Minimal damage: " << this->getminimalAttack() << endl;
 	cout << "Maximal damage: " << this->getmaximalAttack() << endl;
 	cout << "Critical chance: " << this->getcriticalChance() << "%" << endl;
-	cout << "Defence: " << this->getdefense() << endl;
+	cout << "Defense: " << this->getdefense() << endl;
+	if (this->Class->getProf() == warrior)
+	{
+		cout << "Block Chance: " << this->getBlockChance() << endl;
+	}
 	cout << "Amount of money: " << this->getMoney() << endl;
+	return;
+}
+void Hero::showEQ()
+{
+	cout << endl << "Equipment of your hero:" << endl;
+	cout << "Weapon:\n\t name: " << this->EQ->weapon_slot->getName() << "\n\t minimal Damage: " << this->EQ->weapon_slot->getMinDamage() << "\n\t maximal Damage: " << this->EQ->weapon_slot->getMaxDamage() << "\n\t value: " << this->EQ->weapon_slot->getValue() << endl;
+	cout << "Armor:\n\t name: " << this->EQ->armor_slot->getName() << "\n\t Defense: " << this->EQ->armor_slot->getDefense() << "\n\t Health " << this->EQ->armor_slot->getHealth() << "\n\t value: " << this->EQ->armor_slot->getValue() << endl;
+	if (this->Class->getProf() == warrior)
+	{
+		cout << "Shield:\n\t name: " << this->EQ->shield_slot->getName() << "\n\t Defense: " << this->EQ->shield_slot->getDefense() << "\n\t Block Chance: " << this->EQ->shield_slot->getBlockChance() << "\n\t value: " << this->EQ->shield_slot->getValue() << endl;
+	}
+	//DOKONCZYC
+	//cout << "Talisman:\n\t name: " << this->EQ->talisman_slot->getName() << "\n\t "<< this->EQ->talisman_slot->get << this->EQ->armor_slot->getDefense() << "\n\t Health " << this->EQ->armor_slot->getHealth() << "\n\t value: " << this->EQ->armor_slot->getValue() << endl;
+	return;
+}
+void Hero::setAllStats()
+{
+	this->setmaxHealth(this->EQ->headgear_slot->getHealth() + this->EQ->armor_slot->getHealth());
+	this->setcriticalChance(this->EQ->talisman_slot->getCriticalChance()+this->EQ->weapon_slot->getCriticalChance()+defaultCriticalChance*this->getlevel());
+	this->setdefense(this->EQ->armor_slot->getDefense()+this->EQ->headgear_slot->getDefense());
+	this->setAttack(this->EQ->weapon_slot->getMainStat()+this->EQ->headgear_slot->getMainStat()+this->Class->getmainStat(),this->EQ->weapon_slot->getMinDamage(), this->EQ->weapon_slot->getMaxDamage());
+	this->setBlockChance();
+	return;
+}
+void Hero::setAttack(int ms,int weaponmin,int weaponmax)
+{
+	this->setminimalAttack(ms + weaponmin * counterAttackMin);
+	this->setmaximalAttack(ms + weaponmax * counterAttackMax);
+	return;
+}
+void Hero::setmaxHealth(int h)
+{
+	this->maxHealth = (this->getlevel()*defaultHealth + h)*this->Class->getvitalityModifier();
+}
+void Hero::setdefense(int d)
+{
+	if (this->Class->getProf() == warrior)
+	{
+		d += this->EQ->shield_slot->getDefense();
+	}
+	this->defense = d * this->Class->getdefenseModifier();
+}
+void Hero::setBlockChance()
+{
+	if (this->Class->getProf() == warrior)
+	{
+		this->blockChance = this->EQ->shield_slot->getBlockChance();
+	}
+	else
+	{
+		this->blockChance = 0;
+	}
 	return;
 }
 void Hero::setMoney(int m)
@@ -404,4 +498,28 @@ void Hero::setMoney(int m)
 int Hero::getMoney()
 {
 	return this->money;
+}
+void Hero::ChangeEQ(Item *i, ItemType t)
+{
+	this->EQ->ChangeItem(i, t);
+	this->setAllStats();
+	cout << "Changing equipment completed";
+	return;
+}
+bool Hero::fight(Character * opponent)
+{
+	bool whoIsAttacking=true;
+	while (this->getcurrentHealth() != 0 && opponent->getcurrentHealth() != 0)
+	{
+		if (whoIsAttacking)
+		{
+			this->attackOpponent(opponent);
+		}
+		else
+		{
+			opponent->attackOpponent(this);
+		}
+		whoIsAttacking = !whoIsAttacking;
+	}
+	return this->getcurrentHealth() != 0;
 }
