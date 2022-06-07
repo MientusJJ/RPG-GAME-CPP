@@ -1,3 +1,5 @@
+#ifndef EQUIPMENT_H
+#define EQUIPMENT_H
 #pragma once
 #include "items.cpp"
 class Equipment
@@ -14,4 +16,4 @@ public:
 private:
 	ItemFactory *fac;
 };
-
+#endif

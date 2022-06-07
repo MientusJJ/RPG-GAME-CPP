@@ -1,10 +1,12 @@
-#pragma once
+#ifndef CHARACTER_H
+#define CHARACTER_H
 
 #include <string>
 #include <iostream>
 #include <cmath>
 #include <stdlib.h>
 #include "Equipment.h"
+#include "Chamber.h"
 const double dodge = 33.0;
 using namespace std;
 
@@ -132,6 +134,7 @@ private:
 	static Hero *hero;
 	int money;
 	Equipment *EQ;
+	Chamber * currentChamber;
 };
 
 
@@ -151,3 +154,4 @@ public:
 	void setBlockChance();
 private:
 };
+#endif

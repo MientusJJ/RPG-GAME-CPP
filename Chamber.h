@@ -1,3 +1,5 @@
+#ifndef CHAMBER_H
+#define CHAMBER_H
 //#include "monster.cpp"
 #include "items.cpp"
 
@@ -91,3 +93,4 @@ class EmptyRoom : public SafeChamber {
 public:
     void takeAction();
 };
+#endif
