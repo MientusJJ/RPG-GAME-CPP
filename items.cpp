@@ -43,6 +43,7 @@ public:
     string getName() const { return name; }
     ItemType getType() const { return type; }
     virtual int getMainStat() const { return 0; }
+    virtual string getMainStatName() const { return ""; }
     virtual int getDefense() const { return 0; }
     virtual int getHealth() const { return 0; }
     virtual double getCriticalChance() const { return 0; }
@@ -92,6 +93,7 @@ public:
         name = "Sword";
     }
     int getMainStat() const { return main_stat; }
+    string getMainStatName() const { return "strength"; }
 };
 
 class MagicStick : public Weapon {
@@ -111,6 +113,7 @@ public:
         name = "MagicStick";
     }
     int getMainStat() const { return main_stat; }
+    string getMainStatName() const { return "intelligence"; }
 };
 
 class Bow : public Weapon {
@@ -130,6 +133,7 @@ public:
         name = "Bow";
     }
     int getMainStat() const { return main_stat; }
+    string getMainStatName() const { return "agility"; }
 };
 
 class Armor : public Item {
@@ -185,6 +189,7 @@ public:
         name = "Helmet";
     }
     int getHealth() const { return health; }
+    string getMainStatName() const { return "strength"; }
 };
 
 class MagicHat : public Headgear {
@@ -197,6 +202,7 @@ public:
         name = "MagicHat";
     }
     int getMainStat() const { return intelligence; }
+    string getMainStatName() const { return "intelligence"; }
 };
 
 class Talisman : public Item {
@@ -224,6 +230,7 @@ public:
         name = "ScoutTalisman";
     }
     int getMainStat() const { return agility; }
+    string getMainStatName() const { return "agility"; }
 };
 
 class WarriorTalisman : public Talisman {
@@ -236,6 +243,7 @@ public:
         name = "WarriorTalisman";
     }
     int getMainStat() const { return strength; }
+    string getMainStatName() const { return "strength"; }
 };
 
 class MageTalisman : public Talisman {
@@ -248,6 +256,7 @@ public:
         name = "MageTalisman";
     }
     int getMainStat() const { return intelligence; }
+    string getMainStatName() const { return "intelligence"; }
 };
 
 class Shield : public Item {
@@ -347,8 +356,7 @@ static void showItemDetails(const Item& item) {
     double y;
 
     x = item.getMainStat();
-    if (x != 0)
-        cout << "main stat: " << x << endl;
+    cout << item.getMainStatName() << ": " << x << endl;
 
     x = item.getDefense();
     if (x != 0)
