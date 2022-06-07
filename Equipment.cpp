@@ -16,29 +16,29 @@ Equipment::Equipment(int lvl,Profession prof)
 	}
 	delete fac;
 }
-bool Equipment::ChangeItem(Item * i,ItemType t)
+bool Equipment::ChangeItem(Item * i)
 {
-	if (t == weapon)
+	if (i->getType() == weapon)
 	{
 		delete this->weapon_slot;
 		this->weapon_slot = i;
 	}
-	else if (t == armor)
+	else if (i->getType() == armor)
 	{
 		delete this->armor_slot;
 		this->armor_slot = i;
 	}
-	else if(t==talisman)
+	else if(i->getType() ==talisman)
 	{
 		delete this->talisman_slot;
 		this->talisman_slot = i;
 	}
-	else if (t = headgear)
+	else if (i->getType() == headgear)
 	{
 		delete this->headgear_slot;
 		this->headgear_slot = i;
 	}
-	else if (t == shield)
+	else if (i->getType() == shield)
 	{
 		delete this->shield_slot;
 		this->shield_slot = i;

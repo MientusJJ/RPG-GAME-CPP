@@ -442,13 +442,23 @@ void Hero::showEQ()
 {
 	cout << endl << "Equipment of your hero:" << endl;
 	cout << "Weapon:\n\t name: " << this->EQ->weapon_slot->getName() << "\n\t minimal Damage: " << this->EQ->weapon_slot->getMinDamage() << "\n\t maximal Damage: " << this->EQ->weapon_slot->getMaxDamage() << "\n\t value: " << this->EQ->weapon_slot->getValue() << endl;
-	cout << "Armor:\n\t name: " << this->EQ->armor_slot->getName() << "\n\t Defense: " << this->EQ->armor_slot->getDefense() << "\n\t Health " << this->EQ->armor_slot->getHealth() << "\n\t value: " << this->EQ->armor_slot->getValue() << endl;
+	cout << "Armor:\n\t name: " << this->EQ->armor_slot->getName() << "\n\t Defense: " << this->EQ->armor_slot->getDefense() << "\n\t Health: " << this->EQ->armor_slot->getHealth() << "\n\t value: " << this->EQ->armor_slot->getValue() << endl;
 	if (this->Class->getProf() == warrior)
 	{
 		cout << "Shield:\n\t name: " << this->EQ->shield_slot->getName() << "\n\t Defense: " << this->EQ->shield_slot->getDefense() << "\n\t Block Chance: " << this->EQ->shield_slot->getBlockChance() << "\n\t value: " << this->EQ->shield_slot->getValue() << endl;
 	}
 	//DOKONCZYC
-	//cout << "Talisman:\n\t name: " << this->EQ->talisman_slot->getName() << "\n\t "<< this->EQ->talisman_slot->get << this->EQ->armor_slot->getDefense() << "\n\t Health " << this->EQ->armor_slot->getHealth() << "\n\t value: " << this->EQ->armor_slot->getValue() << endl;
+	cout << "Talisman:\n\t name: " << this->EQ->talisman_slot->getName() << "\n\t "<< this->EQ->talisman_slot->getMainStatName() <<": " << this->EQ->talisman_slot->getMainStat() << "\n\t Critical Chance: " << this->EQ->talisman_slot->getCriticalChance() << "\n\t value: " << this->EQ->talisman_slot->getValue() << endl;
+	cout << "Headgear:\n\t name: " << this->EQ->headgear_slot->getName() << "\n\t Defense: " <<  this->EQ->headgear_slot->getDefense();
+	if (this->Class->getProf() == mage)
+	{
+		cout << "\n\t "<<this->EQ->headgear_slot->getMainStatName() <<": " <<  this->EQ->headgear_slot->getMainStat();
+	}
+	else
+	{
+		cout << ":\n\t Health: " << this->EQ->headgear_slot->getHealth();
+	}
+	cout << "\n\t value: " << this->EQ->headgear_slot->getValue() << endl;
 	return;
 }
 void Hero::setAllStats()
@@ -499,9 +509,9 @@ int Hero::getMoney()
 {
 	return this->money;
 }
-void Hero::ChangeEQ(Item *i, ItemType t)
+void Hero::ChangeEQ(Item *i)
 {
-	this->EQ->ChangeItem(i, t);
+	this->EQ->ChangeItem(i);
 	this->setAllStats();
 	cout << "Changing equipment completed";
 	return;

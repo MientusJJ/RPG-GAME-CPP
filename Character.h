@@ -125,7 +125,7 @@ public:
 	void setBlockChance();
 	void setMoney(int);
 	int getMoney();
-	void ChangeEQ(Item *, ItemType);
+	void ChangeEQ(Item *);
 	bool fight(Character *);
 private:
 	Hero();
