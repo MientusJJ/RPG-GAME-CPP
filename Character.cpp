@@ -331,8 +331,17 @@ void monster::setName()
 }
 monster::monster(int lvl)
 {
-	this->chooseClass();
+	setALL(lvl);
 	this->setName();
+}
+monster::monster(int lvl, string name)
+{
+	setALL(lvl);
+	this->name = name;
+}
+void monster::setALL(int lvl)
+{
+	this->chooseClass();
 	this->setlevel(lvl);
 	this->setmaxHealth();
 	this->setdefense();
@@ -371,20 +380,20 @@ Hero::~Hero()
 void Hero::chooseClass()
 {
 	cout << "Choose class of " << this->getName() << " \nWrite 1 if you want warrior \nWrite 2 if you want scout \nWrite 3 if you want mage \n";
-	int ch;
+	string  ch;
 	cin >> ch;
-	while (ch<1 || ch >3)
+	while (ch!="1" && ch!="2" &&ch != "3")
 	{
 		cout << "Bad Number. Choose number between 1 and 3\n";
 		cin >> ch;
 	}
 	cout << "Your class for the whole game is: ";
-	if (ch == 1)
+	if (ch == "1")
 	{
 		this->Class = new Warrior;
 		cout << "Warrior\n";
 	}
-	else if (ch == 2)
+	else if (ch == "2")
 	{
 		this->Class = new Scout;
 		cout << "Scout\n";

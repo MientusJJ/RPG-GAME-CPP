@@ -142,6 +142,7 @@ class monster : public Character
 {
 public:
 	monster(int);
+	monster(int, string );
 	~monster();
 	void chooseClass();
 	void setmaxHealth();
@@ -151,6 +152,7 @@ public:
 	void setmaximalAttack();
 	void setName();
 	void setBlockChance();
+	void setALL(int);
 private:
 };
 #endif
