@@ -6,7 +6,6 @@
 #include <cmath>
 #include <stdlib.h>
 #include "Equipment.h"
-#include "Chamber.h"
 const double dodge = 33.0;
 using namespace std;
 
@@ -90,6 +89,7 @@ public:
 	virtual void setName() {}
 	bool useSpecialEffect(Character *opponent);
 	int useSpecialAttack();
+	Profession getProf();
 	void attackOpponent(Character * opponent);
 protected:
 	
@@ -134,7 +134,6 @@ private:
 	static Hero *hero;
 	int money;
 	Equipment *EQ;
-	Chamber * currentChamber;
 };
 
 

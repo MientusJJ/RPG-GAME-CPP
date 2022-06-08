@@ -97,6 +97,10 @@ int Character::useSpecialAttack()
 	}
 		return 1;
 }
+Profession Character::getProf()
+{
+	return this->Class->getProf();
+}
 void Character::attackOpponent(Character * opponent)
 {
 	if (!this->useSpecialEffect(opponent))
@@ -452,7 +456,6 @@ void Hero::showEQ()
 	{
 		cout << "Shield:\n\t name: " << this->EQ->shield_slot->getName() << "\n\t Defense: " << this->EQ->shield_slot->getDefense() << "\n\t Block Chance: " << this->EQ->shield_slot->getBlockChance() << "\n\t value: " << this->EQ->shield_slot->getValue() << endl;
 	}
-	//DOKONCZYC
 	cout << "Talisman:\n\t name: " << this->EQ->talisman_slot->getName() << "\n\t "<< this->EQ->talisman_slot->getMainStatName() <<": " << this->EQ->talisman_slot->getMainStat() << "\n\t Critical Chance: " << this->EQ->talisman_slot->getCriticalChance() << "\n\t value: " << this->EQ->talisman_slot->getValue() << endl;
 	cout << "Headgear:\n\t name: " << this->EQ->headgear_slot->getName() << "\n\t Defense: " <<  this->EQ->headgear_slot->getDefense();
 	if (this->Class->getProf() == mage)
