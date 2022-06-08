@@ -45,6 +45,10 @@ int Character::getcurrentHealth()
 }
 void Character::setcurrentHealth(int h)
 {
+	if (h > this->getmaxHealth())
+	{
+		h = this->getmaxHealth();
+	}
 	this->currentHealth = h;
 }
 int Character::getmaxHealth()
@@ -415,6 +419,7 @@ void Hero::levelup()
 {
 	++this->level;
 	this->setAllStats();
+	this->setcurrentHealth(this->getcurrentHealth() + double(this->getmaxHealth()*0.3));
 	return;
 }
 void Hero::showStatistics()
