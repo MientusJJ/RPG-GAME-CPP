@@ -37,11 +37,11 @@ Chest::Chest(Hero* h) {
 
 void Chest::openBox(Hero* h) {
 	int coins = rand() % (h->getlevel() * 100);
-	cout << "You found " << coins << " gold in the chest";
+	cout << "You found " << coins << " gold in the chest. ";
 	h->setMoney(h->getMoney() + coins);
 
 	cout << "There is also an item in chest" << endl;
-	showItemDetails(*item);
+	showItemDetails(item,h->getProf());
 	cout << "Your current item: " << endl;
 	h->showOneItem(item->getType(), h->getProf());
 	cout << "Do you want to take this item? (Y/N)" << endl;
@@ -282,6 +282,7 @@ Chamber* HealthRoom::takeAction(Hero *h) {
 void HealthRoom::healthYourself(Hero *h) {
 	cout << "You came to the room with the fountain of life, after drinking the magic water you regain all health points" << endl;
 	h->setcurrentHealth(h->getmaxHealth());
+	cout << "Your current health is: " << h->getcurrentHealth() << "/" << h->getmaxHealth() << endl;
 }
 
 
@@ -305,15 +306,15 @@ Chamber* TraderRoom::takeAction(Hero* h) {
 void TraderRoom::seeItems(Hero* h) {
 	h->showEQ();
 	cout << "item 1:" << endl;
-	showItemDetails(*item1);
+	showItemDetails(item1,h->getProf());
 	cout << "price: " << item1->getValue() << endl << endl;
 
 	cout << "item 2:" << endl;
-	showItemDetails(*item2);
+	showItemDetails(item2, h->getProf());
 	cout << "price: " << item2->getValue() << endl << endl;
 
 	cout << "item 3:" << endl;
-	showItemDetails(*item3);
+	showItemDetails(item3, h->getProf());
 	cout << "price: " << item3->getValue() << endl << endl;
 	cout << "Your balance: " << h->getMoney() << endl;
 	cout << "Do you want to buy something? (Y/N)" << endl;

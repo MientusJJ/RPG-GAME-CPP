@@ -353,29 +353,37 @@ public:
 	};
 };
 
-static void showItemDetails(const Item& item) {
-	cout << "name: " << item.getName() << endl;
-	int x;
-	double y;
-
-	x = item.getMainStat();
-	cout << item.getMainStatName() << ": " << x << endl;
-
-	x = item.getDefense();
-	if (x != 0)
-		cout << "defense: " << x << endl;
-
-	x = item.getHealth();
-	if (x != 0)
-		cout << "health: " << x << endl;
-
-	y = item.getCriticalChance();
-	if (y != 0)
-		cout << "critical attack: " << y << "%" << endl;
-
-	y = item.getBlockChance();
-	if (y != 0)
-		cout << "block: " << y << "%" << endl;
+static void showItemDetails( Item * item,Profession prof) {
+	if (item->getType() == weapon)
+	{
+		cout << "Weapon:\n\t name: " << item->getName() << "\n\t minimal Damage: " << item->getMinDamage() << "\n\t maximal Damage: " << item->getMaxDamage() << "\n\t " << item->getMainStatName() << ": " << item->getMainStat() << "\n\t value: " << item->getValue() << endl;
+	}
+	else if (item->getType() == talisman)
+	{
+		cout << "Talisman:\n\t name: " <<item->getName() << "\n\t " << item->getMainStatName() << ": " << item->getMainStat() << "\n\t Critical Chance: " << item->getCriticalChance() << "\n\t value: " << item->getValue() << endl;
+	}
+	else if (item->getType() == shield)
+	{
+		cout << "Shield:\n\t name: " << item->getName() << "\n\t Defense: " << item->getDefense() << "\n\t Block Chance: " << item->getBlockChance() << "\n\t value: " << item->getValue() << endl;
+	}
+	else if (item->getType() == armor)
+	{
+		cout << "Armor:\n\t name: " << item->getName() << "\n\t Defense: " << item->getDefense() << "\n\t Health: " << item->getHealth() << "\n\t value: " << item->getValue() << endl;
+	}
+	else if (item->getType() == headgear)
+	{
+		cout << "Headgear:\n\t name: " << item->getName() << "\n\t Defense: " << item->getDefense();
+		if (prof == mage)
+		{
+			cout << "\n\t " << item->getMainStatName() << ": " << item->getMainStat();
+		}
+		else
+		{
+			cout << ":\n\t Health: " << item->getHealth();
+		}
+		cout << "\n\t value: " << item->getValue() << endl;
+	}
+	return;
 }
 
 /*

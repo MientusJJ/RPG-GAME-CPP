@@ -16,7 +16,7 @@ const int counterAttackMin = 2;
 const int counterAttackMax = 3;
 const int defaultMonsterDefense = 5;
 const double defaultMonsterCriticalChance = 15.;
-const int defaultHealthMonster = 120;
+const int defaultHealthMonster = 60;
 const int defaultAttackMonsterMin = 15;
 const int defaultAttackMonsterMax = 25;
 
@@ -554,7 +554,7 @@ void Hero::ChangeEQ(Item *i)
 {
 	this->EQ->ChangeItem(i);
 	this->setAllStats();
-	cout << "Changing equipment completed";
+	cout << "Changing equipment completed" << endl;
 	return;
 }
 bool Hero::fight(Character * opponent)
