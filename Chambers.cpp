@@ -1,6 +1,5 @@
 #include <iostream>
 #include <cstdlib>
-#include <ctime>
 #include "Chambers.h"
 using namespace std;
 int numOfChamber;
@@ -37,20 +36,27 @@ Chest::Chest(Hero* h) {
 
 void Chest::openBox(Hero* h) {
 	int coins = rand() % (h->getlevel() * 100);
-	cout << "You found " << coins << " gold in the chest. ";
+	cout << "You found " << coins << " gold in the chest" << endl;
 	h->setMoney(h->getMoney() + coins);
 
-	cout << "There is also an item in chest" << endl;
+	cout << "There is also an item in chest: " << endl;
 	showItemDetails(item,h->getProf());
 	cout << "Your current item: " << endl;
 	h->showOneItem(item->getType(), h->getProf());
-	cout << "Do you want to take this item? (Y/N)" << endl;
+	cout << "Do you want to replace your item with a new found one? (Y/N)" << endl;
 
 	char decision;
-	cin >> decision;
+    while (true) {
+        cin >> decision;
 
-	if (decision == 'Y')
-		h->ChangeEQ(item);
+        if (decision == 'Y')
+            h->ChangeEQ(item);
+
+        if (decision == 'Y' || decision == 'N')
+            break;
+        else
+            cout << "Character not recognized, please retype" << endl;
+    }
 }
 
 
@@ -108,29 +114,46 @@ Chamber* PassageChamber::goNext(Hero* h) {
 
 	if (numOfChamber < 20)
 	{
-		cout << "Currently You are in Chamber number " << numOfChamber << endl;
+		cout << "Currently You are in Chamber number: " << numOfChamber << endl;
 		numOfChamber++;
-		cout << "Do you want to see your EQ or statistics? (equipment - E, statistics - S, nothing - N)" << endl;
-		char showSth;
-		cin >> showSth;
 
-		if (showSth == 'E')
-			h->showEQ();
-		else if (showSth == 'S')
-			h->showStatistics();
+		char showSth;
+        while (true) {
+            cout << "Do you want to see your EQ or statistics? (equipment - E, statistics - S, nothing - N)" << endl;
+            cin >> showSth;
+
+            if (showSth == 'E')
+                h->showEQ();
+            else if (showSth == 'S')
+                h->showStatistics();
+            else if (showSth == 'N')
+                break;
+            else
+                cout << "Character not recognized, please retype" << endl;
+        }
 
 		cout << "Where do you want to go? (left - L, right - R)" << endl;
-		char direction;
-		cin >> direction;
 
 		int left = rand() % 7;
 		int right = rand() % 7;
 		int next;
 
-		if (direction == 'L')
-			next = left;
-		else if (direction == 'R')
-			next = right;
+        char direction;
+        while (true) {
+            cin >> direction;
+
+            if (direction == 'L') {
+                next = left;
+                break;
+            }
+            else if (direction == 'R') {
+                next = right;
+                break;
+            }
+            else
+                cout << "Character not recognized, please retype" << endl;
+        }
+
 
 		if (next == 0)
 			next_chamber = new MonsterRoom(h);
@@ -172,12 +195,22 @@ Chamber* MonsterRoom::takeAction(Hero *h) {
 	cout << "You have entered the room with the monster" << endl;
 	cout << "Are you fighting or running? (F/R)" << endl;
 	char action;
-	cin >> action;
 
-	if (action == 'F')
-		fight(h);
-	else if (action == 'R')
-		runAway(h);
+    while (true) {
+        cin >> action;
+
+        if (action == 'F') {
+            fight(h);
+            break;
+        }
+        else if (action == 'R') {
+            runAway(h);
+            break;
+        }
+        else
+            cout << "Character not recognized, please retype" << endl;
+    }
+
 
 	return goNext(h);
 }
@@ -188,13 +221,21 @@ void MonsterRoom::fight(Hero *h) {
 	{
 		h->levelup();
 		cout << "You have leveled up. Your current level is: " << hero->getlevel() << endl;
-		cout << "Your current health is: " << h->getcurrentHealth() << "/" << h->getmaxHealth() << endl;
+		cout << "Your current health is: " << h->getcurrentHealth() << "/" << h->getmaxHealth() << endl << endl;
 		cout << "After defeating the monster you saw the box in the corner of the room" << endl;
 		cout << "Do you want to open it? (Y/N)" << endl;
 		char player_decision;
-		cin >> player_decision;
-		if (player_decision == 'Y')
-			chest->openBox(h);
+
+        while (true) {
+            cin >> player_decision;
+            if (player_decision == 'Y')
+                chest->openBox(h);
+
+            if (player_decision == 'Y' || player_decision == 'N')
+                break;
+            else
+                cout << "Character not recognized, please retype" << endl;
+        }
 	}
 }
 
@@ -231,9 +272,18 @@ Chamber* PotionRoom::takeAction(Hero *h) {
 	cout << "In the room you came to there is a mysterious potion with unknown properties" << endl;
 	cout << "Do you want to drink it? (Y/N)" << endl;
 	char player_decision;
-	cin >> player_decision;
-	if (player_decision == 'Y')
-		drinkPotion(h);
+
+    while (true) {
+        cin >> player_decision;
+
+        if (player_decision == 'Y')
+            drinkPotion(h);
+
+        if (player_decision == 'Y' || player_decision == 'N')
+            break;
+        else
+            cout << "Character not recognized, please retype" << endl;
+    }
 
 	return goNext(h);
 }
@@ -264,11 +314,20 @@ Chamber* TreasureRoom::takeAction(Hero *h) {
 }
 
 void TreasureRoom::openBox(Hero *h) {
-	cout << "There is a box in the room, do you want to open it? (Y/N)";
+	cout << "There is a box in the room, do you want to open it? (Y/N)" << endl;
 	char player_decision;
-	cin >> player_decision;
-	if (player_decision == 'Y')
-		chest->openBox(h);
+
+    while (true) {
+        cin >> player_decision;
+
+        if (player_decision == 'Y')
+            chest->openBox(h);
+
+        if (player_decision == 'Y' || player_decision == 'N')
+            break;
+        else
+            cout << "Character not recognized, please retype" << endl;
+    }
 }
 
 
@@ -296,9 +355,18 @@ Chamber* TraderRoom::takeAction(Hero* h) {
 	cout << "You came to a room with a merchant who offers you to see his items" << endl;
 	cout << "Do you want to watch them? (Y/N)" << endl;
 	char player_decision;
-	cin >> player_decision;
-	if (player_decision == 'Y')
-		seeItems(h);
+
+    while (true) {
+        cin >> player_decision;
+
+        if (player_decision == 'Y')
+            seeItems(h);
+
+        if (player_decision == 'Y' || player_decision == 'N')
+            break;
+        else
+            cout << "Character not recognized, please retype" << endl;
+    }
 
 	return goNext(h);
 }
@@ -320,9 +388,18 @@ void TraderRoom::seeItems(Hero* h) {
 	cout << "Do you want to buy something? (Y/N)" << endl;
 	
 	char player_decision;
-	cin >> player_decision;
-	if (player_decision == 'Y')
-		buyItem(h);
+
+    while (true) {
+        cin >> player_decision;
+
+        if (player_decision == 'Y')
+            buyItem(h);
+
+        if (player_decision == 'Y' || player_decision == 'N')
+            break;
+        else
+            cout << "Character not recognized, please retype" << endl;
+    }
 }
 
 void TraderRoom::buyItem(Hero* h) {
@@ -384,10 +461,18 @@ void TraderRoom::buyItem(Hero* h) {
 
 		if (!bought1 || !bought2 || !bought3) {
 			cout << "Do you want to buy anything else? (Y/N)" << endl;
-			cin >> player_decision;
 
-			if (player_decision == 'N')
-				wantToBuy = false;
+            while (true) {
+                cin >> player_decision;
+
+                if (player_decision == 'N')
+                    wantToBuy = false;
+
+                if (player_decision == 'Y' || player_decision == 'N')
+                    break;
+                else
+                    cout << "Character not recognized, please retype" << endl;
+            }
 		}
 		else {
 			cout << "You already bought all items from the merchant..." << endl;
