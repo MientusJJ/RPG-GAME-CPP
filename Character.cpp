@@ -367,7 +367,7 @@ Hero::Hero()
 	this->setName();
 	this->chooseClass();
 	this->setlevel(1);
-	this->setMoney(0);
+	this->setMoney(100);
 	EQ = new Equipment(this->getlevel(), this->Class->getProf());
 	this->setAllStats();
 	this->setcurrentHealth(this->getmaxHealth());
