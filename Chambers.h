@@ -21,7 +21,7 @@ protected:
 
 public:
     Chamber(Hero* h);
-    virtual void takeAction(Hero *h);
+    virtual Chamber* takeAction(Hero *h);
     int getChamberID();
     string getName();
 };
@@ -32,7 +32,7 @@ protected:
 
 public:
     BossChamber(Hero *h);
-    void takeAction(Hero *h);
+    Chamber* takeAction(Hero *h);
 
 private:
     void finalFight(Hero *h);
@@ -41,19 +41,19 @@ private:
 class PassageChamber : public Chamber {
 public:
     PassageChamber(Hero* h);
-    virtual void takeAction(Hero* h);
+    virtual Chamber* takeAction(Hero* h);
     static Chamber* goNext(Hero* h);
 };
 
 class NormalChamber : public PassageChamber {
 public:
     NormalChamber(Hero* h);
-    void takeAction(Hero* h);
+    Chamber* takeAction(Hero* h);
 };
 class SafeChamber : public PassageChamber {
 public:
     SafeChamber(Hero* h);
-    void takeAction(Hero* h);
+    Chamber* takeAction(Hero* h);
 };
 
 class MonsterRoom : public NormalChamber {
@@ -63,7 +63,7 @@ protected:
 
 public:
     MonsterRoom(Hero* h);
-    void takeAction(Hero *h);
+    Chamber* takeAction(Hero *h);
 
 private:
     void fight(Hero *h);
@@ -73,7 +73,7 @@ private:
 class TrapRoom : public NormalChamber {
 public:
     TrapRoom(Hero* h);
-    void takeAction(Hero *h);
+    Chamber* takeAction(Hero *h);
 
 private:
     void getDamage(Hero *h);
@@ -82,7 +82,7 @@ private:
 class PotionRoom : public NormalChamber {
 public:
     PotionRoom(Hero* h);
-    void takeAction(Hero *h);
+    Chamber* takeAction(Hero *h);
 
 private:
     void drinkPotion(Hero *h);
@@ -94,7 +94,7 @@ protected:
 
 public:
     TreasureRoom(Hero* h);
-    void takeAction(Hero *h);
+    Chamber* takeAction(Hero *h);
 
 private:
     void openBox(Hero *h);
@@ -103,7 +103,7 @@ private:
 class HealthRoom : public SafeChamber {
 public:
     HealthRoom(Hero* h);
-    void takeAction(Hero *h);
+    Chamber* takeAction(Hero *h);
 
 private:
     void healthYourself(Hero *h);
@@ -117,7 +117,7 @@ protected:
 
 public:
     TraderRoom(Hero* h);
-    void takeAction(Hero* h);
+    Chamber* takeAction(Hero* h);
 
 private:
     void seeItems(Hero* h);
@@ -127,12 +127,12 @@ private:
 class EmptyRoom : public SafeChamber {
 public:
     EmptyRoom(Hero* h);
-    void takeAction(Hero* h);
+    Chamber* takeAction(Hero* h);
 };
 
 class StartingRoom : public SafeChamber {
 public:
     StartingRoom(Hero* h);
-    void takeAction(Hero* h);
+    Chamber* takeAction(Hero* h);
 };
 #endif

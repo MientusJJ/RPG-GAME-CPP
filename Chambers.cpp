@@ -2,7 +2,6 @@
 #include <cstdlib>
 #include <ctime>
 #include "Chambers.h"
-#include "Character.cpp"
 using namespace std;
 int numOfChamber;
 
@@ -54,12 +53,11 @@ void Chest::openBox(Hero* h) {
 
 
 Chamber::Chamber(Hero* h) {
-    srand (time(NULL));
     chamber_ID = rand() % 1000;
     hero = h->getInstance();
 }
 
-void Chamber::takeAction(Hero *h) {}
+Chamber* Chamber::takeAction(Hero *h) {}
 
 int Chamber::getChamberID() {
     return chamber_ID;
@@ -75,7 +73,7 @@ BossChamber::BossChamber(Hero *h) : Chamber(h) {
     boss_monster = new monster(lvl, "Great BOSS");
 }
 
-void BossChamber::takeAction(Hero *h) {
+Chamber* BossChamber::takeAction(Hero *h) {
     cout << "You have entered the boss's chamber" << endl;
     cout << "The last and hardest fight is ahead of you" << endl;
     finalFight(h);
@@ -83,7 +81,9 @@ void BossChamber::takeAction(Hero *h) {
     if (h->getcurrentHealth() > 0)
         cout << "Congratulations! You finished the game" << endl;
     else
-        cout << "Tt was very close ..." << endl;
+        cout << "It was very close..." << endl;
+
+    return nullptr;
 }
 
 void BossChamber::finalFight(Hero *h) {
@@ -93,16 +93,30 @@ void BossChamber::finalFight(Hero *h) {
 
 PassageChamber::PassageChamber(Hero *h) : Chamber(h) {}
 
-void PassageChamber::takeAction(Hero* h) {}
+Chamber* PassageChamber::takeAction(Hero* h) {}
 
 Chamber* PassageChamber::goNext(Hero* h) {
     Chamber* next_chamber;
+
+    if (h->getcurrentHealth() == 0) {
+        cout << "YOU DEAD" << endl;
+        return nullptr;
+    }
 
     if (numOfChamber < 20)
     {
         numOfChamber++;
 
-        cout << "Where do you want to go? (left - L, right - R)";
+        cout << "Do you want to see your EQ or statistics? (equipment - E, statistics - S, nothing - N)" << endl;
+        char showSth;
+        cin >> showSth;
+
+        if (showSth == 'E')
+            h->showEQ();
+        else if (showSth == 'S')
+            h->showStatistics();
+
+        cout << "Where do you want to go? (left - L, right - R)" << endl;
         char direction;
         cin >> direction;
 
@@ -139,10 +153,10 @@ Chamber* PassageChamber::goNext(Hero* h) {
 
 
 NormalChamber::NormalChamber(Hero *h) : PassageChamber(h) {}
-void NormalChamber::takeAction(Hero* h) {}
+Chamber* NormalChamber::takeAction(Hero* h) {}
 
 SafeChamber::SafeChamber(Hero *h) : PassageChamber(h) {}
-void SafeChamber::takeAction(Hero* h) {}
+Chamber* SafeChamber::takeAction(Hero* h) {}
 
 
 MonsterRoom::MonsterRoom(Hero *h) : NormalChamber(h)
@@ -151,7 +165,7 @@ MonsterRoom::MonsterRoom(Hero *h) : NormalChamber(h)
     normal_monster = new monster(h->getlevel());
 }
 
-void MonsterRoom::takeAction(Hero *h) {
+Chamber* MonsterRoom::takeAction(Hero *h) {
     cout << "You have entered the room with the monster" << endl;
     cout << "Are you fighting or running? (F/R)" << endl;
     char action;
@@ -161,6 +175,8 @@ void MonsterRoom::takeAction(Hero *h) {
         fight(h);
     else if (action == 'R')
         runAway(h);
+
+    return goNext(h);
 }
 
 void MonsterRoom::fight(Hero *h) {
@@ -175,8 +191,6 @@ void MonsterRoom::fight(Hero *h) {
         cin >> player_decision;
         if (player_decision == 'Y')
             chest->openBox(h);
-
-        goNext(h);
     }
 }
 
@@ -189,29 +203,25 @@ void MonsterRoom::runAway(Hero *h) {
     }
     else
         cout << "You escaped the monster" << endl;
-
-    goNext(h);
 }
 
 
 TrapRoom::TrapRoom(Hero *h) : NormalChamber(h) {}
 
-void TrapRoom::takeAction(Hero *h) {
+Chamber* TrapRoom::takeAction(Hero *h) {
     getDamage(h);
+    return goNext(h);
 }
 
 void TrapRoom::getDamage(Hero *h) {
     cout << "There was a trap in the room that hurt you" << endl;
-    h->getDamage( h->getmaxHealth() * 0.2);
-
-    if (h->getcurrentHealth() > 0)
-        goNext(h);
+    h->getDamage(h->getmaxHealth() * 0.2);
 }
 
 
 PotionRoom::PotionRoom(Hero *h) : NormalChamber(h) {}
 
-void PotionRoom::takeAction(Hero *h) {
+Chamber* PotionRoom::takeAction(Hero *h) {
     cout << "In the room you came to there is a mysterious potion with unknown properties" << endl;
     cout << "Do you want to drink it? (Y/N)" << endl;
     char player_decision;
@@ -219,8 +229,7 @@ void PotionRoom::takeAction(Hero *h) {
     if (player_decision == 'Y')
         drinkPotion(h);
 
-    if (h->getcurrentHealth() > 0)
-        goNext(h);
+    return goNext(h);
 }
 
 void PotionRoom::drinkPotion(Hero *h) {
@@ -230,7 +239,7 @@ void PotionRoom::drinkPotion(Hero *h) {
         h->setcurrentHealth(h->getmaxHealth());
     }
     else {
-        h->getDamage( h->getmaxHealth() * 0.3);
+        h->getDamage(h->getmaxHealth() * 0.3);
     }
 }
 
@@ -239,8 +248,9 @@ TreasureRoom::TreasureRoom(Hero *h) : SafeChamber(h) {
     chest = new Chest(h);
 }
 
-void TreasureRoom::takeAction(Hero *h) {
+Chamber* TreasureRoom::takeAction(Hero *h) {
     openBox(h);
+    return goNext(h);
 }
 
 void TreasureRoom::openBox(Hero *h) {
@@ -249,21 +259,19 @@ void TreasureRoom::openBox(Hero *h) {
     cin >> player_decision;
     if (player_decision == 'Y')
         chest->openBox(h);
-
-    goNext(h);
 }
 
 
 HealthRoom::HealthRoom(Hero *h) : SafeChamber(h) {}
 
-void HealthRoom::takeAction(Hero *h) {
+Chamber* HealthRoom::takeAction(Hero *h) {
     healthYourself(h);
+    return goNext(h);
 }
 
 void HealthRoom::healthYourself(Hero *h) {
     cout << "You came to the room with the fountain of life, after drinking the magic water you regain all health points" << endl;
     h->setcurrentHealth(h->getmaxHealth());
-    goNext(h);
 }
 
 
@@ -273,7 +281,7 @@ TraderRoom::TraderRoom(Hero* h) : SafeChamber(h) {
     item3 = ItemFactory::createItem(h->getlevel(), getRandomItemType(h), h->getProf());
 };
 
-void TraderRoom::takeAction(Hero* h) {
+Chamber* TraderRoom::takeAction(Hero* h) {
     cout << "You came to a room with a merchant who offers you to see his items" << endl;
     cout << "Do you want to watch them? (Y/N)" << endl;
     char player_decision;
@@ -281,7 +289,7 @@ void TraderRoom::takeAction(Hero* h) {
     if (player_decision == 'Y')
         seeItems(h);
 
-    goNext(h);
+    return goNext(h);
 }
 
 void TraderRoom::seeItems(Hero* h) {
@@ -303,8 +311,6 @@ void TraderRoom::seeItems(Hero* h) {
     cin >> player_decision;
     if (player_decision == 'Y')
         buyItem(h);
-
-    goNext(h);
 }
 
 void TraderRoom::buyItem(Hero* h) {
@@ -329,7 +335,7 @@ void TraderRoom::buyItem(Hero* h) {
                     cout << "You do not have enough coins" << endl;
             }
             else {
-                cout << "You have already purchased this item" << endl;
+                cout << "You have already bought this item" << endl;
             }
         }
         else if (num == 2) {
@@ -343,7 +349,7 @@ void TraderRoom::buyItem(Hero* h) {
                     cout << "You do not have enough coins" << endl;
             }
             else {
-                cout << "You have already purchased this item" << endl;
+                cout << "You have already bought this item" << endl;
             }
         }
         else if (num == 3) {
@@ -357,11 +363,11 @@ void TraderRoom::buyItem(Hero* h) {
                     cout << "You do not have enough coins" << endl;
             }
             else {
-                cout << "You have already purchased this item" << endl;
+                cout << "You have already bought this item" << endl;
             }
         }
         else {
-            cout << "Invalid item number" << endl;
+            cout << "Invalid item number, try again" << endl;
         }
 
         if (!bought1 || !bought2 || !bought3) {
@@ -381,17 +387,18 @@ void TraderRoom::buyItem(Hero* h) {
 
 EmptyRoom::EmptyRoom(Hero *h) : SafeChamber(h) {}
 
-void EmptyRoom::takeAction(Hero* h) {
+Chamber* EmptyRoom::takeAction(Hero* h) {
     cout << "The room is completely empty, you have nothing to do here, so keep walking" << endl;
-    goNext(h);
+    return goNext(h);
 }
 
 
 StartingRoom::StartingRoom(Hero *h) : SafeChamber(h) {
+    srand (time(NULL));
     numOfChamber = 0;
 }
 
-void StartingRoom::takeAction(Hero *h) {
+Chamber* StartingRoom::takeAction(Hero *h) {
     cout << "Your adventure begins here" << endl;
-    goNext(h);
+    return goNext(h);
 }
