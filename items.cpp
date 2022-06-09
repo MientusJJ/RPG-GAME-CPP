@@ -39,7 +39,6 @@ protected:
 
 public:
 	Item(int level) {
-		srand(time(NULL));
 		item_ID = rand() % 1000;
 	}
 	int getValue() const { return value; }

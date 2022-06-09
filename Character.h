@@ -114,6 +114,7 @@ public:
 	void operator=(const Hero &) = delete;
 	void showStatistics();
 	void showEQ();
+	void showOneItem(ItemType,Profession);
 	void setAllStats();
 	void chooseClass();
 	void setmaxHealth(int);
