@@ -129,7 +129,7 @@ public:
 	void setMoney(int);
 	int getMoney();
 	void ChangeEQ(Item *);
-	bool fight(Character *);
+	bool fight(Character *,bool);
 private:
 	Hero();
 	static Hero *hero;

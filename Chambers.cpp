@@ -41,10 +41,13 @@ void Chest::openBox(Hero* h) {
 	cout << "You found " << coins << " gold in the chest" << endl;
 	h->setMoney(h->getMoney() + coins);
 
-	cout << "There is also an item in chest: " << endl;
-	showItemDetails(item,h->getProf());
+	cout << "There is also an item in chest" << endl;
 	cout << "Your current item: " << endl;
 	h->showOneItem(item->getType(), h->getProf());
+	cout << endl;
+	cout << "The item in the chest: " << endl;
+	showItemDetails(item,h->getProf());
+	
 	cout << "Do you want to replace your item with a new found one? (Y/N)" << endl;
 
 	char decision;
@@ -97,7 +100,7 @@ Chamber* BossChamber::takeAction(Hero *h) {
 }
 
 void BossChamber::finalFight(Hero *h) {
-	h->fight(boss_monster);
+	h->fight(boss_monster,1);
 }
 
 
@@ -184,9 +187,11 @@ Chamber* PassageChamber::goNext(Hero* h) {
 
             if (direction == 'L') {
                 next_chamber = new HealthRoom(h);
+				break;
             }
             else if (direction == 'R') {
                 next_chamber = new TraderRoom(h);
+				break;
             }
             else
                 cout << "Character not recognized, please retype" << endl;
@@ -197,7 +202,7 @@ Chamber* PassageChamber::goNext(Hero* h) {
 
         char decision;
         while (true) {
-            cout << "Do you want to face the boss?" << endl;
+            cout << "Do you want to face the boss? (Y/N)" << endl;
             cin >> decision;
 
             if (decision == 'Y')
@@ -232,6 +237,7 @@ MonsterRoom::MonsterRoom(Hero *h) : NormalChamber(h) {
 
 Chamber* MonsterRoom::takeAction(Hero *h) {
 	cout << "You have entered the room with the monster" << endl;
+	cout << "Your current health is: " << h->getcurrentHealth() << "/" << h->getmaxHealth() << endl;
 	cout << "Are you fighting or running? (F/R)" << endl;
 	char action;
 
@@ -255,7 +261,7 @@ Chamber* MonsterRoom::takeAction(Hero *h) {
 }
 
 void MonsterRoom::fight(Hero *h) {
-	h->fight(normal_monster);
+	h->fight(normal_monster,0);
 	if (h->getcurrentHealth() > 0)
 	{
 		h->levelup();
@@ -512,6 +518,7 @@ void TraderRoom::buyItem(Hero* h) {
 		}
 
 		if (!bought1 || !bought2 || !bought3) {
+			cout << "Your balance: " << h->getMoney() << endl;
 			cout << "Do you want to buy anything else? (Y/N)" << endl;
 
             while (true) {

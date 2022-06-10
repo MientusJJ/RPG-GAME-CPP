@@ -1,4 +1,5 @@
 #include "Character.h"
+#include <thread>
 string namesforMonsters[]
 {
 	"The Rainbow Mutant","The Crying Doll","The Icy Snake","The Night Worm","The Young Babbler","The Bruised Gorilla","The Venom Serpent"
@@ -14,11 +15,11 @@ const int defaultAttackMin = 2;
 const int defaultAttackMax = 5;
 const int counterAttackMin = 2;
 const int counterAttackMax = 3;
-const int defaultMonsterDefense = 5;
+const int defaultMonsterDefense = 3;
 const double defaultMonsterCriticalChance = 15.;
-const int defaultHealthMonster = 60;
-const int defaultAttackMonsterMin = 15;
-const int defaultAttackMonsterMax = 25;
+const int defaultHealthMonster = 55;
+const int defaultAttackMonsterMin = 8;
+const int defaultAttackMonsterMax = 15;
 
 Character::Character() {
 
@@ -443,7 +444,7 @@ void Hero::showStatistics()
 	cout << "Main Stat name: " << this->Class->getmainStatName() << endl;
 	cout << "Skill: " << this->Class->getspecialAbility() << endl;
 	cout << "Level: " << this->getlevel() << endl;
-	cout << "Main Stat: " << this->EQ->weapon_slot->getMainStat() + this->EQ->headgear_slot->getMainStat() + this->Class->getmainStat() << endl;
+	cout << "Main Stat: " << this->EQ->weapon_slot->getMainStat() + this->EQ->headgear_slot->getMainStat() + this->Class->getmainStat() + this->EQ->talisman_slot->getMainStat() << endl;
 	cout << "Max health: " << this->getmaxHealth() << endl;
 	cout << "Current health: " << this->getcurrentHealth() << endl;
 	cout << "Minimal damage: " << this->getminimalAttack() << endl;
@@ -506,9 +507,13 @@ void Hero::showEQ()
 void Hero::setAllStats()
 {
 	this->setmaxHealth(this->EQ->headgear_slot->getHealth() + this->EQ->armor_slot->getHealth());
+	if (this->getcurrentHealth() > this->getmaxHealth())
+	{
+		this->setcurrentHealth(this->getmaxHealth());
+	}
 	this->setcriticalChance(this->EQ->talisman_slot->getCriticalChance() + this->EQ->weapon_slot->getCriticalChance() + defaultCriticalChance * this->getlevel());
 	this->setdefense(this->EQ->armor_slot->getDefense() + this->EQ->headgear_slot->getDefense());
-	this->setAttack(this->EQ->weapon_slot->getMainStat() + this->EQ->headgear_slot->getMainStat() + this->Class->getmainStat(), this->EQ->weapon_slot->getMinDamage(), this->EQ->weapon_slot->getMaxDamage());
+	this->setAttack(this->EQ->weapon_slot->getMainStat() + this->EQ->headgear_slot->getMainStat() + this->Class->getmainStat()+this->EQ->talisman_slot->getMainStat(), this->EQ->weapon_slot->getMinDamage(), this->EQ->weapon_slot->getMaxDamage());
 	this->setBlockChance();
 	return;
 }
@@ -559,9 +564,10 @@ void Hero::ChangeEQ(Item *i)
 	cout << "Changing equipment completed" << endl;
 	return;
 }
-bool Hero::fight(Character * opponent)
+bool Hero::fight(Character * opponent,bool boss)
 {
 	bool whoIsAttacking = true;
+	chrono::milliseconds timespan(1000);
 	while (this->getcurrentHealth() != 0 && opponent->getcurrentHealth() != 0)
 	{
 		if (whoIsAttacking)
@@ -573,6 +579,11 @@ bool Hero::fight(Character * opponent)
 			opponent->attackOpponent(this);
 		}
 		whoIsAttacking = !whoIsAttacking;
+		cout << endl;
+		if (boss)
+		{
+			this_thread::sleep_for(timespan);
+		}
 	}
 	cout << endl;
 	return this->getcurrentHealth() != 0;
