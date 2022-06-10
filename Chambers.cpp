@@ -83,7 +83,7 @@ string Chamber::getName() {
 
 BossChamber::BossChamber(Hero *h) : Chamber(h) {
 	int lvl = h->getlevel() * 3 / 2;
-	boss_monster = new monster(lvl, "Great BOSS");
+	boss_monster = new monster(lvl, 1);
 }
 
 Chamber* BossChamber::takeAction(Hero *h) {
@@ -232,7 +232,7 @@ MonsterRoom::MonsterRoom(Hero *h) : NormalChamber(h) {
     chambersWithoutMonsters = 0;
     chambersWithoutTrader++;
 	chest = new Chest(h);
-	normal_monster = new monster(h->getlevel());
+	normal_monster = new monster(h->getlevel(),0);
 }
 
 Chamber* MonsterRoom::takeAction(Hero *h) {

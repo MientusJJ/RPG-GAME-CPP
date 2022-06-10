@@ -5,6 +5,11 @@ string namesforMonsters[]
 	"The Rainbow Mutant","The Crying Doll","The Icy Snake","The Night Worm","The Young Babbler","The Bruised Gorilla","The Venom Serpent"
 };
 const int sizenamesforMonsters = 7;
+string namesforBosses[]
+{
+	"Baron Nashor","Ender Dragon","Eredin","The Death Reaper","Gregoire De Gorgon"
+};
+const int sizenamesforBosses = 5;
 static double chance()
 {
 	return rand() % 100;
@@ -324,22 +329,27 @@ void monster::setmaximalAttack()
 	this->maximalAttack = defaultAttackMonsterMax * this->getlevel()*this->Class->getattackModifier();
 	return;
 }
-void monster::setName()
+void monster::setName(bool p)
 {
-	int r = rand() % sizenamesforMonsters;
-	this->name = namesforMonsters[r];
+	if (!p)
+	{
+		int r = rand() % sizenamesforMonsters;
+		this->name = namesforMonsters[r];
+	}
+	else
+	{
+		int r = rand() % sizenamesforBosses;
+		this->name = namesforBosses[r];
+	}
+	
 	return;
 }
-monster::monster(int lvl)
+monster::monster(int lvl,bool p)
 {
 	setALL(lvl);
-	this->setName();
+	this->setName(p);
 }
-monster::monster(int lvl, string name)
-{
-	setALL(lvl);
-	this->name = name;
-}
+
 void monster::setALL(int lvl)
 {
 	this->chooseClass();
