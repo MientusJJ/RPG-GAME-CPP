@@ -431,7 +431,7 @@ static void showItemDetails(Item * item, Profession prof) {
 		}
 		else
 		{
-			cout << ":\n\t Health: " << item->getHealth();
+			cout << "\n\t Health: " << item->getHealth();
 		}
 		cout << "\n\t value: " << item->getValue() << endl;
 	}
