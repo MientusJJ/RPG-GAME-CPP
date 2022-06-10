@@ -3,9 +3,45 @@
 
 #include <iostream>
 #include <cstdlib>
-#include <ctime>
 #include <string>
 using namespace std;
+
+
+static string namesForSwords[]
+        {
+                "Vanquisher","Kinslayer","Ashrune","Lightbringer","Mangler","Azurewrath","Spiteblade"
+        };
+
+static string namesForBows[]
+        {
+                "Meteor","Splintermark","Archangel","Pierce","Windbreaker","Beesting","Whisper"
+        };
+static string namesForMagicSticks[]
+        {
+                "Enigma","Prophecy","Visage","Snowfall","Frostward","Doombinder","Souleater"
+        };
+static string namesForArmors[]
+        {
+                "Leather Jerkin","Curator of Woe","Vest of the Titans","Pact of Hellfire","Visage of Silence","Frost Tunic of Might","Boon of Hate"
+        };
+static string namesForHelmets[]
+        {
+                "Helm of Eternal Fires","Headcover of Silent Worlds","Vengeful Ivory Helmet","Conqueror Golden Helmet","Stormguard Golden Helmet","Casque of the Dragons","Desolation Steel Headguard"
+        };
+static string namesForMagicHats[]
+        {
+                "Bandana of Lost Worlds","Faith's Cloth Cap","Pact of Tears","Tribute of Honor","Dawn of the Fallen","Might of the Night Sky","Fall of Ancient Power"
+        };
+static string namesForTalismans[]
+        {
+                "The Ruby Promise","The Shadow Passion","The Jade Favor","The Faint Core","The Idle Bond","The Austere Soul","The Ruby Twin"
+        };
+static string namesForShields[]
+        {
+                "Primal Tower Shield","Undead Heavy Shield","Wretched Heavy Shield","Ritual Tower Shield","Mercenary Shield","Bandit's Bronzed Shield","Demonic Glass Shield"
+        };
+
+const int namesTableSize = 7;
 
 enum Profession
 {
@@ -93,7 +129,8 @@ public:
 		else
 			main_stat = level + rand() % (level + 1);
 
-		name = "Sword";
+        int r = rand() % namesTableSize;
+        name = namesForSwords[r];
 	}
 	int getMainStat() const { return main_stat; }
 	string getMainStatName() const { return "strength"; }
@@ -113,7 +150,8 @@ public:
 		else
 			main_stat = level + rand() % (level + 1);
 
-		name = "MagicStick";
+        int r = rand() % namesTableSize;
+        name = namesForMagicSticks[r];
 	}
 	int getMainStat() const { return main_stat; }
 	string getMainStatName() const { return "intelligence"; }
@@ -133,7 +171,8 @@ public:
 		else
 			main_stat = level + rand() % (level + 1);
 
-		name = "Bow";
+        int r = rand() % namesTableSize;
+        name = namesForBows[r];
 	}
 	int getMainStat() const { return main_stat; }
 	string getMainStatName() const { return "agility"; }
@@ -160,7 +199,8 @@ public:
 
 		value = level * 120;
 
-		name = "Armor";
+        int r = rand() % namesTableSize;
+        name = namesForArmors[r];
 	}
 	int getDefense() const { return defense; }
 	int getHealth() const { return health; }
@@ -189,7 +229,9 @@ protected:
 public:
 	Helmet(int level) : Headgear(level) {
 		health = level * 10 + rand() % 201;
-		name = "Helmet";
+
+        int r = rand() % namesTableSize;
+        name = namesForHelmets[r];
 	}
 	int getHealth() const { return health; }
 	string getMainStatName() const { return "strength"; }
@@ -202,7 +244,9 @@ protected:
 public:
 	MagicHat(int level) : Headgear(level) {
 		intelligence = level + rand() % 2;
-		name = "MagicHat";
+
+        int r = rand() % namesTableSize;
+        name = namesForMagicHats[r];
 	}
 	int getMainStat() const { return intelligence; }
 	string getMainStatName() const { return "intelligence"; }
@@ -230,7 +274,9 @@ protected:
 public:
 	ScoutTalisman(int level) : Talisman(level) {
 		agility = level + rand() % 2;
-		name = "ScoutTalisman";
+
+        int r = rand() % namesTableSize;
+        name = namesForTalismans[r];
 	}
 	int getMainStat() const { return agility; }
 	string getMainStatName() const { return "agility"; }
@@ -243,7 +289,9 @@ protected:
 public:
 	WarriorTalisman(int level) : Talisman(level) {
 		strength = level + rand() % 2;
-		name = "WarriorTalisman";
+
+        int r = rand() % namesTableSize;
+        name = namesForTalismans[r];
 	}
 	int getMainStat() const { return strength; }
 	string getMainStatName() const { return "strength"; }
@@ -256,7 +304,9 @@ protected:
 public:
 	MageTalisman(int level) : Talisman(level) {
 		intelligence = level + rand() % 2;
-		name = "MageTalisman";
+
+        int r = rand() % namesTableSize;
+        name = namesForTalismans[r];
 	}
 	int getMainStat() const { return intelligence; }
 	string getMainStatName() const { return "intelligence"; }
@@ -274,7 +324,9 @@ public:
 		defense = level + rand() % 5;
 		block_chance = dRand(1.0, 20.0);
 		value = level * 90;
-		name = "Shield";
+
+        int r = rand() % namesTableSize;
+        name = namesForShields[r];
 	}
 
 	int getDefense() const override { return defense; }

@@ -6,7 +6,6 @@ int numOfChamber;
 int chambersWithoutMonsters;
 int chambersWithoutTrader;
 
-
 ItemType getRandomItemType(Hero* h) {
 	int type = rand() % 4;
 
