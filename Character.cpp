@@ -5,11 +5,6 @@ string namesforMonsters[]
 	"The Rainbow Mutant","The Crying Doll","The Icy Snake","The Night Worm","The Young Babbler","The Bruised Gorilla","The Venom Serpent"
 };
 const int sizenamesforMonsters = 7;
-string namesforBosses[]
-{
-	"Baron Nashor","Ender Dragon","Eredin","The Death Reaper","Gregoire De Gorgon"
-};
-const int sizenamesforBosses = 5;
 static double chance()
 {
 	return rand() % 100;
@@ -329,27 +324,22 @@ void monster::setmaximalAttack()
 	this->maximalAttack = defaultAttackMonsterMax * this->getlevel()*this->Class->getattackModifier();
 	return;
 }
-void monster::setName(bool p)
+void monster::setName()
 {
-	if (!p)
-	{
-		int r = rand() % sizenamesforMonsters;
-		this->name = namesforMonsters[r];
-	}
-	else
-	{
-		int r = rand() % sizenamesforBosses;
-		this->name = namesforBosses[r];
-	}
-	
+	int r = rand() % sizenamesforMonsters;
+	this->name = namesforMonsters[r];
 	return;
 }
-monster::monster(int lvl,bool p)
+monster::monster(int lvl)
 {
 	setALL(lvl);
-	this->setName(p);
+	this->setName();
 }
-
+monster::monster(int lvl, string name)
+{
+	setALL(lvl);
+	this->name = name;
+}
 void monster::setALL(int lvl)
 {
 	this->chooseClass();
@@ -580,6 +570,7 @@ bool Hero::fight(Character * opponent,bool boss)
 	chrono::milliseconds timespan(1000);
 	while (this->getcurrentHealth() != 0 && opponent->getcurrentHealth() != 0)
 	{
+        cout << endl;
 		if (whoIsAttacking)
 		{
 			this->attackOpponent(opponent);
@@ -589,7 +580,6 @@ bool Hero::fight(Character * opponent,bool boss)
 			opponent->attackOpponent(this);
 		}
 		whoIsAttacking = !whoIsAttacking;
-		cout << endl;
 		if (boss)
 		{
 			this_thread::sleep_for(timespan);

@@ -41,12 +41,13 @@ void Chest::openBox(Hero* h) {
 	cout << "You found " << coins << " gold in the chest" << endl;
 	h->setMoney(h->getMoney() + coins);
 
-	cout << "There is also an item in chest" << endl;
+	cout << "There is also an item in chest" << endl << endl;
 	cout << "Your current item: " << endl;
 	h->showOneItem(item->getType(), h->getProf());
 	cout << endl;
 	cout << "The item in the chest: " << endl;
 	showItemDetails(item,h->getProf());
+    cout << endl;
 	
 	cout << "Do you want to replace your item with a new found one? (Y/N)" << endl;
 
@@ -83,7 +84,7 @@ string Chamber::getName() {
 
 BossChamber::BossChamber(Hero *h) : Chamber(h) {
 	int lvl = h->getlevel() * 3 / 2;
-	boss_monster = new monster(lvl, 1);
+	boss_monster = new monster(lvl, "Great BOSS");
 }
 
 Chamber* BossChamber::takeAction(Hero *h) {
@@ -232,7 +233,7 @@ MonsterRoom::MonsterRoom(Hero *h) : NormalChamber(h) {
     chambersWithoutMonsters = 0;
     chambersWithoutTrader++;
 	chest = new Chest(h);
-	normal_monster = new monster(h->getlevel(),0);
+	normal_monster = new monster(h->getlevel());
 }
 
 Chamber* MonsterRoom::takeAction(Hero *h) {
@@ -431,6 +432,8 @@ Chamber* TraderRoom::takeAction(Hero* h) {
 
 void TraderRoom::seeItems(Hero* h) {
 	h->showEQ();
+    cout << endl;
+    cout << "Merchant items:" << endl;
 	cout << "item 1:" << endl;
 	showItemDetails(item1,h->getProf());
 	cout << "price: " << item1->getValue() << endl << endl;
