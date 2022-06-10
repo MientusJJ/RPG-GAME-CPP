@@ -353,14 +353,14 @@ public:
 	};
 };
 
-static void showItemDetails( Item * item,Profession prof) {
+static void showItemDetails(Item * item, Profession prof) {
 	if (item->getType() == weapon)
 	{
 		cout << "Weapon:\n\t name: " << item->getName() << "\n\t minimal Damage: " << item->getMinDamage() << "\n\t maximal Damage: " << item->getMaxDamage() << "\n\t " << item->getMainStatName() << ": " << item->getMainStat() << "\n\t value: " << item->getValue() << endl;
 	}
 	else if (item->getType() == talisman)
 	{
-		cout << "Talisman:\n\t name: " <<item->getName() << "\n\t " << item->getMainStatName() << ": " << item->getMainStat() << "\n\t Critical Chance: " << item->getCriticalChance() << "\n\t value: " << item->getValue() << endl;
+		cout << "Talisman:\n\t name: " << item->getName() << "\n\t " << item->getMainStatName() << ": " << item->getMainStat() << "\n\t Critical Chance: " << item->getCriticalChance() << "\n\t value: " << item->getValue() << endl;
 	}
 	else if (item->getType() == shield)
 	{
