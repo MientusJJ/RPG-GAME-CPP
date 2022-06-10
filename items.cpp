@@ -386,32 +386,4 @@ static void showItemDetails( Item * item,Profession prof) {
 	return;
 }
 
-/*
-int main() {
-	int level, type;
-	auto* factory = new ItemFactory;
-	Profession profession = warrior;
-	ItemType itemType;
-	cin >> level;
-	while (level != -1) {
-		cin >> type;
-		if (type == 0)
-			itemType = weapon;
-		else if (type == 1)
-			itemType = armor;
-		else if (type == 2)
-			itemType = headgear;
-		else if (type == 3)
-			itemType = talisman;
-		else
-			itemType = shield;
-		Item* item = ItemFactory::createItem(level, itemType, profession);
-		showItemDetails(item);
-		delete item;
-		cin >> level;
-	}
-	delete factory;
-	return 0;
-}
-*/
 #endif

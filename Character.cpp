@@ -112,7 +112,7 @@ void Character::attackOpponent(Character * opponent)
 	if (damage < 1) damage = 1;
 	opponent->getDamage(damage);
 	cout << this->getName() << " dealt " << damage << " damage to " << opponent->getName() << endl;
-	cout << "Current health of " << opponent->getName() << " is " << opponent->getcurrentHealth() << endl;;
+	cout << "Current health of " << opponent->getName() << " is " << opponent->getcurrentHealth() << endl;
 	return;
 }
 bool Character::useSpecialEffect(Character *opponent)
@@ -422,7 +422,7 @@ void Hero::setmaximalAttack(int s)
 }
 void Hero::setName()
 {
-	cout << "Write name of your hero: ";
+	cout << "Write name of your hero:" << endl;
 	string n;
 	cin >> n;
 	this->name = n;
@@ -440,9 +440,10 @@ void Hero::showStatistics()
 	cout << endl <<  "Statistics of your hero:" << endl;
 	cout << "Name: " << this->getName() << endl;
 	cout << "Class: " << this->Class->getProfName() << endl;
-	cout << "Main Stat: " << this->Class->getmainStatName() << endl;
+	cout << "Main Stat name: " << this->Class->getmainStatName() << endl;
 	cout << "Skill: " << this->Class->getspecialAbility() << endl;
 	cout << "Level: " << this->getlevel() << endl;
+    cout << "Main Stat: " << this->Class->getmainStat() << endl;
 	cout << "Max health: " << this->getmaxHealth() << endl;
 	cout << "Current health: " << this->getcurrentHealth() << endl;
 	cout << "Minimal damage: " << this->getminimalAttack() << endl;
@@ -451,7 +452,7 @@ void Hero::showStatistics()
 	cout << "Defense: " << this->getdefense() << endl;
 	if (this->Class->getProf() == warrior)
 	{
-		cout << "Block Chance: " << this->getBlockChance() << endl;
+		cout << "Block Chance: " << this->getBlockChance() << "%" << endl;
 	}
 	cout << "Amount of money: " << this->getMoney() << endl;
 	return;
@@ -554,6 +555,7 @@ void Hero::ChangeEQ(Item *i)
 {
 	this->EQ->ChangeItem(i);
 	this->setAllStats();
+
 	cout << "Changing equipment completed" << endl;
 	return;
 }
@@ -572,5 +574,6 @@ bool Hero::fight(Character * opponent)
 		}
 		whoIsAttacking = !whoIsAttacking;
 	}
+    cout << endl;
 	return this->getcurrentHealth() != 0;
 }

@@ -3,6 +3,8 @@
 #include "Chambers.h"
 using namespace std;
 int numOfChamber;
+int chambersWithoutMonsters;
+int chambersWithoutTrader;
 
 
 ItemType getRandomItemType(Hero* h) {
@@ -112,7 +114,7 @@ Chamber* PassageChamber::goNext(Hero* h) {
 		return nullptr;
 	}
 
-	if (numOfChamber < 20)
+	if (numOfChamber < 19)
 	{
 		cout << "Currently You are in Chamber number: " << numOfChamber << endl;
 		numOfChamber++;
@@ -154,11 +156,10 @@ Chamber* PassageChamber::goNext(Hero* h) {
                 cout << "Character not recognized, please retype" << endl;
         }
 
-
-		if (next == 0)
+		if (next == 0 || chambersWithoutMonsters == 3)
 			next_chamber = new MonsterRoom(h);
-		else if (next == 1)
-			next_chamber = new TrapRoom(h);
+		else if (next == 1 || chambersWithoutTrader == 8)
+			next_chamber = new TraderRoom(h);
 		else if (next == 2)
 			next_chamber = new TreasureRoom(h);
 		else if (next == 3)
@@ -166,12 +167,49 @@ Chamber* PassageChamber::goNext(Hero* h) {
 		else if (next == 4)
 			next_chamber = new PotionRoom(h);
 		else if (next == 5)
-			next_chamber = new TraderRoom(h);
+			next_chamber = new TrapRoom(h);
 		else
 			next_chamber = new EmptyRoom(h);
 	}
-	else
-		next_chamber = new BossChamber(h);
+	else if (numOfChamber == 19) {
+        numOfChamber++;
+
+        cout << "After this room, the next one will be with a boss" << endl;
+        cout << "The chambers have open doors, so you can see what is inside" << endl;
+        cout << "Where do you want to go? (HealthRoom - L, TraderRoom - R)" << endl;
+
+        char direction;
+        while (true) {
+            cin >> direction;
+
+            if (direction == 'L') {
+                next_chamber = new HealthRoom(h);
+            }
+            else if (direction == 'R') {
+                next_chamber = new TraderRoom(h);
+            }
+            else
+                cout << "Character not recognized, please retype" << endl;
+        }
+    }
+    else {
+        cout << "The last chamber is ahead of you - BossChamber" << endl;
+
+        char decision;
+        while (true) {
+            cout << "Do you want to face the boss?" << endl;
+            cin >> decision;
+
+            if (decision == 'Y')
+                break;
+            else if (decision == 'N')
+                cout << "You can't give up now, you are so close to your desired goal" << endl;
+            else
+                cout << "Character not recognized, please retype" << endl;
+        }
+
+        next_chamber = new BossChamber(h);
+    }
 
 
 	return next_chamber;
@@ -185,8 +223,9 @@ SafeChamber::SafeChamber(Hero *h) : PassageChamber(h) {}
 Chamber* SafeChamber::takeAction(Hero* h) { return nullptr; }
 
 
-MonsterRoom::MonsterRoom(Hero *h) : NormalChamber(h)
-{
+MonsterRoom::MonsterRoom(Hero *h) : NormalChamber(h) {
+    chambersWithoutMonsters = 0;
+    chambersWithoutTrader++;
 	chest = new Chest(h);
 	normal_monster = new monster(h->getlevel());
 }
@@ -252,7 +291,10 @@ void MonsterRoom::runAway(Hero *h) {
 }
 
 
-TrapRoom::TrapRoom(Hero *h) : NormalChamber(h) {}
+TrapRoom::TrapRoom(Hero *h) : NormalChamber(h) {
+    chambersWithoutMonsters++;
+    chambersWithoutTrader++;
+}
 
 Chamber* TrapRoom::takeAction(Hero *h) {
 	getDamage(h);
@@ -266,7 +308,10 @@ void TrapRoom::getDamage(Hero *h) {
 }
 
 
-PotionRoom::PotionRoom(Hero *h) : NormalChamber(h) {}
+PotionRoom::PotionRoom(Hero *h) : NormalChamber(h) {
+    chambersWithoutMonsters++;
+    chambersWithoutTrader++;
+}
 
 Chamber* PotionRoom::takeAction(Hero *h) {
 	cout << "In the room you came to there is a mysterious potion with unknown properties" << endl;
@@ -305,6 +350,8 @@ void PotionRoom::drinkPotion(Hero *h) {
 
 
 TreasureRoom::TreasureRoom(Hero *h) : SafeChamber(h) {
+    chambersWithoutMonsters++;
+    chambersWithoutTrader++;
 	chest = new Chest(h);
 }
 
@@ -331,7 +378,10 @@ void TreasureRoom::openBox(Hero *h) {
 }
 
 
-HealthRoom::HealthRoom(Hero *h) : SafeChamber(h) {}
+HealthRoom::HealthRoom(Hero *h) : SafeChamber(h) {
+    chambersWithoutMonsters++;
+    chambersWithoutTrader++;
+}
 
 Chamber* HealthRoom::takeAction(Hero *h) {
 	healthYourself(h);
@@ -346,6 +396,8 @@ void HealthRoom::healthYourself(Hero *h) {
 
 
 TraderRoom::TraderRoom(Hero* h) : SafeChamber(h) {
+    chambersWithoutMonsters++;
+    chambersWithoutTrader = 0;
 	item1 = ItemFactory::createItem(h->getlevel(), getRandomItemType(h), h->getProf());
 	item2 = ItemFactory::createItem(h->getlevel(), getRandomItemType(h), h->getProf());
 	item3 = ItemFactory::createItem(h->getlevel(), getRandomItemType(h), h->getProf());
@@ -410,7 +462,7 @@ void TraderRoom::buyItem(Hero* h) {
 
 	while (wantToBuy)
 	{
-		cout << "Enter the number of the item you want to buy: ";
+		cout << "Enter the number of the item you want to buy:" << endl;
 		cin >> num;
 
 		if (num == 1) {
@@ -482,7 +534,10 @@ void TraderRoom::buyItem(Hero* h) {
 }
 
 
-EmptyRoom::EmptyRoom(Hero *h) : SafeChamber(h) {}
+EmptyRoom::EmptyRoom(Hero *h) : SafeChamber(h) {
+    chambersWithoutMonsters++;
+    chambersWithoutTrader++;
+}
 
 Chamber* EmptyRoom::takeAction(Hero* h) {
 	cout << "The room is completely empty, you have nothing to do here, so keep walking" << endl;
@@ -491,8 +546,9 @@ Chamber* EmptyRoom::takeAction(Hero* h) {
 
 
 StartingRoom::StartingRoom(Hero *h) : SafeChamber(h) {
-
 	numOfChamber = 0;
+    chambersWithoutMonsters = 0;
+    chambersWithoutTrader = 0;
 }
 
 Chamber* StartingRoom::takeAction(Hero *h) {
