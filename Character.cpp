@@ -450,7 +450,7 @@ void Hero::levelup()
 void Hero::showStatistics()
 {
 	
-	cout << endl << dye::"Statistics of your hero:" << endl;
+	cout << endl << "Statistics of your hero:" << endl;
 	cout << "Name: " << this->getName() << endl;
 	cout << "Class: " << this->Class->getProfName() << endl;
 	cout << "Main Stat name: " << this->Class->getmainStatName() << endl;
