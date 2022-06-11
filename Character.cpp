@@ -1,5 +1,6 @@
 #include "Character.h"
 #include <thread>
+
 string namesforMonsters[]
 {
 	"The Rainbow Mutant","The Crying Doll","The Icy Snake","The Night Worm","The Young Babbler","The Bruised Gorilla","The Venom Serpent"
@@ -448,7 +449,8 @@ void Hero::levelup()
 }
 void Hero::showStatistics()
 {
-	cout << endl << "Statistics of your hero:" << endl;
+	
+	cout << endl << dye::"Statistics of your hero:" << endl;
 	cout << "Name: " << this->getName() << endl;
 	cout << "Class: " << this->Class->getProfName() << endl;
 	cout << "Main Stat name: " << this->Class->getmainStatName() << endl;
