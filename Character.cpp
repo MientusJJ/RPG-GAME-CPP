@@ -582,6 +582,7 @@ bool Hero::fight(Character * opponent,bool boss)
 	chrono::milliseconds timespan(1000);
 	while (this->getcurrentHealth() != 0 && opponent->getcurrentHealth() != 0)
 	{
+        cout << endl;
 		if (whoIsAttacking)
 		{
 			this->attackOpponent(opponent);
@@ -591,7 +592,7 @@ bool Hero::fight(Character * opponent,bool boss)
 			opponent->attackOpponent(this);
 		}
 		whoIsAttacking = !whoIsAttacking;
-		cout << endl;
+
 		if (boss)
 		{
 			this_thread::sleep_for(timespan);
