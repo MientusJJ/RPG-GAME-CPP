@@ -1,6 +1,6 @@
 #ifndef CHAMBER_H
 #define CHAMBER_H
-#include "items.cpp"
+#include "items.h"
 #include "Character.h"
 
 
