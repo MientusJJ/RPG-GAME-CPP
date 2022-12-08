@@ -7,13 +7,13 @@ class Equipment
 public:
 	Equipment(int, Profession);
 	~Equipment();
-	bool ChangeItem(Item*);
-	Item* weapon_slot;
-	Item* armor_slot;
-	Item* shield_slot;
-	Item* headgear_slot;
-	Item* talisman_slot;
+	bool ChangeItem(unique_ptr<Item>&);
+	unique_ptr<Item> weapon_slot;
+	unique_ptr<Item> armor_slot;
+	unique_ptr<Item> shield_slot;
+	unique_ptr<Item> headgear_slot;
+	unique_ptr<Item> talisman_slot;
 private:
-	ItemFactory* fac;
+	unique_ptr<ItemFactory> fac;
 };
 #endif

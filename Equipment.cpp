@@ -2,7 +2,7 @@
 
 Equipment::Equipment(int lvl,Profession prof)
 {
-	fac = new ItemFactory();
+	fac = make_unique<ItemFactory>();
 	weapon_slot = fac->createItem(lvl, weapon, prof);
 	armor_slot = fac->createItem(lvl, armor, prof);
 	talisman_slot = fac->createItem(lvl, talisman, prof);
@@ -15,42 +15,31 @@ Equipment::Equipment(int lvl,Profession prof)
 	{
 		shield_slot = nullptr;
 	}
-	delete fac;
 }
-bool Equipment::ChangeItem(Item* i)
+bool Equipment::ChangeItem(unique_ptr<Item>& i)
 {
 	if (i->getType() == weapon)
 	{
-		delete this->weapon_slot;
-		this->weapon_slot = i;
+		this->weapon_slot = move(i);
 	}
 	else if (i->getType() == armor)
 	{
-		delete this->armor_slot;
-		this->armor_slot = i;
+		this->armor_slot = move(i);
 	}
 	else if (i->getType() == talisman)
 	{
-		delete this->talisman_slot;
-		this->talisman_slot = i;
+		this->talisman_slot = move(i);
 	}
 	else if (i->getType() == headgear)
 	{
-		delete this->headgear_slot;
-		this->headgear_slot = i;
+		this->headgear_slot = move(i);
 	}
 	else if (i->getType() == shield)
 	{
-		delete this->shield_slot;
-		this->shield_slot = i;
+		this->shield_slot = move(i);
 	}
 	return true;
 }
 Equipment::~Equipment()
 {
-	delete weapon_slot;
-	delete shield_slot;
-	delete armor_slot;
-	delete headgear_slot;
-	delete talisman_slot;
 }

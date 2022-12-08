@@ -87,10 +87,10 @@ public:
 	virtual void chooseClass() {}
 	string getName();
 	virtual void setName() {}
-	bool useSpecialEffect(Character* opponent);
+	bool useSpecialEffect(shared_ptr<Character>& opponent);
 	int useSpecialAttack();
 	Profession getProf();
-	void attackOpponent(Character* opponent);
+	void attackOpponent(shared_ptr<Character>& opponent);
 protected:
 	
 	int minimalAttack;
@@ -102,15 +102,14 @@ protected:
 	double blockChance;
 	string name;
 	double criticalChance;
-	CharacterClass *Class;
+	unique_ptr<CharacterClass> Class;
 };
 
 class Hero : public Character
 {
 public:
 	~Hero();
-	static Hero* getInstance();
-	static shared_ptr<Hero>& getInstance2();
+	static shared_ptr<Hero>& getInstance();
 	Hero(Hero &other) = delete;
 	void operator=(const Hero &) = delete;
 	void showStatistics();
@@ -129,14 +128,14 @@ public:
 	void setBlockChance();
 	void setMoney(int);
 	int getMoney();
-	void ChangeEQ(Item*);
-	bool fight(Character*,bool);
+	void ChangeEQ(unique_ptr<Item>&);
+	bool fight(shared_ptr<Character>&,bool);
 private:
 	Hero();
-	static Hero* hero;
-	static shared_ptr<Hero> hero2;
+
+	static shared_ptr<Hero> hero;
 	int money;
-	Equipment *EQ;
+	unique_ptr<Equipment> EQ;
 };
 
 

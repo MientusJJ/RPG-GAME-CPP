@@ -9,6 +9,6 @@ public:
 	~Game();
 	void play();
 private:
-	Hero* hero;
+	shared_ptr<Hero> hero;
 };
 #endif

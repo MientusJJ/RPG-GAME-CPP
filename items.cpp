@@ -11,7 +11,7 @@ Weapon::Weapon(int level) : Item(level) {
 
     min_damage = static_cast<int>(round(makeRand(min, min + 9)));
     max_damage = static_cast<int>(round(makeRand(min_damage, max)));
-    critical_chance = dRand(1, 15);
+    critical_chance = makeRand(1, 15);
 
     value = level * 100;
 }
@@ -106,7 +106,7 @@ MagicHat::MagicHat(int level) : Headgear(level) {
 Talisman::Talisman(int level) : Item(level) {
     type = talisman;
 
-    critical_chance = dRand(1.0, 10.0);
+    critical_chance = makeRand(1.0, 10.0);
 
     value = level * 60;
 }
@@ -141,7 +141,7 @@ Shield::Shield(int level) : Item(level) {
     type = shield;
 
     defense = static_cast<int>(round(makeRand(level, level+5)));
-    block_chance = dRand(1.0, 20.0);
+    block_chance = makeRand(1.0, 20.0);
     value = level * 90;
 
     int r = static_cast<int>(round(makeRand(0, namesTableSize - 1)));
@@ -149,20 +149,20 @@ Shield::Shield(int level) : Item(level) {
 }
 
 
-Item*  ItemFactory::createItem(int level, ItemType type, Profession profession)
+unique_ptr<Item>  ItemFactory::createItem(int level, ItemType type, Profession profession)
 {
-   Item* item = nullptr;
+    unique_ptr<Item>item = nullptr;
 
    if (type == weapon)
    {
        if (profession == warrior) {
-           item = new Sword(level);
+           item = make_unique<Sword>(level);
        }
        else if (profession == scout) {
-           item = new Bow(level);
+           item = make_unique<Bow>(level);
        }
        else if (profession == mage) {
-           item = new MagicStick(level);
+           item = make_unique<MagicStick>(level);
        }
        else {
            cout << "wrong class value" << endl;
@@ -170,18 +170,18 @@ Item*  ItemFactory::createItem(int level, ItemType type, Profession profession)
    }
    else if (type == armor)
    {
-       item = new Armor(level);
+       item = make_unique<Armor>(level);
    }
    else if (type == headgear)
    {
        if (profession == warrior) {
-           item = new Helmet(level);
+           item = make_unique<Helmet>(level);
        }
        else if (profession == scout) {
-           item = new Helmet(level);
+           item = make_unique<Helmet>(level);
        }
        else if (profession == mage) {
-           item = new MagicHat(level);
+           item = make_unique<MagicHat>(level);
        }
        else {
            cout << "wrong class value" << endl;
@@ -190,13 +190,13 @@ Item*  ItemFactory::createItem(int level, ItemType type, Profession profession)
    else if (type == talisman)
    {
        if (profession == warrior) {
-           item = new WarriorTalisman(level);
+           item = make_unique<WarriorTalisman>(level);
        }
        else if (profession == scout) {
-           item = new ScoutTalisman(level);
+           item = make_unique<ScoutTalisman>(level);
        }
        else if (profession == mage) {
-           item = new MageTalisman(level);
+           item = make_unique<MageTalisman>(level);
        }
        else {
            cout << "wrong class value" << endl;
@@ -205,7 +205,7 @@ Item*  ItemFactory::createItem(int level, ItemType type, Profession profession)
    else if (type == shield)
    {
        if (profession == warrior)
-           item = new Shield(level);
+           item = make_unique<Shield>(level);
        else {
            cout << "wrong class value" << endl;
        }

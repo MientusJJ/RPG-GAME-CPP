@@ -23,10 +23,7 @@ enum ItemType
     talisman = 3,
     shield = 4
 };
-static double dRand(double fMin, double fMax)
-{
-    return makeRand(fMin, fMax);
-}
+
 class Item {
 protected:
     int item_ID;
@@ -184,10 +181,10 @@ public:
 
 class ItemFactory {
 public:
-    static Item* createItem(int level, ItemType type, Profession profession);
+    static unique_ptr<Item> createItem(int level, ItemType type, Profession profession);
 };
 
-static void showItemDetails(Item* item, Profession prof)
+static void showItemDetails(unique_ptr<Item>& item, Profession prof)
 {
     if (item->getType() == weapon)
     {

@@ -19,7 +19,6 @@ Character::Character() {
 
 }
 Character::~Character() {
-	delete Class;
 
 }
 int Character::getminimalAttack()
@@ -96,7 +95,7 @@ Profession Character::getProf()
 {
 	return this->Class->getProf();
 }
-void Character::attackOpponent(Character* opponent)
+void Character::attackOpponent(shared_ptr<Character>& opponent)
 {
 	if (!this->useSpecialEffect(opponent))
 	{
@@ -110,7 +109,7 @@ void Character::attackOpponent(Character* opponent)
 	cout << "Current health of " << opponent->getName() << " is " << opponent->getcurrentHealth() << endl;
 	return;
 }
-bool Character::useSpecialEffect(Character* opponent)
+bool Character::useSpecialEffect(shared_ptr<Character>& opponent)
 {
 	if (this->Class->getProf() == mage || opponent->Class->getProf() == mage)
 	{
@@ -269,15 +268,15 @@ void monster::chooseClass()
 	int p = static_cast<int>(round(makeRand(1, 3)));
 	if (p == 1)
 	{
-		this->Class = new Warrior;
+		this->Class = make_unique<Warrior>();
 	}
 	else if (p == 2)
 	{
-		this->Class = new Scout;
+		this->Class = make_unique<Scout>();
 	}
 	else
 	{
-		this->Class = new Mage;
+		this->Class = make_unique<Mage>();
 	}
 }
 void monster::setmaxHealth()
@@ -351,25 +350,16 @@ void monster::setALL(int lvl)
 }
 monster::~monster()
 {
-	delete Class;
 }
-Hero* Hero::hero = nullptr;
-shared_ptr<Hero> Hero::hero2 = nullptr;
-Hero *Hero::getInstance()
+
+shared_ptr<Hero> Hero::hero = nullptr;
+shared_ptr<Hero>& Hero::getInstance()
 {
 	if (hero == nullptr)
 	{
-		hero = new Hero();
+		hero.reset(new Hero());
 	}
 	return hero;
-}
-shared_ptr<Hero>& Hero::getInstance2()
-{
-	if (hero2 == nullptr)
-	{
-		hero2.reset(new Hero());
-	}
-	return hero2;
 }
 Hero::Hero()
 {
@@ -377,7 +367,7 @@ Hero::Hero()
 	this->chooseClass();
 	this->setlevel(1);
 	this->setMoney(100);
-	EQ = new Equipment(this->getlevel(), this->Class->getProf());
+	EQ = make_unique<Equipment>(this->getlevel(), this->Class->getProf());
 	this->setAllStats();
 	this->setcurrentHealth(this->getmaxHealth());
 
@@ -385,7 +375,6 @@ Hero::Hero()
 }
 Hero::~Hero()
 {
-	delete EQ;
 }
 void Hero::chooseClass()
 {
@@ -400,17 +389,17 @@ void Hero::chooseClass()
 	cout << "Your class for the whole game is: ";
 	if (ch == "1")
 	{
-		this->Class = new Warrior;
+		this->Class = make_unique<Warrior>();
 		cout << "Warrior\n";
 	}
 	else if (ch == "2")
 	{
-		this->Class = new Scout;
+		this->Class = make_unique<Scout>();
 		cout << "Scout\n";
 	}
 	else
 	{
-		this->Class = new Mage;
+		this->Class = make_unique<Mage>();
 		cout << "Mage\n";
 	}
 
@@ -566,7 +555,7 @@ int Hero::getMoney()
 {
 	return this->money;
 }
-void Hero::ChangeEQ(Item* i)
+void Hero::ChangeEQ(unique_ptr<Item>&i)
 {
 	this->EQ->ChangeItem(i);
 	this->setAllStats();
@@ -574,7 +563,7 @@ void Hero::ChangeEQ(Item* i)
 	cout << "Changing equipment completed" << endl;
 	return;
 }
-bool Hero::fight(Character * opponent,bool boss)
+bool Hero::fight(shared_ptr<Character>& opponent,bool boss)
 {
 	bool whoIsAttacking = true;
 	chrono::milliseconds timespan(1000);
@@ -587,7 +576,8 @@ bool Hero::fight(Character * opponent,bool boss)
 		}
 		else
 		{
-			opponent->attackOpponent(this);
+			shared_ptr<Character> h = this->getInstance();
+			opponent->attackOpponent(h);
 		}
 		whoIsAttacking = !whoIsAttacking;
 

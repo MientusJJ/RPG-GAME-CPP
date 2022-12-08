@@ -61,5 +61,9 @@ static double chance()
     return makeRand(1, 100);
 }
 constexpr double dodge = 33.0;
+static char makeBig(char c)
+{
+    return  std::toupper(c);
+}
 #endif
 

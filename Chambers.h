@@ -6,134 +6,134 @@
 
 class Chest {
 protected:
-	Item* item;
+	unique_ptr<Item> item;
 
 
 public:
-	Chest(Hero*hero);
-	void openBox(Hero*hero);
+	Chest(shared_ptr<Hero>&h);
+	void openBox(shared_ptr<Hero>&h);
 };
 
 class Chamber {
 protected:
 	int chamber_ID;
 	string name;
-	Hero* hero;
+	shared_ptr<Hero>hero;
 
 public:
-	Chamber(Hero*h);
-	virtual Chamber* takeAction(Hero* h);
+	Chamber(shared_ptr<Hero>& h);
+	virtual unique_ptr<Chamber> takeAction(shared_ptr<Hero>&h);
 	int getChamberID();
 	string getName();
 };
 
 class BossChamber : public Chamber {
 protected:
-	monster* boss_monster;
+	shared_ptr<monster> boss_monster;
 
 public:
-	BossChamber(Hero* h);
-	Chamber* takeAction(Hero* h);
+	BossChamber(shared_ptr<Hero>&h);
+	unique_ptr<Chamber> takeAction(shared_ptr<Hero>&h);
 
 private:
-	void finalFight(Hero* h);
+	void finalFight(shared_ptr<Hero>&h);
 };
 
 class PassageChamber : public Chamber {
 public:
-	PassageChamber(Hero*h);
-	virtual Chamber* takeAction(Hero* h);
-	static Chamber* goNext(Hero* h);
+	PassageChamber(shared_ptr<Hero>& h);
+	virtual unique_ptr<Chamber> takeAction(shared_ptr<Hero>&h);
+	static unique_ptr<Chamber> goNext(shared_ptr<Hero>&h);
 };
 
 class NormalChamber : public PassageChamber {
 public:
-	NormalChamber(Hero* h);
-	Chamber* takeAction(Hero* hh);
+	NormalChamber(shared_ptr<Hero>&h);
+	unique_ptr<Chamber> takeAction(shared_ptr<Hero>&h);
 };
 class SafeChamber : public PassageChamber {
 public:
-	SafeChamber(Hero* h);
-	Chamber* takeAction(Hero* h);
+	SafeChamber(shared_ptr<Hero>&h);
+	unique_ptr<Chamber> takeAction(shared_ptr<Hero>&h);
 };
 
 class MonsterRoom : public NormalChamber {
 protected:
-	monster* normal_monster;
-	Chest* chest;
+	shared_ptr<monster> normal_monster;
+	unique_ptr<Chest> chest;
 
 public:
-	MonsterRoom(Hero* h);
-	Chamber* takeAction(Hero* h);
+	MonsterRoom(shared_ptr<Hero>&h);
+	unique_ptr<Chamber> takeAction(shared_ptr<Hero>&h);
 
 private:
-	void fight(Hero* h);
-	void runAway(Hero* h);
+	void fight(shared_ptr<Hero>&h);
+	void runAway(shared_ptr<Hero>&h);
 };
 
 class TrapRoom : public NormalChamber {
 public:
-	TrapRoom(Hero* h);
-	Chamber* takeAction(Hero* h);
+	TrapRoom(shared_ptr<Hero>&h);
+	unique_ptr<Chamber> takeAction(shared_ptr<Hero>&h);
 
 private:
-	void getDamage(Hero* h);
+	void getDamage(shared_ptr<Hero>&h);
 };
 
 class PotionRoom : public NormalChamber {
 public:
-	PotionRoom(Hero* h);
-	Chamber* takeAction(Hero* h);
+	PotionRoom(shared_ptr<Hero>&h);
+	unique_ptr<Chamber> takeAction(shared_ptr<Hero>&h);
 
 private:
-	void drinkPotion(Hero* h);
+	void drinkPotion(shared_ptr<Hero>&h);
 };
 
 class TreasureRoom : public SafeChamber {
 protected:
-	Chest* chest;
+	unique_ptr<Chest> chest;
 
 public:
-	TreasureRoom(Hero* h);
-	Chamber* takeAction(Hero* h);
+	TreasureRoom(shared_ptr<Hero>&h);
+	unique_ptr<Chamber> takeAction(shared_ptr<Hero>&h);
 
 private:
-	void openBox(Hero* h);
+	void openBox(shared_ptr<Hero>&h);
 };
 
 class HealthRoom : public SafeChamber {
 public:
-	HealthRoom(Hero* h);
-	Chamber* takeAction(Hero*h);
+	HealthRoom(shared_ptr<Hero>&h);
+	unique_ptr<Chamber> takeAction(shared_ptr<Hero>&h);
 
 private:
-	void healthYourself(Hero*h);
+	void healthYourself(shared_ptr<Hero>&h);
 };
 
 class TraderRoom : public SafeChamber {
 protected:
-	Item* item1;
-	Item* item2;
-	Item* item3;
+	unique_ptr<Item> item1;
+	unique_ptr<Item> item2;
+	unique_ptr<Item> item3;
 
 public:
-	TraderRoom(Hero*h);
-	Chamber* takeAction(Hero*h);
+	TraderRoom(shared_ptr<Hero>&h);
+	unique_ptr<Chamber> takeAction(shared_ptr<Hero>&h);
 
 private:
-	void seeItems(Hero*h);
-	void buyItem(Hero*h);
+	void seeItems(shared_ptr<Hero>&h);
+	void buyItem(shared_ptr<Hero>&h);
 };
 
 class EmptyRoom : public SafeChamber {
 public:
-	EmptyRoom(Hero*h);
-	Chamber* takeAction(Hero*h);
+	EmptyRoom(shared_ptr<Hero>&h);
+	unique_ptr<Chamber> takeAction(shared_ptr<Hero>&h);
 };
 
 class StartingRoom : public SafeChamber {
 public:
-	StartingRoom(Hero*h);
-	Chamber* takeAction(Hero*h);
+	StartingRoom(shared_ptr<Hero>&h);
+	unique_ptr<Chamber> takeAction(shared_ptr<Hero>&h);
 };
 #endif

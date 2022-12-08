@@ -6,7 +6,7 @@ Game::Game()
 void Game::play()
 {
 	hero = Hero::getInstance();
-	Chamber *CurrentCham = new StartingRoom(hero);
+	unique_ptr<Chamber>CurrentCham = make_unique<StartingRoom>(hero);
 	while (CurrentCham != nullptr)
 	{
 		CurrentCham = CurrentCham->takeAction(hero);
@@ -14,5 +14,4 @@ void Game::play()
 }
 Game::~Game()
 {
-	delete hero;
 }
