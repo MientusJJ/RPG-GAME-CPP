@@ -1,16 +1,17 @@
+#pragma once
 #ifndef CHAMBER_H
 #define CHAMBER_H
 #include "items.h"
 #include "Character.h"
 
-
 class Chest {
 protected:
 	Item* item;
 
+
 public:
-	Chest(Hero* hero);
-	void openBox(Hero* hero);
+	Chest(Hero*hero);
+	void openBox(Hero*hero);
 };
 
 class Chamber {
@@ -20,8 +21,8 @@ protected:
 	Hero* hero;
 
 public:
-	Chamber(Hero* h);
-	virtual Chamber* takeAction(Hero *h);
+	Chamber(Hero*h);
+	virtual Chamber* takeAction(Hero* h);
 	int getChamberID();
 	string getName();
 };
@@ -31,16 +32,16 @@ protected:
 	monster* boss_monster;
 
 public:
-	BossChamber(Hero *h);
-	Chamber* takeAction(Hero *h);
+	BossChamber(Hero* h);
+	Chamber* takeAction(Hero* h);
 
 private:
-	void finalFight(Hero *h);
+	void finalFight(Hero* h);
 };
 
 class PassageChamber : public Chamber {
 public:
-	PassageChamber(Hero* h);
+	PassageChamber(Hero*h);
 	virtual Chamber* takeAction(Hero* h);
 	static Chamber* goNext(Hero* h);
 };
@@ -48,7 +49,7 @@ public:
 class NormalChamber : public PassageChamber {
 public:
 	NormalChamber(Hero* h);
-	Chamber* takeAction(Hero* h);
+	Chamber* takeAction(Hero* hh);
 };
 class SafeChamber : public PassageChamber {
 public:
@@ -63,29 +64,29 @@ protected:
 
 public:
 	MonsterRoom(Hero* h);
-	Chamber* takeAction(Hero *h);
+	Chamber* takeAction(Hero* h);
 
 private:
-	void fight(Hero *h);
-	void runAway(Hero *h);
+	void fight(Hero* h);
+	void runAway(Hero* h);
 };
 
 class TrapRoom : public NormalChamber {
 public:
 	TrapRoom(Hero* h);
-	Chamber* takeAction(Hero *h);
+	Chamber* takeAction(Hero* h);
 
 private:
-	void getDamage(Hero *h);
+	void getDamage(Hero* h);
 };
 
 class PotionRoom : public NormalChamber {
 public:
 	PotionRoom(Hero* h);
-	Chamber* takeAction(Hero *h);
+	Chamber* takeAction(Hero* h);
 
 private:
-	void drinkPotion(Hero *h);
+	void drinkPotion(Hero* h);
 };
 
 class TreasureRoom : public SafeChamber {
@@ -94,19 +95,19 @@ protected:
 
 public:
 	TreasureRoom(Hero* h);
-	Chamber* takeAction(Hero *h);
+	Chamber* takeAction(Hero* h);
 
 private:
-	void openBox(Hero *h);
+	void openBox(Hero* h);
 };
 
 class HealthRoom : public SafeChamber {
 public:
 	HealthRoom(Hero* h);
-	Chamber* takeAction(Hero *h);
+	Chamber* takeAction(Hero*h);
 
 private:
-	void healthYourself(Hero *h);
+	void healthYourself(Hero*h);
 };
 
 class TraderRoom : public SafeChamber {
@@ -116,23 +117,23 @@ protected:
 	Item* item3;
 
 public:
-	TraderRoom(Hero* h);
-	Chamber* takeAction(Hero* h);
+	TraderRoom(Hero*h);
+	Chamber* takeAction(Hero*h);
 
 private:
-	void seeItems(Hero* h);
-	void buyItem(Hero* h);
+	void seeItems(Hero*h);
+	void buyItem(Hero*h);
 };
 
 class EmptyRoom : public SafeChamber {
 public:
-	EmptyRoom(Hero* h);
-	Chamber* takeAction(Hero* h);
+	EmptyRoom(Hero*h);
+	Chamber* takeAction(Hero*h);
 };
 
 class StartingRoom : public SafeChamber {
 public:
-	StartingRoom(Hero* h);
-	Chamber* takeAction(Hero* h);
+	StartingRoom(Hero*h);
+	Chamber* takeAction(Hero*h);
 };
 #endif

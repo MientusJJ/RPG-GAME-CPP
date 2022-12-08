@@ -2,7 +2,6 @@
 
 Game::Game()
 {
-	srand(time(NULL));
 }
 void Game::play()
 {

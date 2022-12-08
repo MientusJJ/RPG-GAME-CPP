@@ -1,20 +1,8 @@
 #include "Character.h"
 #include <thread>
 
-string namesforMonsters[]
-{
-	"The Rainbow Mutant","The Crying Doll","The Icy Snake","The Night Worm","The Young Babbler","The Bruised Gorilla","The Venom Serpent"
-};
-const int sizenamesforMonsters = 7;
-string namesforBosses[]
-{
-	"Baron Nashor","Ender Dragon","Eredin","The Death Reaper","Gregoire De Gorgon"
-};
-const int sizenamesforBosses = 5;
-static double chance()
-{
-	return rand() % 100;
-}
+
+
 const int defaultHealth = 50;
 const double defaultCriticalChance = 3.;
 const int defaultAttackMin = 2;
@@ -108,13 +96,13 @@ Profession Character::getProf()
 {
 	return this->Class->getProf();
 }
-void Character::attackOpponent(Character * opponent)
+void Character::attackOpponent(Character* opponent)
 {
 	if (!this->useSpecialEffect(opponent))
 	{
 		return;
 	}
-	int damage = rand() % this->getmaximalAttack() + this->getminimalAttack();
+	int damage = static_cast<int>(round(makeRand(this->getminimalAttack(), this->getmaximalAttack())));
 	damage = damage * this->useSpecialAttack() - opponent->getdefense();
 	if (damage < 1) damage = 1;
 	opponent->getDamage(damage);
@@ -122,7 +110,7 @@ void Character::attackOpponent(Character * opponent)
 	cout << "Current health of " << opponent->getName() << " is " << opponent->getcurrentHealth() << endl;
 	return;
 }
-bool Character::useSpecialEffect(Character *opponent)
+bool Character::useSpecialEffect(Character* opponent)
 {
 	if (this->Class->getProf() == mage || opponent->Class->getProf() == mage)
 	{
@@ -278,7 +266,7 @@ Mage::~Mage()
 }
 void monster::chooseClass()
 {
-	int p = rand() % 3 + 1;
+	int p = static_cast<int>(round(makeRand(1, 3)));
 	if (p == 1)
 	{
 		this->Class = new Warrior;
@@ -334,12 +322,12 @@ void monster::setName(bool p)
 {
 	if (!p)
 	{
-		int r = rand() % sizenamesforMonsters;
+		int r = static_cast<int>(round(makeRand(0, sizenamesforMonsters-1)));
 		this->name = namesforMonsters[r];
 	}
 	else
 	{
-		int r = rand() % sizenamesforBosses;
+		int r = static_cast<int>(round(makeRand(0, sizenamesforBosses - 1)));
 		this->name = namesforBosses[r];
 	}
 	
@@ -365,7 +353,7 @@ monster::~monster()
 {
 	delete Class;
 }
-Hero *Hero::hero = nullptr;
+Hero* Hero::hero = nullptr;
 Hero *Hero::getInstance()
 {
 	if (hero == nullptr)
@@ -383,6 +371,7 @@ Hero::Hero()
 	EQ = new Equipment(this->getlevel(), this->Class->getProf());
 	this->setAllStats();
 	this->setcurrentHealth(this->getmaxHealth());
+
 
 }
 Hero::~Hero()
@@ -568,7 +557,7 @@ int Hero::getMoney()
 {
 	return this->money;
 }
-void Hero::ChangeEQ(Item *i)
+void Hero::ChangeEQ(Item* i)
 {
 	this->EQ->ChangeItem(i);
 	this->setAllStats();

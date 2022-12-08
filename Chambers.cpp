@@ -1,16 +1,17 @@
 #include <iostream>
 #include <cstdlib>
 #include "Chambers.h"
+#include "Items.h"
 using namespace std;
 int numOfChamber;
 int chambersWithoutMonsters;
 int chambersWithoutTrader;
 
-ItemType getRandomItemType(Hero* h) {
-	int type = rand() % 4;
+ItemType getRandomItemType( Hero*h) {
+	int type = static_cast<int>(round(makeRand(0, 3)));
 
 	if (h->getProf() == warrior) {
-		type += rand() % 2;
+		type += static_cast<int>(round(makeRand(0, 1)));
 	}
 
 	ItemType itemType;
@@ -29,14 +30,13 @@ ItemType getRandomItemType(Hero* h) {
 }
 
 
-Chest::Chest(Hero* h) {
+Chest::Chest(Hero*h) {
 	ItemType itemType = getRandomItemType(h);
-
 	item = ItemFactory::createItem(h->getlevel(), itemType, h->getProf());
 }
 
-void Chest::openBox(Hero* h) {
-	int coins = rand() % (h->getlevel() * 100);
+void Chest::openBox(Hero*h) {
+	int coins = static_cast<int>(round(makeRand(0, h->getlevel() * 100)));
 	cout << "You found " << coins << " gold in the chest" << endl;
 	h->setMoney(h->getMoney() + coins);
 
@@ -65,12 +65,12 @@ void Chest::openBox(Hero* h) {
 }
 
 
-Chamber::Chamber(Hero* h) {
-	chamber_ID = rand() % 1000;
+Chamber::Chamber(Hero*h) {
+	chamber_ID = static_cast<int>(makeRand(1,1000));
 	hero = h->getInstance();
 }
 
-Chamber* Chamber::takeAction(Hero *h) { return nullptr; }
+Chamber* Chamber::takeAction(Hero*h) { return nullptr; }
 
 int Chamber::getChamberID() {
 	return chamber_ID;
@@ -81,12 +81,12 @@ string Chamber::getName() {
 }
 
 
-BossChamber::BossChamber(Hero *h) : Chamber(h) {
+BossChamber::BossChamber(Hero*h) : Chamber(h) {
 	int lvl = h->getlevel() * 3 / 2;
 	boss_monster = new monster(lvl, "Great BOSS");
 }
 
-Chamber* BossChamber::takeAction(Hero *h) {
+Chamber* BossChamber::takeAction(Hero*h) {
 	cout << "You have entered the boss's chamber" << endl;
 	cout << "The last and hardest fight is ahead of you" << endl;
 	finalFight(h);
@@ -99,16 +99,16 @@ Chamber* BossChamber::takeAction(Hero *h) {
 	return nullptr;
 }
 
-void BossChamber::finalFight(Hero *h) {
+void BossChamber::finalFight(Hero*h) {
 	h->fight(boss_monster,1);
 }
 
 
-PassageChamber::PassageChamber(Hero *h) : Chamber(h) {}
+PassageChamber::PassageChamber(Hero*h) : Chamber(h) {}
 
-Chamber* PassageChamber::takeAction(Hero* h) { return nullptr; }
+Chamber* PassageChamber::takeAction(Hero*h) { return nullptr; }
 
-Chamber* PassageChamber::goNext(Hero* h) {
+Chamber* PassageChamber::goNext(Hero*h) {
 	Chamber* next_chamber;
 
 	if (h->getcurrentHealth() == 0) {
@@ -140,8 +140,8 @@ Chamber* PassageChamber::goNext(Hero* h) {
 
 		cout << "Where do you want to go? (left - L, right - R)" << endl;
 
-		int left = rand() % 7;
-		int right = rand() % 7;
+		int left = static_cast<int>(round(makeRand(0,6)));
+		int right = static_cast<int>(round(makeRand(0, 6)));
 		int next;
 
         char direction;
@@ -225,21 +225,21 @@ Chamber* PassageChamber::goNext(Hero* h) {
 }
 
 
-NormalChamber::NormalChamber(Hero *h) : PassageChamber(h) {}
-Chamber* NormalChamber::takeAction(Hero* h) { return nullptr; }
+NormalChamber::NormalChamber(Hero*h) : PassageChamber(h) {}
+Chamber* NormalChamber::takeAction(Hero*h) { return nullptr; }
 
-SafeChamber::SafeChamber(Hero *h) : PassageChamber(h) {}
-Chamber* SafeChamber::takeAction(Hero* h) { return nullptr; }
+SafeChamber::SafeChamber(Hero*h) : PassageChamber(h) {}
+Chamber* SafeChamber::takeAction(Hero*h) { return nullptr; }
 
 
-MonsterRoom::MonsterRoom(Hero *h) : NormalChamber(h) {
+MonsterRoom::MonsterRoom(Hero*h) : NormalChamber(h) {
     chambersWithoutMonsters = 0;
     chambersWithoutTrader++;
 	chest = new Chest(h);
 	normal_monster = new monster(h->getlevel(), 0);
 }
 
-Chamber* MonsterRoom::takeAction(Hero *h) {
+Chamber* MonsterRoom::takeAction(Hero*h) {
 	cout << "You have entered the room with the monster" << endl;
 	cout << "Your current health is: " << h->getcurrentHealth() << "/" << h->getmaxHealth() << endl;
 	cout << "Are you fighting or running? (F/R)" << endl;
@@ -264,7 +264,9 @@ Chamber* MonsterRoom::takeAction(Hero *h) {
 	return goNext(h);
 }
 
-void MonsterRoom::fight(Hero *h) {
+void MonsterRoom::fight(Hero*h)
+{
+
 	h->fight(normal_monster, 0);
 	if (h->getcurrentHealth() > 0)
 	{
@@ -290,8 +292,8 @@ void MonsterRoom::fight(Hero *h) {
 	}
 }
 
-void MonsterRoom::runAway(Hero *h) {
-	int chance = rand() % 10;
+void MonsterRoom::runAway(Hero*h) {
+	const int chance = static_cast<int>(makeRand(0, 10));
 
 	if (chance < 3) {
 		cout << "While escaping you got hit by a monster" << endl;
@@ -303,29 +305,29 @@ void MonsterRoom::runAway(Hero *h) {
 }
 
 
-TrapRoom::TrapRoom(Hero *h) : NormalChamber(h) {
+TrapRoom::TrapRoom(Hero*h) : NormalChamber(h) {
     chambersWithoutMonsters++;
     chambersWithoutTrader++;
 }
 
-Chamber* TrapRoom::takeAction(Hero *h) {
+Chamber* TrapRoom::takeAction(Hero*h) {
 	getDamage(h);
 	return goNext(h);
 }
 
-void TrapRoom::getDamage(Hero *h) {
+void TrapRoom::getDamage(Hero*h) {
 	cout << "There was a trap in the room that has hurted you" << endl;
 	h->getDamage(h->getmaxHealth() * 0.2);
 	cout << "Your current health is: " << h->getcurrentHealth() << "/" << h->getmaxHealth() << endl;
 }
 
 
-PotionRoom::PotionRoom(Hero *h) : NormalChamber(h) {
+PotionRoom::PotionRoom(Hero*h) : NormalChamber(h) {
     chambersWithoutMonsters++;
     chambersWithoutTrader++;
 }
 
-Chamber* PotionRoom::takeAction(Hero *h) {
+Chamber* PotionRoom::takeAction(Hero*h) {
 	cout << "In the room you came to there is a mysterious potion with unknown properties" << endl;
 	cout << "Do you want to drink it? (Y/N)" << endl;
 	char player_decision;
@@ -345,8 +347,8 @@ Chamber* PotionRoom::takeAction(Hero *h) {
 	return goNext(h);
 }
 
-void PotionRoom::drinkPotion(Hero *h) {
-	int drawn_num = rand() % 2;
+void PotionRoom::drinkPotion(Hero*h) {
+	int drawn_num = static_cast<int>(round(makeRand(0, 1)));
 
 	if (drawn_num == 0) {
 		h->setcurrentHealth(h->getmaxHealth());
@@ -361,18 +363,18 @@ void PotionRoom::drinkPotion(Hero *h) {
 }
 
 
-TreasureRoom::TreasureRoom(Hero *h) : SafeChamber(h) {
+TreasureRoom::TreasureRoom(Hero*h) : SafeChamber(h) {
     chambersWithoutMonsters++;
     chambersWithoutTrader++;
 	chest = new Chest(h);
 }
 
-Chamber* TreasureRoom::takeAction(Hero *h) {
+Chamber* TreasureRoom::takeAction(Hero*h) {
 	openBox(h);
 	return goNext(h);
 }
 
-void TreasureRoom::openBox(Hero *h) {
+void TreasureRoom::openBox(Hero*h) {
 	cout << "There is a box in the room, do you want to open it? (Y/N)" << endl;
 	char player_decision;
 
@@ -390,24 +392,24 @@ void TreasureRoom::openBox(Hero *h) {
 }
 
 
-HealthRoom::HealthRoom(Hero *h) : SafeChamber(h) {
+HealthRoom::HealthRoom(Hero*h) : SafeChamber(h) {
     chambersWithoutMonsters++;
     chambersWithoutTrader++;
 }
 
-Chamber* HealthRoom::takeAction(Hero *h) {
+Chamber* HealthRoom::takeAction(Hero*h) {
 	healthYourself(h);
 	return goNext(h);
 }
 
-void HealthRoom::healthYourself(Hero *h) {
+void HealthRoom::healthYourself(Hero*h) {
 	cout << "You came to the room with the fountain of life, after drinking the magic water you regain all health points" << endl;
 	h->setcurrentHealth(h->getmaxHealth());
 	cout << "Your current health is: " << h->getcurrentHealth() << "/" << h->getmaxHealth() << endl;
 }
 
 
-TraderRoom::TraderRoom(Hero* h) : SafeChamber(h) {
+TraderRoom::TraderRoom(Hero*h) : SafeChamber(h) {
     chambersWithoutMonsters++;
     chambersWithoutTrader = 0;
 	item1 = ItemFactory::createItem(h->getlevel(), getRandomItemType(h), h->getProf());
@@ -415,7 +417,7 @@ TraderRoom::TraderRoom(Hero* h) : SafeChamber(h) {
 	item3 = ItemFactory::createItem(h->getlevel(), getRandomItemType(h), h->getProf());
 };
 
-Chamber* TraderRoom::takeAction(Hero* h) {
+Chamber* TraderRoom::takeAction(Hero*h) {
 	cout << "You came to a room with a merchant who offers you to see his items" << endl;
 	cout << "Do you want to watch them? (Y/N)" << endl;
 	char player_decision;
@@ -435,7 +437,7 @@ Chamber* TraderRoom::takeAction(Hero* h) {
 	return goNext(h);
 }
 
-void TraderRoom::seeItems(Hero* h) {
+void TraderRoom::seeItems(Hero*h) {
 	h->showEQ();
     cout << endl;
     cout << "Merchant items:" << endl;
@@ -468,7 +470,7 @@ void TraderRoom::seeItems(Hero* h) {
     }
 }
 
-void TraderRoom::buyItem(Hero* h) {
+void TraderRoom::buyItem(Hero*h) {
 	bool wantToBuy = true;
 	int num;
 	char player_decision;
@@ -549,24 +551,24 @@ void TraderRoom::buyItem(Hero* h) {
 }
 
 
-EmptyRoom::EmptyRoom(Hero *h) : SafeChamber(h) {
+EmptyRoom::EmptyRoom(Hero*h) : SafeChamber(h) {
     chambersWithoutMonsters++;
     chambersWithoutTrader++;
 }
 
-Chamber* EmptyRoom::takeAction(Hero* h) {
+Chamber* EmptyRoom::takeAction(Hero*h) {
 	cout << "The room is completely empty, you have nothing to do here, so keep walking" << endl;
 	return goNext(h);
 }
 
 
-StartingRoom::StartingRoom(Hero *h) : SafeChamber(h) {
+StartingRoom::StartingRoom(Hero*h) : SafeChamber(h) {
 	numOfChamber = 0;
     chambersWithoutMonsters = 0;
     chambersWithoutTrader = 0;
 }
 
-Chamber* StartingRoom::takeAction(Hero *h) {
+Chamber* StartingRoom::takeAction(Hero*h) {
 	cout << "Your adventure begins here" << endl;
 	return goNext(h);
 }

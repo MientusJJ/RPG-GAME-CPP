@@ -1,3 +1,4 @@
+#pragma once
 #ifndef CHARACTER_H
 #define CHARACTER_H
 
@@ -5,9 +6,8 @@
 #include <iostream>
 #include <cmath>
 #include <stdlib.h>
+#include <memory>
 #include "Equipment.h"
-const double dodge = 33.0;
-using namespace std;
 
 class CharacterClass
 {
@@ -87,10 +87,10 @@ public:
 	virtual void chooseClass() {}
 	string getName();
 	virtual void setName() {}
-	bool useSpecialEffect(Character *opponent);
+	bool useSpecialEffect(Character* opponent);
 	int useSpecialAttack();
 	Profession getProf();
-	void attackOpponent(Character * opponent);
+	void attackOpponent(Character* opponent);
 protected:
 	
 	int minimalAttack;
@@ -109,7 +109,7 @@ class Hero : public Character
 {
 public:
 	~Hero();
-	static Hero *getInstance();
+	static Hero* getInstance();
 	Hero(Hero &other) = delete;
 	void operator=(const Hero &) = delete;
 	void showStatistics();
@@ -128,11 +128,11 @@ public:
 	void setBlockChance();
 	void setMoney(int);
 	int getMoney();
-	void ChangeEQ(Item *);
-	bool fight(Character *,bool);
+	void ChangeEQ(Item*);
+	bool fight(Character*,bool);
 private:
 	Hero();
-	static Hero *hero;
+	static Hero* hero;
 	int money;
 	Equipment *EQ;
 };

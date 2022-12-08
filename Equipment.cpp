@@ -1,7 +1,8 @@
 #include "Equipment.h"
+
 Equipment::Equipment(int lvl,Profession prof)
 {
-	fac = new ItemFactory;
+	fac = new ItemFactory();
 	weapon_slot = fac->createItem(lvl, weapon, prof);
 	armor_slot = fac->createItem(lvl, armor, prof);
 	talisman_slot = fac->createItem(lvl, talisman, prof);
@@ -16,7 +17,7 @@ Equipment::Equipment(int lvl,Profession prof)
 	}
 	delete fac;
 }
-bool Equipment::ChangeItem(Item * i)
+bool Equipment::ChangeItem(Item* i)
 {
 	if (i->getType() == weapon)
 	{
@@ -28,7 +29,7 @@ bool Equipment::ChangeItem(Item * i)
 		delete this->armor_slot;
 		this->armor_slot = i;
 	}
-	else if(i->getType() ==talisman)
+	else if (i->getType() == talisman)
 	{
 		delete this->talisman_slot;
 		this->talisman_slot = i;
