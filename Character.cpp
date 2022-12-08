@@ -354,6 +354,7 @@ monster::~monster()
 	delete Class;
 }
 Hero* Hero::hero = nullptr;
+shared_ptr<Hero> Hero::hero2 = nullptr;
 Hero *Hero::getInstance()
 {
 	if (hero == nullptr)
@@ -361,6 +362,14 @@ Hero *Hero::getInstance()
 		hero = new Hero();
 	}
 	return hero;
+}
+shared_ptr<Hero>& Hero::getInstance2()
+{
+	if (hero2 == nullptr)
+	{
+		hero2.reset(new Hero());
+	}
+	return hero2;
 }
 Hero::Hero()
 {

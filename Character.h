@@ -110,6 +110,7 @@ class Hero : public Character
 public:
 	~Hero();
 	static Hero* getInstance();
+	static shared_ptr<Hero>& getInstance2();
 	Hero(Hero &other) = delete;
 	void operator=(const Hero &) = delete;
 	void showStatistics();
@@ -133,6 +134,7 @@ public:
 private:
 	Hero();
 	static Hero* hero;
+	static shared_ptr<Hero> hero2;
 	int money;
 	Equipment *EQ;
 };
