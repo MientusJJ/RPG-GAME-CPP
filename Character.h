@@ -132,7 +132,6 @@ public:
 	bool fight(shared_ptr<Character>&,bool);
 private:
 	Hero();
-
 	static shared_ptr<Hero> hero;
 	int money;
 	unique_ptr<Equipment> EQ;
