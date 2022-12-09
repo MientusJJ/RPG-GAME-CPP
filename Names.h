@@ -16,12 +16,12 @@ static string namesforMonsters[]
 {
 	"The Rainbow Mutant","The Crying Doll","The Icy Snake","The Night Worm","The Young Babbler","The Bruised Gorilla","The Venom Serpent"
 };
-const int sizenamesforMonsters = 7;
+const int sizenamesforMonsters{ 7 };
 static string namesforBosses[]
 {
 	"Baron Nashor","Ender Dragon","Eredin","The Death Reaper","Gregoire De Gorgon"
 };
-const int sizenamesforBosses = 5;
+const int sizenamesforBosses{ 5 };
 static string namesForSwords[]
 {
         "Vanquisher","Kinslayer","Ashrune","Lightbringer","Mangler","Azurewrath","Spiteblade"
@@ -55,12 +55,12 @@ static string namesForShields[]
 {
         "Primal Tower Shield","Undead Heavy Shield","Wretched Heavy Shield","Ritual Tower Shield","Mercenary Shield","Bandit's Bronzed Shield","Demonic Glass Shield"
 };
-constexpr int namesTableSize = 7;
+constexpr int namesTableSize{ 7 };
 static double chance()
 {
     return makeRand(1, 100);
 }
-constexpr double dodge = 33.0;
+constexpr double dodge{ 33.0 };
 static char makeBig(char c)
 {
     return  std::toupper(c);

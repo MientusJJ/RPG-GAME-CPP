@@ -337,7 +337,7 @@ unique_ptr<Chamber> PotionRoom::takeAction(shared_ptr<Hero>&h) {
 
     while (true) {
         cin >> player_decision;
-
+		player_decision = makeBig(player_decision);
         if (player_decision == 'Y')
             drinkPotion(h);
 
@@ -383,7 +383,7 @@ void TreasureRoom::openBox(shared_ptr<Hero>&h) {
 
     while (true) {
         cin >> player_decision;
-
+		player_decision = makeBig(player_decision);
         if (player_decision == 'Y')
             chest->openBox(h);
 
@@ -427,7 +427,7 @@ unique_ptr<Chamber> TraderRoom::takeAction(shared_ptr<Hero>&h) {
 
     while (true) {
         cin >> player_decision;
-
+		player_decision = makeBig(player_decision);
         if (player_decision == 'Y')
             seeItems(h);
 
@@ -462,7 +462,7 @@ void TraderRoom::seeItems(shared_ptr<Hero>&h) {
 
     while (true) {
         cin >> player_decision;
-
+		player_decision = makeBig(player_decision);
         if (player_decision == 'Y')
             buyItem(h);
 
@@ -536,7 +536,7 @@ void TraderRoom::buyItem(shared_ptr<Hero>&h) {
 
             while (true) {
                 cin >> player_decision;
-
+				player_decision = makeBig(player_decision);
                 if (player_decision == 'N')
                     wantToBuy = false;
 

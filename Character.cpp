@@ -381,7 +381,7 @@ void Hero::chooseClass()
 	cout << "Choose class of " << this->getName() << " \nWrite 1 if you want warrior \nWrite 2 if you want scout \nWrite 3 if you want mage \n";
 	string  ch;
 	cin >> ch;
-	while (ch != "1" && ch != "2" &&ch != "3")
+	while (ch != "1" && ch != "2" && ch != "3")
 	{
 		cout << "Bad Number. Choose number between 1 and 3\n";
 		cin >> ch;
