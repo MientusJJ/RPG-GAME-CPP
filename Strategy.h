@@ -2,14 +2,24 @@
 #ifndef STRATEGY_H
 #define STRATEGY_H
 
+
 class Strategy
 {
-	virtual int makeNewPrice(int p_wallet, int p_actualPrice, int p_previousPrice) = 0;
-	
+public:
+	Strategy(int p_value) : m_startingPrice(p_value), m_currentPrice(p_value){};
+	virtual bool makeNewPrice(int p_wallet, int p_heroPrice) = 0;
+protected:
+	int getStartPrice() { return m_startingPrice; }
+	int getCurrentPrice() { return m_currentPrice; }
+	void setCurrentPrice(int p_value) { this->m_currentPrice = p_value; return; }
+private:
+	const int m_startingPrice;
+	int m_currentPrice;
+
 };
 
 class StandardStrategy : public Strategy
 {
-	int makeNewPrice(int p_wallet, int p_actualPrice, int p_previousPrice) override;
+	bool makeNewPrice(int p_wallet,int p_heroPrice) override;
 };
 #endif
