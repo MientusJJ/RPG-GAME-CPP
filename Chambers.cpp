@@ -300,7 +300,7 @@ void MonsterRoom::runAway(shared_ptr<Hero>&h) {
 
 	if (chance < 3) {
 		cout << "While escaping you got hit by a monster" << endl;
-		h->getDamage(h->getcurrentHealth() * 0.2);
+		h->getDamage(static_cast<int>(h->getcurrentHealth() * 0.2));
 		cout << "Your current health is: " << h->getcurrentHealth() << "/" << h->getmaxHealth() << endl;
 	}
 	else
@@ -320,7 +320,7 @@ unique_ptr<Chamber> TrapRoom::takeAction(shared_ptr<Hero>&h) {
 
 void TrapRoom::getDamage(shared_ptr<Hero>&h) {
 	cout << "There was a trap in the room that has hurted you" << endl;
-	h->getDamage(h->getmaxHealth() * 0.2);
+	h->getDamage(static_cast<int>(h->getcurrentHealth() * 0.2));
 	cout << "Your current health is: " << h->getcurrentHealth() << "/" << h->getmaxHealth() << endl;
 }
 
@@ -359,7 +359,7 @@ void PotionRoom::drinkPotion(shared_ptr<Hero>&h) {
 		cout << "Your current health is: " << h->getcurrentHealth() << "/" << h->getmaxHealth() << endl;
 	}
 	else {
-		h->getDamage(h->getmaxHealth() * 0.3);
+		h->getDamage(static_cast<int>(h->getmaxHealth() * 0.3));
 		cout << "The potion was poisoned. You lost " << int(h->getmaxHealth() * 0.3) << " health" << endl;
 		cout << "Your current health is: " << h->getcurrentHealth() << "/" << h->getmaxHealth() << endl;
 	}
