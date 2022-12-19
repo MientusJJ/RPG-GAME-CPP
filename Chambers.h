@@ -3,16 +3,6 @@
 #include "items.cpp"
 #include "Events.h"
 
-
-//class Chest {
-//protected:
-//	Item* item;
-//
-//public:
-//	Chest(Hero* hero);
-//	void openBox(Hero* hero);
-//};
-
 class Chamber {
 protected:
 	int chamber_ID;
@@ -21,10 +11,10 @@ protected:
 
 public:
 	Chamber(Hero* h);
-	virtual Chamber* takeAction(Hero *h);
+	virtual void takeAction(Hero *h);
 	int getChamberID();
 	string getName();
-    void transitionFunction(EventNode* start, Hero* h);
+    void eventTransitionFunction(EventNode* start, Hero* h);
 };
 
 class BossChamber : public Chamber {
@@ -33,7 +23,7 @@ protected:
 
 public:
 	BossChamber(Hero *h);
-	Chamber* takeAction(Hero *h);
+    void takeAction(Hero *h);
 
 private:
 	void finalFight(Hero *h);
@@ -42,19 +32,18 @@ private:
 class PassageChamber : public Chamber {
 public:
 	PassageChamber(Hero* h);
-	virtual Chamber* takeAction(Hero* h);
-	static Chamber* goNext(Hero* h);
+	virtual void takeAction(Hero* h);
 };
 
 class NormalChamber : public PassageChamber {
 public:
 	NormalChamber(Hero* h);
-	Chamber* takeAction(Hero* h);
+    void takeAction(Hero* h);
 };
 class SafeChamber : public PassageChamber {
 public:
 	SafeChamber(Hero* h);
-	Chamber* takeAction(Hero* h);
+    void takeAction(Hero* h);
 };
 
 class MonsterRoom : public NormalChamber {
@@ -64,7 +53,7 @@ protected:
 
 public:
 	MonsterRoom(Hero* h);
-	Chamber* takeAction(Hero *h);
+    void takeAction(Hero *h);
 
 private:
 	void fight(Hero *h);
@@ -74,7 +63,7 @@ private:
 class TrapRoom : public NormalChamber {
 public:
 	TrapRoom(Hero* h);
-	Chamber* takeAction(Hero *h);
+    void takeAction(Hero *h);
 
 private:
 	void getDamage(Hero *h);
@@ -83,7 +72,7 @@ private:
 class PotionRoom : public NormalChamber {
 public:
 	PotionRoom(Hero* h);
-	Chamber* takeAction(Hero *h);
+    void takeAction(Hero *h);
 
 private:
 	void drinkPotion(Hero *h);
@@ -95,7 +84,7 @@ protected:
 
 public:
 	TreasureRoom(Hero* h);
-	Chamber* takeAction(Hero *h);
+    void takeAction(Hero *h);
 
 private:
 	void openBox(Hero *h);
@@ -104,7 +93,7 @@ private:
 class HealthRoom : public SafeChamber {
 public:
 	HealthRoom(Hero* h);
-	Chamber* takeAction(Hero *h);
+    void takeAction(Hero *h);
 
 private:
 	void healthYourself(Hero *h);
@@ -118,7 +107,7 @@ protected:
 
 public:
 	TraderRoom(Hero* h);
-	Chamber* takeAction(Hero* h);
+    void takeAction(Hero* h);
 
 private:
 	void seeItems(Hero* h);
@@ -128,12 +117,21 @@ private:
 class EmptyRoom : public SafeChamber {
 public:
 	EmptyRoom(Hero* h);
-	Chamber* takeAction(Hero* h);
+    void takeAction(Hero* h);
 };
 
 class StartingRoom : public SafeChamber {
 public:
 	StartingRoom(Hero* h);
-	Chamber* takeAction(Hero* h);
+    void takeAction(Hero* h);
 };
 #endif
+
+//w pokojach z jednym przejściem, następnik jest dodawany jako left
+class ChamberNode {
+public:
+    ChamberNode(Chamber* curr);
+    Chamber* current;
+    ChamberNode* option1;
+    ChamberNode* option2;
+};

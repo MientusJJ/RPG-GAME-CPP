@@ -148,6 +148,5 @@ class EventNode {
 public:
     EventNode(Event* curr);
     Event* current;
-    EventNode* next;
     vector <EventNode*> AllNexts;
 };

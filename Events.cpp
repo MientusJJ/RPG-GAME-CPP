@@ -1,4 +1,6 @@
 #include "Events.h"
+#include <chrono>
+#include <thread>
 
 void Chest::openBox(Hero *h) {
     int coins = rand() % (h->getlevel() * 100);
@@ -311,12 +313,15 @@ EnterToBossRoom::EnterToBossRoom(Hero *hero) {
     h = hero;
 }
 void EnterToBossRoom::Action() {
+    chrono::milliseconds timespan(1000);
+    this_thread::sleep_for(timespan);
     cout << "You have entered the boss's chamber" << endl;
+    this_thread::sleep_for(timespan);
     cout << "The last and hardest fight is ahead of you" << endl;
+    this_thread::sleep_for(timespan);
 }
 
 
 EventNode::EventNode(Event* curr) {
     current = curr;
-    next = nullptr;
 }

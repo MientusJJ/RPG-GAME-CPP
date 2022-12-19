@@ -2,7 +2,6 @@
 #include <cstdlib>
 #include "Chambers.h"
 using namespace std;
-int numOfChamber;
 int chambersWithoutMonsters;
 int chambersWithoutTrader;
 
@@ -39,7 +38,7 @@ Chamber::Chamber(Hero* h) {
 	hero = h->getInstance();
 }
 
-Chamber* Chamber::takeAction(Hero *h) { return nullptr; }
+void Chamber::takeAction(Hero *h) {}
 
 int Chamber::getChamberID() {
 	return chamber_ID;
@@ -54,7 +53,7 @@ inline bool instanceof(const T *ptr) {
     return dynamic_cast<const Base*>(ptr) != nullptr;
 }
 
-void Chamber::transitionFunction(EventNode* start, Hero* h) {
+void Chamber::eventTransitionFunction(EventNode* start, Hero* h) {
     EventNode* curr = start;
     while (true) {
         curr->current->Action();
@@ -94,7 +93,7 @@ BossChamber::BossChamber(Hero *h) : Chamber(h) {
 	boss_monster = new monster(lvl, "Great BOSS");
 }
 
-Chamber* BossChamber::takeAction(Hero *h) {
+void BossChamber::takeAction(Hero *h) {
     EndPoint* e0 = new EndPoint(h);
     EnterToBossRoom* e1 = new EnterToBossRoom(h);
     Fight* e2 = new Fight(h, boss_monster);
@@ -106,146 +105,25 @@ Chamber* BossChamber::takeAction(Hero *h) {
     start->AllNexts.push_back(fightBoss);
     fightBoss->AllNexts.push_back(end);
 
-    transitionFunction(start, h);
+    eventTransitionFunction(start, h);
 
 	if (h->getcurrentHealth() > 0)
 		cout << "Congratulations! You finished the game" << endl;
 	else
 		cout << "It was very close..." << endl;
-
-	return nullptr;
 }
 
 
 PassageChamber::PassageChamber(Hero *h) : Chamber(h) {}
-
-Chamber* PassageChamber::takeAction(Hero* h) { return nullptr; }
-
-Chamber* PassageChamber::goNext(Hero* h) {
-	Chamber* next_chamber;
-
-	if (h->getcurrentHealth() == 0) {
-		cout << "YOU DEAD" << endl;
-		cout << "THE GAME IS OVER" << endl;
-		return nullptr;
-	}
-
-	if (numOfChamber < 19)
-	{
-        cout << endl;
-		cout << "Currently You are in Chamber number: " << numOfChamber << endl;
-		numOfChamber++;
-
-		char showSth;
-        while (true) {
-            cout << "Do you want to see your EQ or statistics? (equipment - E, statistics - S, nothing - N)" << endl;
-            cin >> showSth;
-
-            if (showSth == 'E')
-                h->showEQ();
-            else if (showSth == 'S')
-                h->showStatistics();
-            else if (showSth == 'N')
-                break;
-            else
-                cout << "Character not recognized, please retype" << endl;
-        }
-
-		cout << "Where do you want to go? (left - L, right - R)" << endl;
-
-		int left = rand() % 7;
-		int right = rand() % 7;
-		int next;
-
-        char direction;
-        while (true) {
-            cin >> direction;
-
-            if (direction == 'L') {
-                next = left;
-                break;
-            }
-            else if (direction == 'R') {
-                next = right;
-                break;
-            }
-            else
-                cout << "Character not recognized, please retype" << endl;
-        }
-
-        cout << endl;
-
-		if (next == 0 || chambersWithoutMonsters == 3)
-			next_chamber = new MonsterRoom(h);
-		else if (next == 1 || chambersWithoutTrader == 9)
-			next_chamber = new TraderRoom(h);
-		else if (next == 2)
-			next_chamber = new TreasureRoom(h);
-		else if (next == 3)
-			next_chamber = new HealthRoom(h);
-		else if (next == 4)
-			next_chamber = new PotionRoom(h);
-		else if (next == 5)
-			next_chamber = new TrapRoom(h);
-		else
-			next_chamber = new EmptyRoom(h);
-	}
-	else if (numOfChamber == 19) {
-        numOfChamber++;
-
-        cout << endl;
-        cout << "Your health points: " << h->getcurrentHealth() << "/" << h->getmaxHealth() << endl;
-        cout << "After this room, the next one will be with a boss" << endl;
-        cout << "The chambers have open doors, so you can see what is inside" << endl;
-        cout << "Where do you want to go? (HealthRoom - L, TraderRoom - R)" << endl;
-
-        char direction;
-        while (true) {
-            cin >> direction;
-
-            if (direction == 'L') {
-                next_chamber = new HealthRoom(h);
-				break;
-            }
-            else if (direction == 'R') {
-                next_chamber = new TraderRoom(h);
-				break;
-            }
-            else
-                cout << "Character not recognized, please retype" << endl;
-        }
-    }
-    else {
-        cout << endl;
-        cout << "The last chamber is ahead of you - BossChamber" << endl;
-
-        char decision;
-        while (true) {
-            cout << "Do you want to face the boss? (Y/N)" << endl;
-            cin >> decision;
-
-            if (decision == 'Y')
-                break;
-            else if (decision == 'N')
-                cout << "You can't give up now, you are so close to your desired goal" << endl;
-            else
-                cout << "Character not recognized, please retype" << endl;
-        }
-
-        next_chamber = new BossChamber(h);
-    }
-
-
-	return next_chamber;
-}
+void PassageChamber::takeAction(Hero* h) {}
 
 
 NormalChamber::NormalChamber(Hero *h) : PassageChamber(h) {}
-Chamber* NormalChamber::takeAction(Hero* h) { return nullptr; }
+void NormalChamber::takeAction(Hero* h) {}
 
 
 SafeChamber::SafeChamber(Hero *h) : PassageChamber(h) {}
-Chamber* SafeChamber::takeAction(Hero* h) { return nullptr; }
+void SafeChamber::takeAction(Hero* h) {}
 
 
 MonsterRoom::MonsterRoom(Hero *h) : NormalChamber(h) {
@@ -255,7 +133,7 @@ MonsterRoom::MonsterRoom(Hero *h) : NormalChamber(h) {
     chest = new Chest(h);
 }
 
-Chamber* MonsterRoom::takeAction(Hero *h) {
+void MonsterRoom::takeAction(Hero *h) {
     //przygotowanie przejść:
     EndPoint* e0 = new EndPoint(h);
     EnterToMonsterRoom* e1 = new EnterToMonsterRoom(h);
@@ -277,9 +155,7 @@ Chamber* MonsterRoom::takeAction(Hero *h) {
     runAway->AllNexts.push_back(end);
 
     //funkcja przejścia:
-    transitionFunction(start, h);
-
-	return goNext(h);
+    eventTransitionFunction(start, h);
 }
 
 
@@ -288,7 +164,7 @@ TrapRoom::TrapRoom(Hero *h) : NormalChamber(h) {
     chambersWithoutTrader++;
 }
 
-Chamber* TrapRoom::takeAction(Hero *h) {
+void TrapRoom::takeAction(Hero *h) {
     EndPoint* e0 = new EndPoint(h);
     EnterToTrapRoom* e1 = new EnterToTrapRoom(h);
     ActiveTheTrap* e2 = new ActiveTheTrap(h);
@@ -300,9 +176,7 @@ Chamber* TrapRoom::takeAction(Hero *h) {
     start->AllNexts.push_back(trap);
     trap->AllNexts.push_back(end);
 
-    transitionFunction(start, h);
-
-	return goNext(h);
+    eventTransitionFunction(start, h);
 }
 
 
@@ -311,7 +185,7 @@ PotionRoom::PotionRoom(Hero *h) : NormalChamber(h) {
     chambersWithoutTrader++;
 }
 
-Chamber* PotionRoom::takeAction(Hero *h) {
+void PotionRoom::takeAction(Hero *h) {
     EndPoint* e0 = new EndPoint(h);
     EnterToPotionRoom* e1 = new EnterToPotionRoom(h);
     DrinkPotion* e2 = new DrinkPotion(h);
@@ -324,9 +198,7 @@ Chamber* PotionRoom::takeAction(Hero *h) {
     start->AllNexts.push_back(end);
     potion->AllNexts.push_back(end);
 
-    transitionFunction(start, h);
-
-	return goNext(h);
+    eventTransitionFunction(start, h);
 }
 
 
@@ -336,7 +208,7 @@ TreasureRoom::TreasureRoom(Hero *h) : SafeChamber(h) {
     chest = new Chest(h);
 }
 
-Chamber* TreasureRoom::takeAction(Hero *h) {
+void TreasureRoom::takeAction(Hero *h) {
     EndPoint* e0 = new EndPoint(h);
     EnterToTreasureRoom* e1 = new EnterToTreasureRoom(h);
     CheckChest* e2 = new CheckChest(h, chest);
@@ -349,9 +221,7 @@ Chamber* TreasureRoom::takeAction(Hero *h) {
     start->AllNexts.push_back(end);
     chest->AllNexts.push_back(end);
 
-    transitionFunction(start, h);
-
-	return goNext(h);
+    eventTransitionFunction(start, h);
 }
 
 
@@ -360,7 +230,7 @@ HealthRoom::HealthRoom(Hero *h) : SafeChamber(h) {
     chambersWithoutTrader++;
 }
 
-Chamber* HealthRoom::takeAction(Hero *h) {
+void HealthRoom::takeAction(Hero *h) {
     EndPoint* e0 = new EndPoint(h);
     EnterToHealthRoom* e1 = new EnterToHealthRoom(h);
     HealthYourself* e2 = new HealthYourself(h);
@@ -373,9 +243,7 @@ Chamber* HealthRoom::takeAction(Hero *h) {
     start->AllNexts.push_back(end);
     health->AllNexts.push_back(end);
 
-    transitionFunction(start, h);
-
-	return goNext(h);
+    eventTransitionFunction(start, h);
 }
 
 
@@ -387,7 +255,7 @@ TraderRoom::TraderRoom(Hero* h) : SafeChamber(h) {
 	item3 = ItemFactory::createItem(h->getlevel(), getRandomItemType(h), h->getProf());
 };
 
-Chamber* TraderRoom::takeAction(Hero* h) {
+void TraderRoom::takeAction(Hero* h) {
     EndPoint* e0 = new EndPoint(h);
     EnterToTraderRoom* e1 = new EnterToTraderRoom(h);
     SeeItems* e2 = new SeeItems(h, item1, item2, item3);
@@ -404,9 +272,7 @@ Chamber* TraderRoom::takeAction(Hero* h) {
     see->AllNexts.push_back(end);
     buy->AllNexts.push_back(end);
 
-    transitionFunction(start, h);
-
-	return goNext(h);
+    eventTransitionFunction(start, h);
 }
 
 
@@ -415,7 +281,7 @@ EmptyRoom::EmptyRoom(Hero *h) : SafeChamber(h) {
     chambersWithoutTrader++;
 }
 
-Chamber* EmptyRoom::takeAction(Hero* h) {
+void EmptyRoom::takeAction(Hero* h) {
     EndPoint* e0 = new EndPoint(h);
     EnterToEmptyRoom* e1 = new EnterToEmptyRoom(h);
 
@@ -424,19 +290,17 @@ Chamber* EmptyRoom::takeAction(Hero* h) {
 
     start->AllNexts.push_back(end);
 
-    transitionFunction(start, h);
-
-	return goNext(h);
+    eventTransitionFunction(start, h);
 }
 
 
 StartingRoom::StartingRoom(Hero *h) : SafeChamber(h) {
-	numOfChamber = 0;
+	//numOfChamber = 0;
     chambersWithoutMonsters = 0;
     chambersWithoutTrader = 0;
 }
 
-Chamber* StartingRoom::takeAction(Hero *h) {
+void StartingRoom::takeAction(Hero *h) {
     EndPoint* e0 = new EndPoint(h);
     EnterToStartingRoom* e1 = new EnterToStartingRoom(h);
 
@@ -445,7 +309,12 @@ Chamber* StartingRoom::takeAction(Hero *h) {
 
     start->AllNexts.push_back(end);
 
-    transitionFunction(start, h);
+    eventTransitionFunction(start, h);
+}
 
-	return goNext(h);
+
+ChamberNode::ChamberNode(Chamber* curr) {
+    current = curr;
+    option1 = nullptr;
+    option2 = nullptr;
 }
