@@ -1,8 +1,20 @@
 #include "Character.h"
 #include <thread>
 
-
-
+string namesforMonsters[]
+{
+	"The Rainbow Mutant","The Crying Doll","The Icy Snake","The Night Worm","The Young Babbler","The Bruised Gorilla","The Venom Serpent"
+};
+const int sizenamesforMonsters = 7;
+string namesforBosses[]
+{
+	"Baron Nashor","Ender Dragon","Eredin","The Death Reaper","Gregoire De Gorgon"
+};
+const int sizenamesforBosses = 5;
+static double chance()
+{
+	return rand() % 100;
+}
 const int defaultHealth = 50;
 const double defaultCriticalChance = 3.;
 const int defaultAttackMin = 2;
@@ -19,6 +31,7 @@ Character::Character() {
 
 }
 Character::~Character() {
+	delete Class;
 
 }
 int Character::getminimalAttack()
@@ -95,13 +108,13 @@ Profession Character::getProf()
 {
 	return this->Class->getProf();
 }
-void Character::attackOpponent(shared_ptr<Character>& opponent)
+void Character::attackOpponent(Character * opponent)
 {
 	if (!this->useSpecialEffect(opponent))
 	{
 		return;
 	}
-	int damage = static_cast<int>(round(makeRand(this->getminimalAttack(), this->getmaximalAttack())));
+	int damage = rand() % this->getmaximalAttack() + this->getminimalAttack();
 	damage = damage * this->useSpecialAttack() - opponent->getdefense();
 	if (damage < 1) damage = 1;
 	opponent->getDamage(damage);
@@ -109,7 +122,7 @@ void Character::attackOpponent(shared_ptr<Character>& opponent)
 	cout << "Current health of " << opponent->getName() << " is " << opponent->getcurrentHealth() << endl;
 	return;
 }
-bool Character::useSpecialEffect(shared_ptr<Character>& opponent)
+bool Character::useSpecialEffect(Character *opponent)
 {
 	if (this->Class->getProf() == mage || opponent->Class->getProf() == mage)
 	{
@@ -265,18 +278,18 @@ Mage::~Mage()
 }
 void monster::chooseClass()
 {
-	int p = static_cast<int>(round(makeRand(1, 3)));
+	int p = rand() % 3 + 1;
 	if (p == 1)
 	{
-		this->Class = make_unique<Warrior>();
+		this->Class = new Warrior;
 	}
 	else if (p == 2)
 	{
-		this->Class = make_unique<Scout>();
+		this->Class = new Scout;
 	}
 	else
 	{
-		this->Class = make_unique<Mage>();
+		this->Class = new Mage;
 	}
 }
 void monster::setmaxHealth()
@@ -321,12 +334,12 @@ void monster::setName(bool p)
 {
 	if (!p)
 	{
-		int r = static_cast<int>(round(makeRand(0, sizenamesforMonsters-1)));
+		int r = rand() % sizenamesforMonsters;
 		this->name = namesforMonsters[r];
 	}
 	else
 	{
-		int r = static_cast<int>(round(makeRand(0, sizenamesforBosses - 1)));
+		int r = rand() % sizenamesforBosses;
 		this->name = namesforBosses[r];
 	}
 	
@@ -350,14 +363,14 @@ void monster::setALL(int lvl)
 }
 monster::~monster()
 {
+	delete Class;
 }
-
-shared_ptr<Hero> Hero::hero = nullptr;
-shared_ptr<Hero>& Hero::getInstance()
+Hero *Hero::hero = nullptr;
+Hero *Hero::getInstance()
 {
 	if (hero == nullptr)
 	{
-		hero.reset(new Hero());
+		hero = new Hero();
 	}
 	return hero;
 }
@@ -367,21 +380,21 @@ Hero::Hero()
 	this->chooseClass();
 	this->setlevel(1);
 	this->setMoney(100);
-	EQ = make_unique<Equipment>(this->getlevel(), this->Class->getProf());
+	EQ = new Equipment(this->getlevel(), this->Class->getProf());
 	this->setAllStats();
 	this->setcurrentHealth(this->getmaxHealth());
-
 
 }
 Hero::~Hero()
 {
+	delete EQ;
 }
 void Hero::chooseClass()
 {
 	cout << "Choose class of " << this->getName() << " \nWrite 1 if you want warrior \nWrite 2 if you want scout \nWrite 3 if you want mage \n";
 	string  ch;
 	cin >> ch;
-	while (ch != "1" && ch != "2" && ch != "3")
+	while (ch != "1" && ch != "2" &&ch != "3")
 	{
 		cout << "Bad Number. Choose number between 1 and 3\n";
 		cin >> ch;
@@ -389,17 +402,17 @@ void Hero::chooseClass()
 	cout << "Your class for the whole game is: ";
 	if (ch == "1")
 	{
-		this->Class = make_unique<Warrior>();
+		this->Class = new Warrior;
 		cout << "Warrior\n";
 	}
 	else if (ch == "2")
 	{
-		this->Class = make_unique<Scout>();
+		this->Class = new Scout;
 		cout << "Scout\n";
 	}
 	else
 	{
-		this->Class = make_unique<Mage>();
+		this->Class = new Mage;
 		cout << "Mage\n";
 	}
 
@@ -555,7 +568,7 @@ int Hero::getMoney()
 {
 	return this->money;
 }
-void Hero::ChangeEQ(unique_ptr<Item>&i)
+void Hero::ChangeEQ(Item *i)
 {
 	this->EQ->ChangeItem(i);
 	this->setAllStats();
@@ -563,7 +576,7 @@ void Hero::ChangeEQ(unique_ptr<Item>&i)
 	cout << "Changing equipment completed" << endl;
 	return;
 }
-bool Hero::fight(shared_ptr<Character>& opponent,bool boss)
+bool Hero::fight(Character * opponent,bool boss)
 {
 	bool whoIsAttacking = true;
 	chrono::milliseconds timespan(1000);
@@ -576,8 +589,7 @@ bool Hero::fight(shared_ptr<Character>& opponent,bool boss)
 		}
 		else
 		{
-			shared_ptr<Character> h = this->getInstance();
-			opponent->attackOpponent(h);
+			opponent->attackOpponent(this);
 		}
 		whoIsAttacking = !whoIsAttacking;
 

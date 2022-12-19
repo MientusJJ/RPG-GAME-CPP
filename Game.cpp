@@ -2,11 +2,12 @@
 
 Game::Game()
 {
+	srand(time(NULL));
 }
 void Game::play()
 {
 	hero = Hero::getInstance();
-	unique_ptr<Chamber>CurrentCham = make_unique<StartingRoom>(hero);
+	Chamber *CurrentCham = new StartingRoom(hero);
 	while (CurrentCham != nullptr)
 	{
 		CurrentCham = CurrentCham->takeAction(hero);
@@ -14,4 +15,5 @@ void Game::play()
 }
 Game::~Game()
 {
+	delete hero;
 }

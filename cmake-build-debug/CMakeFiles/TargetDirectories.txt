@@ -1,0 +1,3 @@
+C:/Users/Alber/CLionProjects/IO_project_old_version/cmake-build-debug/CMakeFiles/IO_project.dir
+C:/Users/Alber/CLionProjects/IO_project_old_version/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/Alber/CLionProjects/IO_project_old_version/cmake-build-debug/CMakeFiles/rebuild_cache.dir

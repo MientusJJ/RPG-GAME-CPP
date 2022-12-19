@@ -1,6 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 #pragma once
+#include "Character.h"
 #include "Chambers.h"
 class Game
 {
@@ -9,6 +10,6 @@ public:
 	~Game();
 	void play();
 private:
-	shared_ptr<Hero> hero;
+	Hero *hero;
 };
 #endif
