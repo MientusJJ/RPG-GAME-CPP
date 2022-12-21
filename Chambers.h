@@ -3,28 +3,19 @@
 #define CHAMBER_H
 #include "items.h"
 #include "Character.h"
-
-class Chest {
-protected:
-	unique_ptr<Item> item;
-
-
-public:
-	Chest(shared_ptr<Hero>&h);
-	void openBox(shared_ptr<Hero>&h);
-};
-
+#include "Events.h"
 class Chamber {
 protected:
 	int chamber_ID;
 	string name;
-	shared_ptr<Hero>hero;
+	shared_ptr<Hero> hero;
 
 public:
 	Chamber(shared_ptr<Hero>& h);
-	virtual unique_ptr<Chamber> takeAction(shared_ptr<Hero>&h);
+	virtual void takeAction(shared_ptr<Hero>&h)=0;
 	int getChamberID();
 	string getName();
+	void eventTransitionFunction(shared_ptr<EventNode>& start, shared_ptr<Hero>& h);
 };
 
 class BossChamber : public Chamber {
@@ -33,7 +24,7 @@ protected:
 
 public:
 	BossChamber(shared_ptr<Hero>&h);
-	unique_ptr<Chamber> takeAction(shared_ptr<Hero>&h);
+	void takeAction(shared_ptr<Hero>&h);
 
 private:
 	void finalFight(shared_ptr<Hero>&h);
@@ -42,19 +33,18 @@ private:
 class PassageChamber : public Chamber {
 public:
 	PassageChamber(shared_ptr<Hero>& h);
-	virtual unique_ptr<Chamber> takeAction(shared_ptr<Hero>&h);
-	static unique_ptr<Chamber> goNext(shared_ptr<Hero>&h);
+	virtual void takeAction(shared_ptr<Hero>&h);
 };
 
 class NormalChamber : public PassageChamber {
 public:
 	NormalChamber(shared_ptr<Hero>&h);
-	unique_ptr<Chamber> takeAction(shared_ptr<Hero>&h);
+	void takeAction(shared_ptr<Hero>&h);
 };
 class SafeChamber : public PassageChamber {
 public:
 	SafeChamber(shared_ptr<Hero>&h);
-	unique_ptr<Chamber> takeAction(shared_ptr<Hero>&h);
+	void takeAction(shared_ptr<Hero>&h);
 };
 
 class MonsterRoom : public NormalChamber {
@@ -64,7 +54,7 @@ protected:
 
 public:
 	MonsterRoom(shared_ptr<Hero>&h);
-	unique_ptr<Chamber> takeAction(shared_ptr<Hero>&h);
+	void takeAction(shared_ptr<Hero>&h);
 
 private:
 	void fight(shared_ptr<Hero>&h);
@@ -74,7 +64,7 @@ private:
 class TrapRoom : public NormalChamber {
 public:
 	TrapRoom(shared_ptr<Hero>&h);
-	unique_ptr<Chamber> takeAction(shared_ptr<Hero>&h);
+	void takeAction(shared_ptr<Hero>&h);
 
 private:
 	void getDamage(shared_ptr<Hero>&h);
@@ -83,7 +73,7 @@ private:
 class PotionRoom : public NormalChamber {
 public:
 	PotionRoom(shared_ptr<Hero>&h);
-	unique_ptr<Chamber> takeAction(shared_ptr<Hero>&h);
+	void takeAction(shared_ptr<Hero>&h);
 
 private:
 	void drinkPotion(shared_ptr<Hero>&h);
@@ -95,7 +85,7 @@ protected:
 
 public:
 	TreasureRoom(shared_ptr<Hero>&h);
-	unique_ptr<Chamber> takeAction(shared_ptr<Hero>&h);
+	void takeAction(shared_ptr<Hero>&h);
 
 private:
 	void openBox(shared_ptr<Hero>&h);
@@ -104,7 +94,7 @@ private:
 class HealthRoom : public SafeChamber {
 public:
 	HealthRoom(shared_ptr<Hero>&h);
-	unique_ptr<Chamber> takeAction(shared_ptr<Hero>&h);
+	void takeAction(shared_ptr<Hero>&h);
 
 private:
 	void healthYourself(shared_ptr<Hero>&h);
@@ -112,13 +102,13 @@ private:
 
 class TraderRoom : public SafeChamber {
 protected:
-	unique_ptr<Item> item1;
-	unique_ptr<Item> item2;
-	unique_ptr<Item> item3;
+	shared_ptr<Item> item1;
+	shared_ptr<Item> item2;
+	shared_ptr<Item> item3;
 
 public:
 	TraderRoom(shared_ptr<Hero>&h);
-	unique_ptr<Chamber> takeAction(shared_ptr<Hero>&h);
+	void takeAction(shared_ptr<Hero>&h);
 
 private:
 	void seeItems(shared_ptr<Hero>&h);
@@ -128,12 +118,19 @@ private:
 class EmptyRoom : public SafeChamber {
 public:
 	EmptyRoom(shared_ptr<Hero>&h);
-	unique_ptr<Chamber> takeAction(shared_ptr<Hero>&h);
+	void takeAction(shared_ptr<Hero>&h);
 };
 
 class StartingRoom : public SafeChamber {
 public:
 	StartingRoom(shared_ptr<Hero>&h);
-	unique_ptr<Chamber> takeAction(shared_ptr<Hero>&h);
+	void takeAction(shared_ptr<Hero>&h);
+};
+class ChamberNode {
+public:
+	ChamberNode(shared_ptr<Chamber> curr);
+	shared_ptr<Chamber> current;
+	shared_ptr<ChamberNode> option1;
+	shared_ptr<ChamberNode> option2;
 };
 #endif

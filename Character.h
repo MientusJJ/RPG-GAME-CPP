@@ -128,7 +128,7 @@ public:
 	void setBlockChance();
 	void setMoney(int);
 	int getMoney();
-	void ChangeEQ(unique_ptr<Item>&);
+	void ChangeEQ(shared_ptr<Item>&);
 	bool fight(shared_ptr<Character>&,bool);
 private:
 	Hero();

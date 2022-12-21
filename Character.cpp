@@ -555,7 +555,7 @@ int Hero::getMoney()
 {
 	return this->money;
 }
-void Hero::ChangeEQ(unique_ptr<Item>&i)
+void Hero::ChangeEQ(shared_ptr<Item>&i)
 {
 	this->EQ->ChangeItem(i);
 	this->setAllStats();

@@ -16,27 +16,27 @@ Equipment::Equipment(int lvl,Profession prof)
 		shield_slot = nullptr;
 	}
 }
-bool Equipment::ChangeItem(unique_ptr<Item>& i)
+bool Equipment::ChangeItem(shared_ptr<Item>& i)
 {
 	if (i->getType() == weapon)
 	{
-		this->weapon_slot = move(i);
+		this->weapon_slot = i;
 	}
 	else if (i->getType() == armor)
 	{
-		this->armor_slot = move(i);
+		this->armor_slot = i;
 	}
 	else if (i->getType() == talisman)
 	{
-		this->talisman_slot = move(i);
+		this->talisman_slot = i;
 	}
 	else if (i->getType() == headgear)
 	{
-		this->headgear_slot = move(i);
+		this->headgear_slot = i;
 	}
 	else if (i->getType() == shield)
 	{
-		this->shield_slot = move(i);
+		this->shield_slot = i;
 	}
 	return true;
 }

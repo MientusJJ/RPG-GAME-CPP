@@ -184,7 +184,7 @@ public:
     static unique_ptr<Item> createItem(int level, ItemType type, Profession profession);
 };
 
-static void showItemDetails(unique_ptr<Item>& item, Profession prof)
+static void showItemDetails(shared_ptr<Item>& item, Profession prof)
 {
     if (item->getType() == weapon)
     {
