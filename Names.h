@@ -3,6 +3,7 @@
 #define NAMES_H
 #include <random>
 #include <string>
+#include <memory>
 
 using namespace std;
 
