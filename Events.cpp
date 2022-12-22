@@ -43,7 +43,23 @@ EndPoint::EndPoint(shared_ptr<Hero>& hero) {
 }
 
 void EndPoint::Action() {
-    cout << "";
+    char decision;
+    while (true) {
+        cout << "Do you want to check your Statistics (S), Equipment (E), or do nothing (N)?" << endl;
+        cin >> decision;
+        decision = makeBig(decision);
+        if (decision == 'E') {
+            h->showEQ();
+        }
+        else if(decision == 'S')
+        {
+            h->showStatistics();
+        }
+        else if (decision == 'N')
+            break;
+        else
+            cout << "Character not recognized, please retype" << endl;
+    }
 }
 
 EnterToMonsterRoom::EnterToMonsterRoom(shared_ptr<Hero>& hero) {
@@ -209,11 +225,12 @@ void SeeItems::Action() {
     cout << "Your balance: " << h->getMoney() << endl;
 }
 
-BuyItems::BuyItems(shared_ptr<Hero>& hero, shared_ptr<Item>& i1, shared_ptr<Item>& i2, shared_ptr<Item>& i3) {
+BuyItems::BuyItems(shared_ptr<Hero>& hero, shared_ptr<Item>& i1, shared_ptr<Item>& i2, shared_ptr<Item>& i3, unique_ptr<Strategy>& p_strategy) {
     h = hero;
     _item1 = i1;
     _item2 = i2;
     _item3 = i3;
+    _buyingStrategy = move(p_strategy);
     description = "Buy some items";
 }
 void BuyItems::Action() {
@@ -229,13 +246,8 @@ void BuyItems::Action() {
         num = makeBig(num);
         if (num == 1) {
             if (!bought1) {
-                if (h->getMoney() >= _item1->getValue()) {
-                    h->setMoney(h->getMoney() - _item1->getValue());
-                    h->ChangeEQ(_item1);
-                    bought1 = true;
-                }
-                else
-                    cout << "You do not have enough coins" << endl;
+                showItemDetails(_item1, h->getProf());
+                bought1 = buyOneItem(1);
             }
             else {
                 cout << "You have already bought this item" << endl;
@@ -243,13 +255,8 @@ void BuyItems::Action() {
         }
         else if (num == 2) {
             if (!bought2) {
-                if (h->getMoney() >= _item2->getValue()) {
-                    h->setMoney(h->getMoney() - _item2->getValue());
-                    h->ChangeEQ(_item2);
-                    bought2 = true;
-                }
-                else
-                    cout << "You do not have enough coins" << endl;
+                showItemDetails(_item2, h->getProf());
+                bought2=buyOneItem(2);
             }
             else {
                 cout << "You have already bought this item" << endl;
@@ -257,13 +264,9 @@ void BuyItems::Action() {
         }
         else if (num == 3) {
             if (!bought3) {
-                if (h->getMoney() >= _item3->getValue()) {
-                    h->setMoney(h->getMoney() - _item3->getValue());
-                    h->ChangeEQ(_item3);
-                    bought3 = true;
-                }
-                else
-                    cout << "You do not have enough coins" << endl;
+                showItemDetails(_item3, h->getProf());
+                bought3=buyOneItem(3);
+               
             }
             else {
                 cout << "You have already bought this item" << endl;
@@ -295,7 +298,53 @@ void BuyItems::Action() {
         }
     }
 }
+bool BuyItems::buyOneItem(int num)
+{
+    shared_ptr<Item> _buyingItem;
+    bool _flag = false;
+    if(num==1)
+    {
+        _buyingItem = _item1;
+    }
+    else if(num==2)
+    {
+        _buyingItem = _item2;
+    }
+    else if (num==3)
+    {
+        _buyingItem = _item3;
+    }
+    _buyingStrategy->setStartingPrice(_buyingItem->getValue());
 
+    while (!_flag)
+    {
+        char player_decision;
+
+    	cout << "Do you still want to negotiate price of this item: " << _buyingItem->getName() << "? (Y/N)" << endl;
+        while (true) {
+            cin >> player_decision;
+            player_decision = makeBig(player_decision);
+            if (player_decision == 'Y' || player_decision == 'N')
+                break;
+            else
+                cout << "Character not recognized, please retype" << endl;
+        }
+        if(player_decision=='N')
+        {
+            break;
+        }
+        cout << "Enter the price at which you want to buy item: " << endl;
+        int price;
+        cin >> price;
+        _flag = _buyingStrategy->makeNewPrice(h, price);
+    }
+    if(_flag)
+    {
+        h->ChangeEQ(_buyingItem);
+    }
+    return _flag;
+	
+}
 EnterToEmptyRoom::EnterToEmptyRoom(shared_ptr<Hero>& hero) {
     h = hero;
 }

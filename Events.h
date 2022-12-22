@@ -4,6 +4,8 @@
 #include "Character.h"
 #include <vector>
 
+#include "Strategy.h"
+
 class Chest {
 protected:
     shared_ptr<Item> item;
@@ -117,9 +119,11 @@ private:
 
 class BuyItems : public Event {
 public:
-    BuyItems(shared_ptr<Hero>& h, shared_ptr<Item>& i1, shared_ptr<Item>& i2, shared_ptr<Item>& i3);
+    BuyItems(shared_ptr<Hero>& h, shared_ptr<Item>& i1, shared_ptr<Item>& i2, shared_ptr<Item>& i3,unique_ptr<Strategy>& p_strategy);
     void Action();
 private:
+    bool buyOneItem(int num);
+    unique_ptr<Strategy> _buyingStrategy;
     shared_ptr<Item> _item1;
     shared_ptr<Item> _item2;
     shared_ptr<Item> _item3;

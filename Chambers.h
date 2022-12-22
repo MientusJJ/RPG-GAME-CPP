@@ -4,6 +4,7 @@
 #include "items.h"
 #include "Character.h"
 #include "Events.h"
+#include "Strategy.h"
 class Chamber {
 protected:
 	int chamber_ID;
@@ -56,9 +57,6 @@ public:
 	MonsterRoom(shared_ptr<Hero>&h);
 	void takeAction(shared_ptr<Hero>&h);
 
-private:
-	void fight(shared_ptr<Hero>&h);
-	void runAway(shared_ptr<Hero>&h);
 };
 
 class TrapRoom : public NormalChamber {
@@ -66,17 +64,12 @@ public:
 	TrapRoom(shared_ptr<Hero>&h);
 	void takeAction(shared_ptr<Hero>&h);
 
-private:
-	void getDamage(shared_ptr<Hero>&h);
 };
 
 class PotionRoom : public NormalChamber {
 public:
 	PotionRoom(shared_ptr<Hero>&h);
 	void takeAction(shared_ptr<Hero>&h);
-
-private:
-	void drinkPotion(shared_ptr<Hero>&h);
 };
 
 class TreasureRoom : public SafeChamber {
@@ -87,8 +80,6 @@ public:
 	TreasureRoom(shared_ptr<Hero>&h);
 	void takeAction(shared_ptr<Hero>&h);
 
-private:
-	void openBox(shared_ptr<Hero>&h);
 };
 
 class HealthRoom : public SafeChamber {
@@ -96,8 +87,6 @@ public:
 	HealthRoom(shared_ptr<Hero>&h);
 	void takeAction(shared_ptr<Hero>&h);
 
-private:
-	void healthYourself(shared_ptr<Hero>&h);
 };
 
 class TraderRoom : public SafeChamber {
@@ -105,14 +94,11 @@ protected:
 	shared_ptr<Item> item1;
 	shared_ptr<Item> item2;
 	shared_ptr<Item> item3;
-
+	unique_ptr<Strategy> _buyingstrategy;
 public:
 	TraderRoom(shared_ptr<Hero>&h);
 	void takeAction(shared_ptr<Hero>&h);
 
-private:
-	void seeItems(shared_ptr<Hero>&h);
-	void buyItem(shared_ptr<Hero>&h);
 };
 
 class EmptyRoom : public SafeChamber {

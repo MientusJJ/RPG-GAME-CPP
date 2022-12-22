@@ -47,6 +47,7 @@ shared_ptr<ChamberNode> Game::prepareMap(shared_ptr<Hero>& hero)
 	n12->option1 = n14;
 	n13->option1 = boss;
 	n14->option1 = boss;
+
 	return start;
 }
 void Game::chamberTransitionFunction(shared_ptr<ChamberNode>& start, shared_ptr<Hero>& h)

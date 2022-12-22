@@ -1,7 +1,5 @@
 #include <iostream>
-#include <cstdlib>
 #include "Chambers.h"
-#include "Items.h"
 using namespace std;
 int numOfChamber;
 int chambersWithoutMonsters;
@@ -63,7 +61,10 @@ void Chamber::eventTransitionFunction(shared_ptr<EventNode>& start, shared_ptr<H
 			break;
 
 		int numOfNexts = curr->AllNexts.size();
-		if (numOfNexts == 1)
+
+        if (numOfNexts == 0)    //komnata z bossem
+            break;
+		else if (numOfNexts == 1)
 			curr = curr->AllNexts[0];
 		else {
 			for (int i = 0; i < curr->AllNexts.size(); i++) {
@@ -71,31 +72,43 @@ void Chamber::eventTransitionFunction(shared_ptr<EventNode>& start, shared_ptr<H
 				curr->AllNexts[i]->current->DisplayDescription();
 				cout << endl;
 			}
-
 			int choice;
 			cin >> choice;
+			while (choice != 1 && instanceof<EnterToBossRoom>(curr->current))
+			{
+				cout << "You can't run away from boss fight" << endl;
+				cin >> choice;
+			}
 			while (choice < 1 || choice > numOfNexts) {
 				cout << "Character not recognized, please retype" << endl;
 				cin >> choice;
+				
 			}
 
 			curr = curr->AllNexts[choice - 1];
 		}
 
 		if (instanceof<EndPoint>(curr->current))
+		{
+			curr->current->Action();
 			break;
+		}
+			
 	}
 }
 
 BossChamber::BossChamber(shared_ptr<Hero>&h) : Chamber(h) {
-	int lvl = h->getlevel() * 3 / 2;
+	int lvl = h->getlevel() * 2;
 	boss_monster = make_shared<monster>(lvl, "Great BOSS");
 }
 
 void BossChamber::takeAction(shared_ptr<Hero>&h) {
 	shared_ptr<EventNode> start = make_shared<EventNode>(make_shared<EnterToBossRoom>(h));
+	shared_ptr<EventNode> bossfight = make_shared<EventNode>(make_shared<Fight>(h, boss_monster));
+	bossfight->AllNexts.reserve(1);
 	start->AllNexts.reserve(2);
-	start->AllNexts.emplace_back(make_shared<EventNode>(make_shared<Fight>(h, boss_monster)));
+	start->AllNexts.emplace_back(bossfight);
+	bossfight->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
 	start->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
 	eventTransitionFunction(start, h);
 	if (h->getcurrentHealth() > 0)
@@ -137,6 +150,7 @@ void MonsterRoom::takeAction(shared_ptr<Hero>&h) {
 	fight->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
 	openBox->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
 	runAway->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
+
 	eventTransitionFunction(start, h);
 }
 
@@ -154,6 +168,7 @@ void TrapRoom::takeAction(shared_ptr<Hero>&h) {
 	trap->AllNexts.reserve(1);
 	start->AllNexts.emplace_back(trap);
 	trap->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
+
 	eventTransitionFunction(start, h);
 }
 
@@ -171,6 +186,7 @@ void PotionRoom::takeAction(shared_ptr<Hero>&h) {
 	potion->AllNexts.reserve(1);
 	start->AllNexts.emplace_back(potion);
 	potion->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
+
 	eventTransitionFunction(start, h);
 }
 
@@ -182,13 +198,15 @@ TreasureRoom::TreasureRoom(shared_ptr<Hero>&h) : SafeChamber(h) {
 }
 
 void TreasureRoom::takeAction(shared_ptr<Hero>&h) {
-	shared_ptr<EventNode> start = make_shared<EventNode>(make_shared<EnterToPotionRoom>(h));
+	shared_ptr<EventNode> start = make_shared<EventNode>(make_shared<EnterToTreasureRoom>(h));
 	start->AllNexts.reserve(2);
 	shared_ptr<EventNode> chestEvent = make_shared<EventNode>(make_shared<CheckChest>(h,chest));
 	chestEvent->AllNexts.reserve(1);
 	start->AllNexts.emplace_back(chestEvent);
 	start->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
 	chestEvent->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
+
+    eventTransitionFunction(start, h);
 }
 
 
@@ -201,23 +219,24 @@ HealthRoom::HealthRoom(shared_ptr<Hero>&h) : SafeChamber(h) {
 void  HealthRoom::takeAction(shared_ptr<Hero>&h) {
 	shared_ptr<EventNode> start = make_shared<EventNode>(make_shared<EnterToHealthRoom>(h));
 	start->AllNexts.reserve(2);
-	shared_ptr<EventNode> potion = make_shared<EventNode>(make_shared<DrinkPotion>(h));
-	potion->AllNexts.reserve(1);
-	start->AllNexts.emplace_back(potion);
+	shared_ptr<EventNode> health = make_shared<EventNode>(make_shared<HealthYourself>(h));
+    health->AllNexts.reserve(1);
+	start->AllNexts.emplace_back(health);
 	start->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
-	potion->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
+    health->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
+
 	eventTransitionFunction(start, h);
 }
 
 
 
 
-TraderRoom::TraderRoom(shared_ptr<Hero>&h) : SafeChamber(h) {
-    chambersWithoutMonsters++;
-    chambersWithoutTrader = 0;
+TraderRoom::TraderRoom(shared_ptr<Hero>&h) : SafeChamber(h) {chambersWithoutMonsters++;
+	chambersWithoutTrader = 0;
 	item1 = ItemFactory::createItem(h->getlevel(), getRandomItemType(h), h->getProf());
 	item2 = ItemFactory::createItem(h->getlevel(), getRandomItemType(h), h->getProf());
 	item3 = ItemFactory::createItem(h->getlevel(), getRandomItemType(h), h->getProf());
+	_buyingstrategy = make_unique<StandardStrategy>();
 };
 
 void  TraderRoom::takeAction(shared_ptr<Hero>&h)
@@ -226,7 +245,7 @@ void  TraderRoom::takeAction(shared_ptr<Hero>&h)
 	start->AllNexts.reserve(2);
 	shared_ptr<EventNode> see = make_shared<EventNode>(make_shared<SeeItems>(h,item1,item2,item3));
 	see->AllNexts.reserve(2);
-	shared_ptr<EventNode> buy = make_shared<EventNode>(make_shared<SeeItems>(h, item1, item2, item3));
+	shared_ptr<EventNode> buy = make_shared<EventNode>(make_shared<BuyItems>(h, item1, item2, item3,_buyingstrategy));
 	buy->AllNexts.reserve(1);
 	start->AllNexts.emplace_back(see);
 	start->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
@@ -248,6 +267,7 @@ void EmptyRoom::takeAction(shared_ptr<Hero>&h) {
 	shared_ptr<EventNode> start = make_shared<EventNode>(make_shared<EnterToEmptyRoom>(h));
 	start->AllNexts.reserve(1);
 	start->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
+
 	eventTransitionFunction(start, h);
 }
 
@@ -261,6 +281,7 @@ void  StartingRoom::takeAction(shared_ptr<Hero>&h) {
 	shared_ptr<EventNode> start= make_shared<EventNode>(make_shared<EnterToStartingRoom>(h));
 	start->AllNexts.reserve(1);
 	start->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
+
 	eventTransitionFunction(start, h);
 }
 ChamberNode::ChamberNode(shared_ptr<Chamber> curr) {

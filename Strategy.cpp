@@ -1,10 +1,10 @@
 #include "Strategy.h"
 #include <iostream>
 
-bool StandardStrategy::makeNewPrice(int p_wallet, int p_heroPrice)
+bool StandardStrategy::makeNewPrice(shared_ptr<Hero>& h, int p_heroPrice)
 {
 	bool l_flag{ false };
-	if(p_heroPrice>p_wallet)
+	if(p_heroPrice>h->getMoney())
 	{
 		std::cout << "You don't have that amount of money" << std::endl;
 	}
@@ -16,13 +16,17 @@ bool StandardStrategy::makeNewPrice(int p_wallet, int p_heroPrice)
 	{
 		l_flag = true;
 		std::cout << "This price is fair. I can sell you this item" << std::endl;
+		h->setMoney(h->getMoney() - this->getCurrentPrice());
 	}
 	else
 	{
-		int l_newPrice{ this->getCurrentPrice() + p_heroPrice / 2 };
+		int l_newPrice{ (this->getCurrentPrice() + p_heroPrice) / 2 };
 		std::cout << "This price is too low, but I can propose: " << l_newPrice << std::endl;
 		this->setCurrentPrice(l_newPrice);
 	}
-	std::cout << "Current price: " << this->getCurrentPrice();
+	if (!l_flag)
+	{
+		std::cout << "Current price: " << this->getCurrentPrice() << endl;
+	}
 	return l_flag;
 }
