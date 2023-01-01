@@ -62,9 +62,8 @@ void Chamber::eventTransitionFunction(shared_ptr<EventNode>& start, shared_ptr<H
 
 		int numOfNexts = curr->AllNexts.size();
 
-        if (numOfNexts == 0)    //komnata z bossem
-            break;
-		else if (numOfNexts == 1)
+       
+		if (numOfNexts == 1)
 			curr = curr->AllNexts[0];
 		else {
 			for (int i = 0; i < curr->AllNexts.size(); i++) {
