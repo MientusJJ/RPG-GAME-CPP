@@ -1,7 +1,7 @@
 #include "Strategy.h"
 #include <iostream>
 
-bool StandardStrategy::makeNewPrice(shared_ptr<Hero>& h, int p_heroPrice)
+bool StandardStrategy::makeNewPrice(int p_heroPrice)
 {
 	bool l_flag{ false };
 	if(p_heroPrice>h->getMoney())
@@ -16,7 +16,7 @@ bool StandardStrategy::makeNewPrice(shared_ptr<Hero>& h, int p_heroPrice)
 	{
 		l_flag = true;
 		std::cout << "This price is fair. I can sell you this item" << std::endl;
-		h->setMoney(h->getMoney() - this->getCurrentPrice());
+		this->setCurrentPrice(p_heroPrice);
 	}
 	else
 	{
@@ -30,3 +30,21 @@ bool StandardStrategy::makeNewPrice(shared_ptr<Hero>& h, int p_heroPrice)
 	}
 	return l_flag;
 }
+Strategy::Strategy(shared_ptr<Hero>& hero) :h(hero) {}
+StandardStrategy::StandardStrategy(shared_ptr<Hero> h) : Strategy(h){}
+void Strategy::takeMoney()
+{
+	h->setMoney(h->getMoney() - this->getCurrentPrice());
+}
+bool Strategy::buyingProcess(int price)
+{
+	if(this->makeNewPrice(price))
+	{
+		this->takeMoney();
+		return true;
+	}
+	return false;
+}
+
+
+

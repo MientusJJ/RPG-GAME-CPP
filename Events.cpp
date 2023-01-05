@@ -336,7 +336,7 @@ bool BuyItems::buyOneItem(int num)
         cout << "Enter the price at which you want to buy item: " << endl;
         int price;
         cin >> price;
-        _flag = _buyingStrategy->makeNewPrice(h, price);
+        _flag = _buyingStrategy->buyingProcess(price);
     }
     if(_flag)
     {

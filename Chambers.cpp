@@ -235,7 +235,7 @@ TraderRoom::TraderRoom(shared_ptr<Hero>&h) : SafeChamber(h) {chambersWithoutMons
 	item1 = ItemFactory::createItem(h->getlevel(), getRandomItemType(h), h->getProf());
 	item2 = ItemFactory::createItem(h->getlevel(), getRandomItemType(h), h->getProf());
 	item3 = ItemFactory::createItem(h->getlevel(), getRandomItemType(h), h->getProf());
-	_buyingstrategy = make_unique<StandardStrategy>();
+	_buyingstrategy = make_unique<StandardStrategy>(h);
 };
 
 void  TraderRoom::takeAction(shared_ptr<Hero>&h)
