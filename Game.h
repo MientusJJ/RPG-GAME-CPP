@@ -2,6 +2,7 @@
 #define GAME_H
 #pragma once
 #include "Chambers.h"
+#include "Observer.h"
 class Game
 {
 public:
@@ -12,5 +13,6 @@ public:
 	void chamberTransitionFunction(shared_ptr<ChamberNode>& start, shared_ptr<Hero>& h);
 private:
 	shared_ptr<Hero> hero;
+	shared_ptr<Observer> o;
 };
 #endif

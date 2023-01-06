@@ -376,6 +376,19 @@ Hero::Hero()
 Hero::~Hero()
 {
 }
+void Hero::setcurrentHealth(int h)
+{
+	Character::setcurrentHealth(h);
+	if(!this->getcurrentHealth())
+	{
+		obs->setTrue();
+	}
+}
+void Hero::setObserver(shared_ptr<Observer> o)
+{
+	this->obs = o;
+}
+
 void Hero::chooseClass()
 {
 	cout << "Choose class of " << this->getName() << " \nWrite 1 if you want warrior \nWrite 2 if you want scout \nWrite 3 if you want mage \n";
@@ -524,7 +537,8 @@ void Hero::setAttack(int ms, int weaponmin, int weaponmax)
 }
 void Hero::setmaxHealth(int h)
 {
-	this->maxHealth = (this->getlevel()*defaultHealth + h)*this->Class->getvitalityModifier();
+	//this->maxHealth = (this->getlevel()*defaultHealth + h)*this->Class->getvitalityModifier();
+	this->maxHealth = 1;
 }
 void Hero::setdefense(int d)
 {

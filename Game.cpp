@@ -6,6 +6,8 @@ Game::Game()
 void Game::play()
 {
 	hero = Hero::getInstance();
+	o = make_shared<Observer>();
+	hero->setObserver(o);
 	shared_ptr<ChamberNode> start = prepareMap(hero);
 	chamberTransitionFunction(start, hero);
 }
@@ -56,7 +58,7 @@ void Game::chamberTransitionFunction(shared_ptr<ChamberNode>& start, shared_ptr<
 	while (true)
 	{
 		curr->current->takeAction(h);
-		if (h->getcurrentHealth() == 0)
+		if (this->o->check())
 		{
 			break;
 		}

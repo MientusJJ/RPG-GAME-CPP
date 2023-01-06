@@ -1,18 +1,20 @@
 #include "Observer.h"
 
-//void Observer::add(shared_ptr<Chamber> ch)
-//{
-//	listofChambers.push_back(ch);
-//}
 void Observer::setTrue()
 {
-	//for(auto &v:listofChambers)
-	//{
-		//v->setEndFunction();
-	//}
-	cout << endGameMessage << endl;
+	this->endik = true;
 }
-Observer::~Observer()
+bool Observer::getEndik()
 {
-	//this->listofChambers.clear();
+	return this->endik;
+}
+bool Observer::check()
+{
+	if (this->getEndik())
+	{
+		cout << endGameMessage << endl;
+		return true;
+	}
+	else
+		return false;
 }

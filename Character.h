@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <memory>
 #include "Equipment.h"
-
+#include "Observer.h"
 class CharacterClass
 {
 public:
@@ -74,7 +74,7 @@ public:
 	int getlevel();
 	virtual void setlevel(int) {}
 	int getcurrentHealth();
-	void setcurrentHealth(int);
+	virtual void setcurrentHealth(int);
 	double getcriticalChance();
 	void setcriticalChance(double);
 	int getmaxHealth();
@@ -119,6 +119,8 @@ public:
 	void chooseClass();
 	void setmaxHealth(int);
 	void setdefense(int);
+	void setObserver(shared_ptr<Observer>);
+	void setcurrentHealth(int);
 	void setlevel(int);
 	void setminimalAttack(int);
 	void setmaximalAttack(int);
@@ -132,6 +134,7 @@ public:
 	bool fight(shared_ptr<Character>&,bool);
 private:
 	Hero();
+	shared_ptr<Observer> obs;
 	static shared_ptr<Hero> hero;
 	int money;
 	unique_ptr<Equipment> EQ;

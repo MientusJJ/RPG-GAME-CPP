@@ -3,16 +3,17 @@
 #define OBSERVER_H
 #include <vector>
 #include "Names.h"
-#include "Chambers.h"
-
+#include <iostream>
 class Observer
 {
+
 public:
 	//void add(shared_ptr<Chamber>);
 	void setTrue();
-	virtual ~Observer();
+	bool check();
 private:
-	//std::vector<shared_ptr<Chamber>> listofChambers;
+	bool endik{false};
+	bool getEndik();
 };
 
 #endif
