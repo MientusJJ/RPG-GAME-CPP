@@ -375,3 +375,7 @@ void EnterToBossRoom::Action() {
 EventNode::EventNode(shared_ptr<Event>&& curr) {
     current = curr;
 }
+
+void EventNode::Description() {
+    current->DisplayDescription();
+}

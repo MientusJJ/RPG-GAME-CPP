@@ -148,12 +148,11 @@ public:
 };
 
 
-
-
 class EventNode {
 public:
     EventNode(shared_ptr<Event>&& curr);
     shared_ptr<Event> current;
+    void Description();
     vector <shared_ptr<EventNode>> AllNexts;
 };
 #endif

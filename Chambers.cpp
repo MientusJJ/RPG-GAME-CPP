@@ -66,11 +66,16 @@ void Chamber::eventTransitionFunction(shared_ptr<EventNode>& start, shared_ptr<H
 		if (numOfNexts == 1)
 			curr = curr->AllNexts[0];
 		else {
-			for (int i = 0; i < curr->AllNexts.size(); i++) {
-				cout << "Option [" << i + 1 << "]: ";
-				curr->AllNexts[i]->current->DisplayDescription();
-				cout << endl;
-			}
+            int i = 1;
+            vector <shared_ptr<EventNode>> options = curr->AllNexts;
+
+            for (vector <shared_ptr<EventNode>>::iterator it = options.begin(); it != options.end(); it++) {
+                cout << "Option [" << i << "]: ";
+                (*it)->Description();
+                cout << endl;
+                i++;
+            }
+
 			int choice;
 			cin >> choice;
 			while (choice != 1 && instanceof<EnterToBossRoom>(curr->current))
