@@ -53,9 +53,9 @@ public:
 
 class CheckChest : public Event {
 protected:
-    unique_ptr<Chest> _chest;
+    shared_ptr<Chest> _chest;
 public:
-    CheckChest(shared_ptr<Hero>& hero, unique_ptr<Chest>& chest);
+    CheckChest(shared_ptr<Hero>& hero, shared_ptr<Chest>& chest);
     void Action();
 };
 
@@ -119,11 +119,11 @@ private:
 
 class BuyItems : public Event {
 public:
-    BuyItems(shared_ptr<Hero>& h, shared_ptr<Item>& i1, shared_ptr<Item>& i2, shared_ptr<Item>& i3,unique_ptr<Strategy>& p_strategy);
+    BuyItems(shared_ptr<Hero>& h, shared_ptr<Item>& i1, shared_ptr<Item>& i2, shared_ptr<Item>& i3,shared_ptr<Strategy>& p_strategy);
     void Action();
 private:
     bool buyOneItem(int num);
-    unique_ptr<Strategy> _buyingStrategy;
+    shared_ptr<Strategy> _buyingStrategy;
     shared_ptr<Item> _item1;
     shared_ptr<Item> _item2;
     shared_ptr<Item> _item3;

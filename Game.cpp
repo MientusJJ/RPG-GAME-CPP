@@ -55,9 +55,12 @@ shared_ptr<ChamberNode> Game::prepareMap(shared_ptr<Hero>& hero)
 void Game::chamberTransitionFunction(shared_ptr<ChamberNode>& start, shared_ptr<Hero>& h)
 {
 	shared_ptr<ChamberNode> curr = start;
+    ActionVisitor *visitor = new ActionVisitor();
+
 	while (true)
 	{
-		curr->current->takeAction(h);
+        curr->current->action(*visitor);
+
 		if (this->o->check())
 		{
 			break;

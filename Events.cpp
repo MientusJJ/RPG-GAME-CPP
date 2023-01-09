@@ -104,7 +104,7 @@ void RunAway::Action() {
         cout << "You escaped the monster" << endl;
 }
 
-CheckChest::CheckChest(shared_ptr<Hero>& hero, unique_ptr<Chest>& chest) {
+CheckChest::CheckChest(shared_ptr<Hero>& hero, shared_ptr<Chest>& chest) {
     h = hero;
     description = "Check the chest";
     _chest = move(chest);
@@ -225,12 +225,12 @@ void SeeItems::Action() {
     cout << "Your balance: " << h->getMoney() << endl;
 }
 
-BuyItems::BuyItems(shared_ptr<Hero>& hero, shared_ptr<Item>& i1, shared_ptr<Item>& i2, shared_ptr<Item>& i3, unique_ptr<Strategy>& p_strategy) {
+BuyItems::BuyItems(shared_ptr<Hero>& hero, shared_ptr<Item>& i1, shared_ptr<Item>& i2, shared_ptr<Item>& i3, shared_ptr<Strategy>& p_strategy) {
     h = hero;
     _item1 = i1;
     _item2 = i2;
     _item3 = i3;
-    _buyingStrategy = move(p_strategy);
+    _buyingStrategy = p_strategy;
     description = "Buy some items";
 }
 void BuyItems::Action() {
