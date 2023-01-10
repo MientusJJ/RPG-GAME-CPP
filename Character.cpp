@@ -537,8 +537,7 @@ void Hero::setAttack(int ms, int weaponmin, int weaponmax)
 }
 void Hero::setmaxHealth(int h)
 {
-	//this->maxHealth = (this->getlevel()*defaultHealth + h)*this->Class->getvitalityModifier();
-	this->maxHealth = 1;
+	this->maxHealth = (this->getlevel()*defaultHealth + h)*this->Class->getvitalityModifier();
 }
 void Hero::setdefense(int d)
 {

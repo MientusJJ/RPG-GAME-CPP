@@ -18,7 +18,7 @@ protected:
 public:
 	Chamber(shared_ptr<Hero>& h);
     virtual void action(ActionVisitor visitor) = 0;
-    shared_ptr<Hero> getHero();
+
 	string getName();
 	void eventTransitionFunction(shared_ptr<EventNode>& start, shared_ptr<Hero>& h);
 };
@@ -125,32 +125,17 @@ public:
 	shared_ptr<ChamberNode> option2;
 };
 
-
-class IVisitor {
+class ActionVisitor {
 public:
-    virtual ~IVisitor() {}
-    virtual void visitMonsterRoom(MonsterRoom room) = 0;
-    virtual void visitTrapRoom(TrapRoom room) = 0;
-    virtual void visitPotionRoom(PotionRoom room) = 0;
-    virtual void visitTreasureRoom(TreasureRoom room) = 0;
-    virtual void visitHealthRoom(HealthRoom room) = 0;
-    virtual void visitTraderRoom(TraderRoom room) = 0;
-    virtual void visitEmptyRoom(EmptyRoom room) = 0;
-    virtual void visitStartingRoom(StartingRoom room) = 0;
-    virtual void visitBossRoom(BossChamber room) = 0;
-};
-
-class ActionVisitor : public IVisitor {
-public:
-    void visitMonsterRoom(MonsterRoom room) override;
-    void visitTrapRoom(TrapRoom room) override;
-    void visitPotionRoom(PotionRoom room) override;
-    void visitTreasureRoom(TreasureRoom room) override;
-    void visitHealthRoom(HealthRoom room) override;
-    void visitTraderRoom(TraderRoom room) override;
-    void visitEmptyRoom(EmptyRoom room) override;
-    void visitStartingRoom(StartingRoom room) override;
-    void visitBossRoom(BossChamber room) override;
+    void visitMonsterRoom(MonsterRoom room);
+    void visitTrapRoom(TrapRoom room) ;
+    void visitPotionRoom(PotionRoom room);
+    void visitTreasureRoom(TreasureRoom room);
+    void visitHealthRoom(HealthRoom room);
+    void visitTraderRoom(TraderRoom room);
+    void visitEmptyRoom(EmptyRoom room);
+    void visitStartingRoom(StartingRoom room);
+    void visitBossRoom(BossChamber room);
 };
 
 #endif

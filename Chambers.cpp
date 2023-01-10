@@ -32,7 +32,7 @@ Chest::Chest(shared_ptr<Hero>& h) {
 
 
 void ActionVisitor::visitMonsterRoom(MonsterRoom room) {
-    shared_ptr<Hero> h = room.getHero();
+    shared_ptr<Hero> h = Hero::getInstance();
     shared_ptr<Chest> chest = room.getChest();
     shared_ptr<monster> normal_monster = room.getMonster();
 
@@ -56,7 +56,7 @@ void ActionVisitor::visitMonsterRoom(MonsterRoom room) {
 
 void ActionVisitor::visitTrapRoom(TrapRoom room)
 {
-    shared_ptr<Hero> h = room.getHero();
+    shared_ptr<Hero> h = Hero::getInstance();
 
     shared_ptr<EventNode> start = make_shared<EventNode>(make_shared<EnterToTrapRoom>(h));
     start->AllNexts.reserve(1);
@@ -70,7 +70,7 @@ void ActionVisitor::visitTrapRoom(TrapRoom room)
 
 void ActionVisitor::visitPotionRoom(PotionRoom room)
 {
-    shared_ptr<Hero> h = room.getHero();
+    shared_ptr<Hero> h = Hero::getInstance();
 
     shared_ptr<EventNode> start = make_shared<EventNode>(make_shared<EnterToPotionRoom>(h));
     start->AllNexts.reserve(1);
@@ -84,7 +84,7 @@ void ActionVisitor::visitPotionRoom(PotionRoom room)
 
 void ActionVisitor::visitTreasureRoom(TreasureRoom room)
 {
-    shared_ptr<Hero> h = room.getHero();
+    shared_ptr<Hero> h = Hero::getInstance();
     shared_ptr<Chest> chest = room.getChest();
 
     shared_ptr<EventNode> start = make_shared<EventNode>(make_shared<EnterToTreasureRoom>(h));
@@ -100,7 +100,7 @@ void ActionVisitor::visitTreasureRoom(TreasureRoom room)
 
 void ActionVisitor::visitHealthRoom(HealthRoom room)
 {
-    shared_ptr<Hero> h = room.getHero();
+    shared_ptr<Hero> h = Hero::getInstance();
 
     shared_ptr<EventNode> start = make_shared<EventNode>(make_shared<EnterToHealthRoom>(h));
     start->AllNexts.reserve(2);
@@ -115,7 +115,7 @@ void ActionVisitor::visitHealthRoom(HealthRoom room)
 
 void ActionVisitor::visitTraderRoom(TraderRoom room)
 {
-    shared_ptr<Hero> h = room.getHero();
+    shared_ptr<Hero> h = Hero::getInstance();
     shared_ptr<Item> item1 = room.getItem1();
     shared_ptr<Item> item2 = room.getItem2();
     shared_ptr<Item> item3 = room.getItem3();
@@ -138,7 +138,7 @@ void ActionVisitor::visitTraderRoom(TraderRoom room)
 
 void ActionVisitor::visitEmptyRoom(EmptyRoom room)
 {
-    shared_ptr<Hero> h = room.getHero();
+    shared_ptr<Hero> h = Hero::getInstance();
 
     shared_ptr<EventNode> start = make_shared<EventNode>(make_shared<EnterToEmptyRoom>(h));
     start->AllNexts.reserve(1);
@@ -149,7 +149,7 @@ void ActionVisitor::visitEmptyRoom(EmptyRoom room)
 
 void ActionVisitor::visitStartingRoom(StartingRoom room)
 {
-    shared_ptr<Hero> h = room.getHero();
+    shared_ptr<Hero> h = Hero::getInstance();
 
     shared_ptr<EventNode> start= make_shared<EventNode>(make_shared<EnterToStartingRoom>(h));
     start->AllNexts.reserve(1);
@@ -160,7 +160,7 @@ void ActionVisitor::visitStartingRoom(StartingRoom room)
 
 void ActionVisitor::visitBossRoom(BossChamber room)
 {
-    shared_ptr<Hero> h = room.getHero();
+    shared_ptr<Hero> h = Hero::getInstance();
     shared_ptr<monster> boss_monster = room.getMonster();
 
     shared_ptr<EventNode> start = make_shared<EventNode>(make_shared<EnterToBossRoom>(h));
@@ -183,10 +183,6 @@ Chamber::Chamber(shared_ptr<Hero>&h)
 {
 	chamber_ID = static_cast<int>(makeRand(1,1000));
 	hero = h->getInstance();
-}
-
-shared_ptr<Hero> Chamber::getHero() {
-    return hero;
 }
 
 string Chamber::getName() {
