@@ -43,6 +43,7 @@ EndPoint::EndPoint(shared_ptr<Hero>& hero) {
     description = "Get out of the room";
 }
 
+// Action do kontrolera (różne definicje Action dla różnych argumentów - różne rodzaje eventów) - poliformizm
 void EndPoint::Action() {
     char decision;
     while (true) {

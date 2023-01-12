@@ -389,6 +389,7 @@ void Hero::setObserver(shared_ptr<Observer> o)
 	this->obs = o;
 }
 
+// do kontrolera + instancja hero jak pole + heroSetClass() + heroSetName()
 void Hero::chooseClass()
 {
 	cout << "Choose class of " << this->getName() << " \nWrite 1 if you want warrior \nWrite 2 if you want scout \nWrite 3 if you want mage \n";

@@ -30,6 +30,7 @@ public:
 	BossChamber(shared_ptr<Hero>&h);
     shared_ptr<monster> getMonster();
     void action(ActionVisitor visitor);
+    shared_ptr<EventNode> prepareEventsGraph();
 
 private:
 	void finalFight(shared_ptr<Hero>&h);
@@ -59,18 +60,21 @@ public:
     shared_ptr<Chest> getChest();
     shared_ptr<monster> getMonster();
     void action(ActionVisitor visitor);
+    shared_ptr<EventNode> prepareEventsGraph();
 };
 
 class TrapRoom : public NormalChamber {
 public:
 	TrapRoom(shared_ptr<Hero>&h);
     void action(ActionVisitor visitor);
+    shared_ptr<EventNode> prepareEventsGraph();
 };
 
 class PotionRoom : public NormalChamber {
 public:
 	PotionRoom(shared_ptr<Hero>&h);
     void action(ActionVisitor visitor);
+    shared_ptr<EventNode> prepareEventsGraph();
 };
 
 class TreasureRoom : public SafeChamber {
@@ -81,12 +85,14 @@ public:
 	TreasureRoom(shared_ptr<Hero>&h);
     shared_ptr<Chest> getChest();
     void action(ActionVisitor visitor);
+    shared_ptr<EventNode> prepareEventsGraph();
 };
 
 class HealthRoom : public SafeChamber {
 public:
 	HealthRoom(shared_ptr<Hero>&h);
     void action(ActionVisitor visitor);
+    shared_ptr<EventNode> prepareEventsGraph();
 };
 
 class TraderRoom : public SafeChamber {
@@ -102,18 +108,21 @@ public:
     shared_ptr<Item> getItem3();
     shared_ptr<Strategy> getStrategy();
     void action(ActionVisitor visitor);
+    shared_ptr<EventNode> prepareEventsGraph();
 };
 
 class EmptyRoom : public SafeChamber {
 public:
 	EmptyRoom(shared_ptr<Hero>&h);
     void action(ActionVisitor visitor);
+    shared_ptr<EventNode> prepareEventsGraph();
 };
 
 class StartingRoom : public SafeChamber {
 public:
 	StartingRoom(shared_ptr<Hero>&h);
     void action(ActionVisitor visitor);
+    shared_ptr<EventNode> prepareEventsGraph();
 };
 
 class ChamberNode {
@@ -124,6 +133,8 @@ public:
 	shared_ptr<ChamberNode> option2;
 };
 
+
+// Controller
 class IVisitor {
 public:
     virtual ~IVisitor() {}
@@ -138,6 +149,7 @@ public:
     virtual void visitBossRoom(BossChamber room) = 0;
 };
 
+// Controller
 class ActionVisitor : public IVisitor {
 public:
     void visitMonsterRoom(MonsterRoom room) override;
@@ -149,6 +161,9 @@ public:
     void visitEmptyRoom(EmptyRoom room) override;
     void visitStartingRoom(StartingRoom room) override;
     void visitBossRoom(BossChamber room) override;
+
+private:
+    void eventTransitionFunction(shared_ptr<EventNode>& start, shared_ptr<Hero>& h);
 };
 
 #endif

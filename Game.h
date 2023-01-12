@@ -5,6 +5,7 @@
 #include "Observer.h"
 #include "Views.cpp"
 
+// Controller
 class Game
 {
 public:

@@ -31,146 +31,128 @@ Chest::Chest(shared_ptr<Hero>& h) {
 }
 
 
+
+template<typename Derived, typename T>
+inline bool instanceof(const shared_ptr<T> ptr) {
+    shared_ptr<Derived> d = dynamic_pointer_cast<Derived>(ptr);
+    return d != nullptr;
+}
+
+void ActionVisitor::eventTransitionFunction(shared_ptr<EventNode> &start, shared_ptr<Hero> &h) {
+    shared_ptr<EventNode> curr = start;
+    while (true)
+    {
+        curr->current->Action();
+
+        if (h->getcurrentHealth() == 0)
+            break;
+
+        int numOfNexts = curr->AllNexts.size();
+
+
+        if (numOfNexts == 1)
+            curr = curr->AllNexts[0];
+        else {
+            int i = 1;
+            vector <shared_ptr<EventNode>> options = curr->AllNexts;
+
+            for (vector <shared_ptr<EventNode>>::iterator it = options.begin(); it != options.end(); it++) {
+                cout << "Option [" << i << "]: ";
+                (*it)->Description();
+                cout << endl;
+                i++;
+            }
+
+            int choice;
+            cin >> choice;
+            while (choice < 1 || choice > numOfNexts) {
+                cout << "Character not recognized, please retype" << endl;
+                cin >> choice;
+
+            }
+
+            curr = curr->AllNexts[choice - 1];
+        }
+
+        if (instanceof<EndPoint>(curr->current))
+        {
+            curr->current->Action();
+            break;
+        }
+
+    }
+}
+
 void ActionVisitor::visitMonsterRoom(MonsterRoom room) {
     shared_ptr<Hero> h = Hero::getInstance();
-    shared_ptr<Chest> chest = room.getChest();
-    shared_ptr<monster> normal_monster = room.getMonster();
+    shared_ptr<EventNode> start = room.prepareEventsGraph();
 
-    shared_ptr<EventNode> start = make_shared<EventNode>(make_shared<EnterToMonsterRoom>(h));
-    shared_ptr<EventNode> fight = make_shared<EventNode>(make_shared<Fight>(h,normal_monster));
-    shared_ptr<EventNode> runAway = make_shared<EventNode>(make_shared<RunAway>(h));
-    shared_ptr<EventNode> openBox = make_shared<EventNode>(make_unique<CheckChest>(h, chest));
-    start->AllNexts.reserve(2);
-    fight->AllNexts.reserve(2);
-    openBox->AllNexts.reserve(1);
-    runAway->AllNexts.reserve(1);
-    start->AllNexts.emplace_back(fight);
-    start->AllNexts.emplace_back(runAway);
-    fight->AllNexts.emplace_back(openBox);
-    fight->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
-    openBox->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
-    runAway->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
-
-    room.eventTransitionFunction(start, h);
+    eventTransitionFunction(start, h);
 }
 
 void ActionVisitor::visitTrapRoom(TrapRoom room)
 {
     shared_ptr<Hero> h = Hero::getInstance();
+    shared_ptr<EventNode> start = room.prepareEventsGraph();
 
-    shared_ptr<EventNode> start = make_shared<EventNode>(make_shared<EnterToTrapRoom>(h));
-    start->AllNexts.reserve(1);
-    shared_ptr<EventNode> trap = make_shared<EventNode>(make_shared<ActiveTheTrap>(h));
-    trap->AllNexts.reserve(1);
-    start->AllNexts.emplace_back(trap);
-    trap->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
-
-    room.eventTransitionFunction(start, h);
+    eventTransitionFunction(start, h);
 }
 
 void ActionVisitor::visitPotionRoom(PotionRoom room)
 {
     shared_ptr<Hero> h = Hero::getInstance();
+    shared_ptr<EventNode> start = room.prepareEventsGraph();
 
-    shared_ptr<EventNode> start = make_shared<EventNode>(make_shared<EnterToPotionRoom>(h));
-    start->AllNexts.reserve(1);
-    shared_ptr<EventNode> potion = make_shared<EventNode>(make_shared<DrinkPotion>(h));
-    potion->AllNexts.reserve(1);
-    start->AllNexts.emplace_back(potion);
-    potion->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
-
-    room.eventTransitionFunction(start, h);
+    eventTransitionFunction(start, h);
 }
 
 void ActionVisitor::visitTreasureRoom(TreasureRoom room)
 {
     shared_ptr<Hero> h = Hero::getInstance();
-    shared_ptr<Chest> chest = room.getChest();
+    shared_ptr<EventNode> start = room.prepareEventsGraph();
 
-    shared_ptr<EventNode> start = make_shared<EventNode>(make_shared<EnterToTreasureRoom>(h));
-    start->AllNexts.reserve(2);
-    shared_ptr<EventNode> chestEvent = make_shared<EventNode>(make_shared<CheckChest>(h,chest));
-    chestEvent->AllNexts.reserve(1);
-    start->AllNexts.emplace_back(chestEvent);
-    start->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
-    chestEvent->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
-
-    room.eventTransitionFunction(start, h);
+    eventTransitionFunction(start, h);
 }
 
 void ActionVisitor::visitHealthRoom(HealthRoom room)
 {
     shared_ptr<Hero> h = Hero::getInstance();
+    shared_ptr<EventNode> start = room.prepareEventsGraph();
 
-    shared_ptr<EventNode> start = make_shared<EventNode>(make_shared<EnterToHealthRoom>(h));
-    start->AllNexts.reserve(2);
-    shared_ptr<EventNode> health = make_shared<EventNode>(make_shared<HealthYourself>(h));
-    health->AllNexts.reserve(1);
-    start->AllNexts.emplace_back(health);
-    start->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
-    health->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
-
-    room.eventTransitionFunction(start, h);
+    eventTransitionFunction(start, h);
 }
 
 void ActionVisitor::visitTraderRoom(TraderRoom room)
 {
     shared_ptr<Hero> h = Hero::getInstance();
-    shared_ptr<Item> item1 = room.getItem1();
-    shared_ptr<Item> item2 = room.getItem2();
-    shared_ptr<Item> item3 = room.getItem3();
-    shared_ptr<Strategy> _buyingstrategy = room.getStrategy();
+    shared_ptr<EventNode> start = room.prepareEventsGraph();
 
-    shared_ptr<EventNode> start = make_shared<EventNode>(make_shared<EnterToTraderRoom>(h));
-    start->AllNexts.reserve(2);
-    shared_ptr<EventNode> see = make_shared<EventNode>(make_shared<SeeItems>(h,item1,item2,item3));
-    see->AllNexts.reserve(2);
-    shared_ptr<EventNode> buy = make_shared<EventNode>(make_shared<BuyItems>(h, item1, item2, item3,_buyingstrategy));
-    buy->AllNexts.reserve(1);
-    start->AllNexts.emplace_back(see);
-    start->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
-    see->AllNexts.emplace_back(buy);
-    see->AllNexts.push_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
-    buy->AllNexts.push_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
-
-    room.eventTransitionFunction(start, h);
+    eventTransitionFunction(start, h);
 }
 
 void ActionVisitor::visitEmptyRoom(EmptyRoom room)
 {
     shared_ptr<Hero> h = Hero::getInstance();
+    shared_ptr<EventNode> start = room.prepareEventsGraph();
 
-    shared_ptr<EventNode> start = make_shared<EventNode>(make_shared<EnterToEmptyRoom>(h));
-    start->AllNexts.reserve(1);
-    start->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
-
-    room.eventTransitionFunction(start, h);
+    eventTransitionFunction(start, h);
 }
 
 void ActionVisitor::visitStartingRoom(StartingRoom room)
 {
     shared_ptr<Hero> h = Hero::getInstance();
+    shared_ptr<EventNode> start = room.prepareEventsGraph();
 
-    shared_ptr<EventNode> start= make_shared<EventNode>(make_shared<EnterToStartingRoom>(h));
-    start->AllNexts.reserve(1);
-    start->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
-
-    room.eventTransitionFunction(start, h);
+    eventTransitionFunction(start, h);
 }
 
 void ActionVisitor::visitBossRoom(BossChamber room)
 {
     shared_ptr<Hero> h = Hero::getInstance();
-    shared_ptr<monster> boss_monster = room.getMonster();
+    shared_ptr<EventNode> start = room.prepareEventsGraph();
 
-    shared_ptr<EventNode> start = make_shared<EventNode>(make_shared<EnterToBossRoom>(h));
-    shared_ptr<EventNode> bossfight = make_shared<EventNode>(make_shared<Fight>(h, boss_monster));
-    bossfight->AllNexts.reserve(1);
-    start->AllNexts.reserve(2);
-    start->AllNexts.emplace_back(bossfight);
-    bossfight->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
-    start->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
-    room.eventTransitionFunction(start, h);
+    eventTransitionFunction(start, h);
+
     if (h->getcurrentHealth() > 0)
         cout << "Congratulations! You finished the game" << endl;
     else
@@ -189,57 +171,6 @@ string Chamber::getName() {
 	return name;
 }
 
-template<typename Derived, typename T>
-inline bool instanceof(const shared_ptr<T> ptr) {
-	shared_ptr<Derived> d = dynamic_pointer_cast<Derived>(ptr);
-	return d != nullptr;
-}
-
-// do Controller
-void Chamber::eventTransitionFunction(shared_ptr<EventNode>& start, shared_ptr<Hero>& h) {
-	shared_ptr<EventNode> curr = start;
-	while (true)
-	{
-		curr->current->Action();
-
-		if (h->getcurrentHealth() == 0)
-			break;
-
-		int numOfNexts = curr->AllNexts.size();
-
-       
-		if (numOfNexts == 1)
-			curr = curr->AllNexts[0];
-		else {
-            int i = 1;
-            vector <shared_ptr<EventNode>> options = curr->AllNexts;
-
-            for (vector <shared_ptr<EventNode>>::iterator it = options.begin(); it != options.end(); it++) {
-                cout << "Option [" << i << "]: ";
-                (*it)->Description();
-                cout << endl;
-                i++;
-            }
-
-			int choice;
-			cin >> choice;
-			while (choice < 1 || choice > numOfNexts) {
-				cout << "Character not recognized, please retype" << endl;
-				cin >> choice;
-				
-			}
-
-			curr = curr->AllNexts[choice - 1];
-		}
-
-		if (instanceof<EndPoint>(curr->current))
-		{
-			curr->current->Action();
-			break;
-		}
-			
-	}
-}
 
 BossChamber::BossChamber(shared_ptr<Hero>&h) : Chamber(h) {
 	int lvl = h->getlevel() * 2;
@@ -252,6 +183,21 @@ shared_ptr<monster> BossChamber::getMonster() {
 
 void BossChamber::action(ActionVisitor visitor) {
     visitor.visitBossRoom(*this);
+}
+
+shared_ptr<EventNode> BossChamber::prepareEventsGraph() {
+    shared_ptr<Hero> h = Hero::getInstance();
+    shared_ptr<monster> boss_monster = getMonster();
+
+    shared_ptr<EventNode> start = make_shared<EventNode>(make_shared<EnterToBossRoom>(h));
+    shared_ptr<EventNode> bossfight = make_shared<EventNode>(make_shared<Fight>(h, boss_monster));
+    bossfight->AllNexts.reserve(1);
+    start->AllNexts.reserve(2);
+    start->AllNexts.emplace_back(bossfight);
+    bossfight->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
+    start->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
+
+    return start;
 }
 
 
@@ -281,6 +227,29 @@ void MonsterRoom::action(ActionVisitor visitor) {
     visitor.visitMonsterRoom(*this);
 }
 
+shared_ptr<EventNode> MonsterRoom::prepareEventsGraph() {
+    shared_ptr<Hero> h = Hero::getInstance();
+    shared_ptr<Chest> chest = getChest();
+    shared_ptr<monster> normal_monster = getMonster();
+
+    shared_ptr<EventNode> start = make_shared<EventNode>(make_shared<EnterToMonsterRoom>(h));
+    shared_ptr<EventNode> fight = make_shared<EventNode>(make_shared<Fight>(h,normal_monster));
+    shared_ptr<EventNode> runAway = make_shared<EventNode>(make_shared<RunAway>(h));
+    shared_ptr<EventNode> openBox = make_shared<EventNode>(make_unique<CheckChest>(h, chest));
+    start->AllNexts.reserve(2);
+    fight->AllNexts.reserve(2);
+    openBox->AllNexts.reserve(1);
+    runAway->AllNexts.reserve(1);
+    start->AllNexts.emplace_back(fight);
+    start->AllNexts.emplace_back(runAway);
+    fight->AllNexts.emplace_back(openBox);
+    fight->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
+    openBox->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
+    runAway->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
+
+    return start;
+}
+
 
 TrapRoom::TrapRoom(shared_ptr<Hero>&h) : NormalChamber(h) {
     chambersWithoutMonsters++;
@@ -291,6 +260,20 @@ void TrapRoom::action(ActionVisitor visitor) {
     visitor.visitTrapRoom(*this);
 }
 
+shared_ptr<EventNode> TrapRoom::prepareEventsGraph() {
+    shared_ptr<Hero> h = Hero::getInstance();
+
+    shared_ptr<EventNode> start = make_shared<EventNode>(make_shared<EnterToTrapRoom>(h));
+    start->AllNexts.reserve(1);
+    shared_ptr<EventNode> trap = make_shared<EventNode>(make_shared<ActiveTheTrap>(h));
+    trap->AllNexts.reserve(1);
+    start->AllNexts.emplace_back(trap);
+    trap->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
+
+    return start;
+}
+
+
 
 PotionRoom::PotionRoom(shared_ptr<Hero>&h) : NormalChamber(h) {
     chambersWithoutMonsters++;
@@ -299,6 +282,19 @@ PotionRoom::PotionRoom(shared_ptr<Hero>&h) : NormalChamber(h) {
 
 void PotionRoom::action(ActionVisitor visitor) {
     visitor.visitPotionRoom(*this);
+}
+
+shared_ptr<EventNode> PotionRoom::prepareEventsGraph() {
+    shared_ptr<Hero> h = Hero::getInstance();
+
+    shared_ptr<EventNode> start = make_shared<EventNode>(make_shared<EnterToPotionRoom>(h));
+    start->AllNexts.reserve(1);
+    shared_ptr<EventNode> potion = make_shared<EventNode>(make_shared<DrinkPotion>(h));
+    potion->AllNexts.reserve(1);
+    start->AllNexts.emplace_back(potion);
+    potion->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
+
+    return start;
 }
 
 
@@ -316,6 +312,21 @@ void TreasureRoom::action(ActionVisitor visitor) {
     visitor.visitTreasureRoom(*this);
 }
 
+shared_ptr<EventNode> TreasureRoom::prepareEventsGraph() {
+    shared_ptr<Hero> h = Hero::getInstance();
+    shared_ptr<Chest> chest = getChest();
+
+    shared_ptr<EventNode> start = make_shared<EventNode>(make_shared<EnterToTreasureRoom>(h));
+    start->AllNexts.reserve(2);
+    shared_ptr<EventNode> chestEvent = make_shared<EventNode>(make_shared<CheckChest>(h,chest));
+    chestEvent->AllNexts.reserve(1);
+    start->AllNexts.emplace_back(chestEvent);
+    start->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
+    chestEvent->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
+
+    return start;
+}
+
 
 HealthRoom::HealthRoom(shared_ptr<Hero>&h) : SafeChamber(h) {
     chambersWithoutMonsters++;
@@ -326,9 +337,24 @@ void HealthRoom::action(ActionVisitor visitor) {
     visitor.visitHealthRoom(*this);
 }
 
+shared_ptr<EventNode> HealthRoom::prepareEventsGraph() {
+    shared_ptr<Hero> h = Hero::getInstance();
+
+    shared_ptr<EventNode> start = make_shared<EventNode>(make_shared<EnterToHealthRoom>(h));
+    start->AllNexts.reserve(2);
+    shared_ptr<EventNode> health = make_shared<EventNode>(make_shared<HealthYourself>(h));
+    health->AllNexts.reserve(1);
+    start->AllNexts.emplace_back(health);
+    start->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
+    health->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
+
+    return start;
+}
+
 
 TraderRoom::TraderRoom(shared_ptr<Hero>&h) : SafeChamber(h) {chambersWithoutMonsters++;
 	chambersWithoutTrader = 0;
+    // tworzenie itemów do kontrolera
 	item1 = ItemFactory::createItem(h->getlevel(), getRandomItemType(h), h->getProf());
 	item2 = ItemFactory::createItem(h->getlevel(), getRandomItemType(h), h->getProf());
 	item3 = ItemFactory::createItem(h->getlevel(), getRandomItemType(h), h->getProf());
@@ -352,6 +378,28 @@ void TraderRoom::action(ActionVisitor visitor) {
     visitor.visitTraderRoom(*this);
 }
 
+shared_ptr<EventNode> TraderRoom::prepareEventsGraph() {
+    shared_ptr<Hero> h = Hero::getInstance();
+    shared_ptr<Item> item1 = getItem1();
+    shared_ptr<Item> item2 = getItem2();
+    shared_ptr<Item> item3 = getItem3();
+    shared_ptr<Strategy> _buyingstrategy = getStrategy();
+
+    shared_ptr<EventNode> start = make_shared<EventNode>(make_shared<EnterToTraderRoom>(h));
+    start->AllNexts.reserve(2);
+    shared_ptr<EventNode> see = make_shared<EventNode>(make_shared<SeeItems>(h,item1,item2,item3));
+    see->AllNexts.reserve(2);
+    shared_ptr<EventNode> buy = make_shared<EventNode>(make_shared<BuyItems>(h, item1, item2, item3,_buyingstrategy));
+    buy->AllNexts.reserve(1);
+    start->AllNexts.emplace_back(see);
+    start->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
+    see->AllNexts.emplace_back(buy);
+    see->AllNexts.push_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
+    buy->AllNexts.push_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
+
+    return start;
+}
+
 
 EmptyRoom::EmptyRoom(shared_ptr<Hero>&h) : SafeChamber(h) {
     chambersWithoutMonsters++;
@@ -362,6 +410,16 @@ void EmptyRoom::action(ActionVisitor visitor) {
     visitor.visitEmptyRoom(*this);
 }
 
+shared_ptr<EventNode> EmptyRoom::prepareEventsGraph() {
+    shared_ptr<Hero> h = Hero::getInstance();
+
+    shared_ptr<EventNode> start = make_shared<EventNode>(make_shared<EnterToEmptyRoom>(h));
+    start->AllNexts.reserve(1);
+    start->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
+
+    return start;
+}
+
 
 StartingRoom::StartingRoom(shared_ptr<Hero>&h) : SafeChamber(h) {
     chambersWithoutMonsters = 0;
@@ -370,6 +428,16 @@ StartingRoom::StartingRoom(shared_ptr<Hero>&h) : SafeChamber(h) {
 
 void StartingRoom::action(ActionVisitor visitor) {
     visitor.visitStartingRoom(*this);
+}
+
+shared_ptr<EventNode> StartingRoom::prepareEventsGraph() {
+    shared_ptr<Hero> h = Hero::getInstance();
+
+    shared_ptr<EventNode> start= make_shared<EventNode>(make_shared<EnterToStartingRoom>(h));
+    start->AllNexts.reserve(1);
+    start->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>(h)));
+
+    return start;
 }
 
 
