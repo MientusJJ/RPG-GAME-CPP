@@ -1,9 +1,20 @@
 #include "Game.h"
 
+class Controller {
+public:
+    Controller() = default;;
+    void playGame() {
+        unique_ptr<Game> newGame;
+        newGame = make_unique<Game>();
+        newGame->play();
+        system("pause");
+    }
+};
+
 int main() {
-	unique_ptr<Game> myGame;
-	myGame = make_unique<Game>();
-	myGame->play();
-	system("pause");
+    unique_ptr<Controller> myGame;
+    myGame->playGame();
+
+
 	return 0;
 }

@@ -3,14 +3,16 @@
 Game::Game()
 {
 }
+
 void Game::play()
 {
 	hero = Hero::getInstance();
 	o = make_shared<Observer>();
 	hero->setObserver(o);
 	shared_ptr<ChamberNode> start = prepareMap(hero);
-	chamberTransitionFunction(start, hero);
+	chamberTransitionFunction(start);
 }
+
 shared_ptr<ChamberNode> Game::prepareMap(shared_ptr<Hero>& hero)
 {
 	shared_ptr<ChamberNode> start = make_shared<ChamberNode>(make_shared<StartingRoom>(hero));
@@ -52,7 +54,8 @@ shared_ptr<ChamberNode> Game::prepareMap(shared_ptr<Hero>& hero)
 
 	return start;
 }
-void Game::chamberTransitionFunction(shared_ptr<ChamberNode>& start, shared_ptr<Hero>& h)
+
+void Game::chamberTransitionFunction(shared_ptr<ChamberNode>& start)
 {
 	shared_ptr<ChamberNode> curr = start;
     shared_ptr<ActionVisitor> visitor(new ActionVisitor());

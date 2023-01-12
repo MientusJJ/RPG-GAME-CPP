@@ -195,6 +195,7 @@ inline bool instanceof(const shared_ptr<T> ptr) {
 	return d != nullptr;
 }
 
+// do Controller
 void Chamber::eventTransitionFunction(shared_ptr<EventNode>& start, shared_ptr<Hero>& h) {
 	shared_ptr<EventNode> curr = start;
 	while (true)
@@ -222,11 +223,6 @@ void Chamber::eventTransitionFunction(shared_ptr<EventNode>& start, shared_ptr<H
 
 			int choice;
 			cin >> choice;
-			while (choice != 1 && instanceof<EnterToBossRoom>(curr->current))
-			{
-				cout << "You can't run away from boss fight" << endl;
-				cin >> choice;
-			}
 			while (choice < 1 || choice > numOfNexts) {
 				cout << "Character not recognized, please retype" << endl;
 				cin >> choice;

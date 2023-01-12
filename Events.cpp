@@ -4,6 +4,7 @@
 
 void Chest::openBox(shared_ptr<Hero>& h) {
     int coins = static_cast<int>(round(makeRand(0, h->getlevel() * 100)));
+    //viewTxtOpenBox
     cout << "You found " << coins << " gold in the chest" << endl;
     h->setMoney(h->getMoney() + coins);
 
