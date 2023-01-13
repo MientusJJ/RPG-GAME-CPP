@@ -2,7 +2,7 @@
 
 
 // klasy wchodzące w skład kontrolera:
-// Game, ActionVisitor,
+// Game, ActionVisitor, Event, DescriptionVisitor
 void Controller::playGame() {
     unique_ptr<Game> newGame;
     newGame = make_unique<Game>();

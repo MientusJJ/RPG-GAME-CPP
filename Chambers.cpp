@@ -55,11 +55,11 @@ void ActionVisitor::eventTransitionFunction(shared_ptr<EventNode> &start, shared
         else {
             int i = 1;
             vector <shared_ptr<EventNode>> options = curr->AllNexts;
+            shared_ptr<DescriptionVisitor> visitor(new DescriptionVisitor());
 
             for (vector <shared_ptr<EventNode>>::iterator it = options.begin(); it != options.end(); it++) {
                 cout << "Option [" << i << "]: ";
-                (*it)->Description();
-                cout << endl;
+                (*it)->current->DisplayDescription(*visitor);
                 i++;
             }
 

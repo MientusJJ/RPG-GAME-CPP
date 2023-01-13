@@ -8,6 +8,7 @@
 
 class ActionVisitor;
 
+// Controller
 class Chamber {
 protected:
     int chamber_ID;
