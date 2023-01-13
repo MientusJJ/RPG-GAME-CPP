@@ -8,8 +8,7 @@
 #include <stdlib.h>
 #include <memory>
 #include "Equipment.h"
-#include "Observer.h"
-#include "list"
+#include <list>
 class Observer;
 
 class CharacterClass
