@@ -7,8 +7,8 @@ Game::Game()
 void Game::play()
 {
 	hero = Hero::getInstance();
-	o = make_shared<Observer>();
-	hero->setObserver(o);
+	o = make_shared<Observer>(hero);
+	o->addToObserver();
 	shared_ptr<ChamberNode> start = prepareMap(hero);
 	chamberTransitionFunction(start);
 }
@@ -58,7 +58,7 @@ shared_ptr<ChamberNode> Game::prepareMap(shared_ptr<Hero>& hero)
 void Game::chamberTransitionFunction(shared_ptr<ChamberNode>& start)
 {
 	shared_ptr<ChamberNode> curr = start;
-    shared_ptr<ActionVisitor> visitor(new ActionVisitor());
+    shared_ptr<ActionVisitor> visitor(new ActionVisitor(hero));
 
 	while (true)
 	{

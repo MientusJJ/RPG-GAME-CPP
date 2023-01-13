@@ -9,6 +9,9 @@
 #include <memory>
 #include "Equipment.h"
 #include "Observer.h"
+#include "list"
+class Observer;
+
 class CharacterClass
 {
 public:
@@ -119,7 +122,6 @@ public:
 	void chooseClass();
 	void setmaxHealth(int);
 	void setdefense(int);
-	void setObserver(shared_ptr<Observer>);
 	void setcurrentHealth(int);
 	void setlevel(int);
 	void setminimalAttack(int);
@@ -132,15 +134,31 @@ public:
 	int getMoney();
 	void ChangeEQ(shared_ptr<Item>&);
 	bool fight(shared_ptr<Character>&,bool);
+	void AddObserver(shared_ptr<Observer>);
+	void DeleteObserver(shared_ptr<Observer>);
+	
 private:
 	Hero();
-	shared_ptr<Observer> obs;
+	void Notify();
+	list<shared_ptr<Observer>> obs;
 	static shared_ptr<Hero> hero;
 	int money;
 	unique_ptr<Equipment> EQ;
 };
+class Observer : public enable_shared_from_this<Observer>
+{
 
-
+public:
+	void setTrue();
+	bool check();
+	Observer(shared_ptr<Hero> hero): h(hero){}
+	void removeFromObserver();
+	void addToObserver();
+private:
+	bool endik{ false };
+	bool getEndik();
+	shared_ptr<Hero> h;
+};
 
 class monster : public Character
 {

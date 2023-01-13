@@ -6,5 +6,5 @@ public:
     void playGame();
 
 private:
-    Controller() = default;;
+    Controller() = default;
 };

@@ -37,14 +37,18 @@ inline bool instanceof(const shared_ptr<T> ptr) {
     shared_ptr<Derived> d = dynamic_pointer_cast<Derived>(ptr);
     return d != nullptr;
 }
-
+ActionVisitor::ActionVisitor(shared_ptr<Hero> h)
+{
+    this->obs = make_shared<Observer>(h);
+    this->obs->addToObserver();
+}
 void ActionVisitor::eventTransitionFunction(shared_ptr<EventNode> &start, shared_ptr<Hero> &h) {
     shared_ptr<EventNode> curr = start;
     while (true)
     {
         curr->current->Action();
 
-        if (h->getcurrentHealth() == 0)
+        if (this->obs->check())
             break;
 
         int numOfNexts = curr->AllNexts.size();

@@ -381,14 +381,25 @@ void Hero::setcurrentHealth(int h)
 	Character::setcurrentHealth(h);
 	if(!this->getcurrentHealth())
 	{
-		obs->setTrue();
+		this->Notify();
 	}
 }
-void Hero::setObserver(shared_ptr<Observer> o)
+void Hero::AddObserver(shared_ptr<Observer> o)
 {
-	this->obs = o;
+	this->obs.push_back(o);
 }
+void Hero::DeleteObserver(shared_ptr<Observer> o)
+{
+	this->obs.remove(o);
+}
+void Hero::Notify()
+{
+	for(auto it= this->obs.begin();it!=this->obs.end();it++)
+	{
+		(*it)->setTrue();
+	}
 
+}
 // do kontrolera + instancja hero jak pole + heroSetClass() + heroSetName()
 void Hero::chooseClass()
 {
@@ -539,6 +550,7 @@ void Hero::setAttack(int ms, int weaponmin, int weaponmax)
 void Hero::setmaxHealth(int h)
 {
 	this->maxHealth = (this->getlevel()*defaultHealth + h)*this->Class->getvitalityModifier();
+	//this->maxHealth = 1;
 }
 void Hero::setdefense(int d)
 {
@@ -602,4 +614,30 @@ bool Hero::fight(shared_ptr<Character>& opponent,bool boss)
 	}
 	cout << endl;
 	return this->getcurrentHealth() != 0;
+}
+void Observer::setTrue()
+{
+	this->endik = true;
+}
+bool Observer::getEndik()
+{
+	return this->endik;
+}
+bool Observer::check()
+{
+	if (this->getEndik())
+	{
+		cout << endGameMessage << endl;
+		return true;
+	}
+	else
+		return false;
+}
+void Observer::removeFromObserver()
+{
+	this->h->DeleteObserver(shared_from_this());
+}
+void Observer::addToObserver()
+{
+	this->h->AddObserver(shared_from_this());
 }

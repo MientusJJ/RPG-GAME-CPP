@@ -153,6 +153,7 @@ public:
 // Controller
 class ActionVisitor : public IVisitor {
 public:
+    ActionVisitor(shared_ptr<Hero> h);
     void visitMonsterRoom(MonsterRoom room) override;
     void visitTrapRoom(TrapRoom room) override;
     void visitPotionRoom(PotionRoom room) override;
@@ -165,6 +166,7 @@ public:
 
 private:
     void eventTransitionFunction(shared_ptr<EventNode>& start, shared_ptr<Hero>& h);
+    shared_ptr<Observer> obs;
 };
 
 #endif

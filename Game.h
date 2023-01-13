@@ -2,7 +2,6 @@
 #define GAME_H
 #pragma once
 #include "Chambers.h"
-#include "Observer.h"
 #include "Views.cpp"
 
 // Controller

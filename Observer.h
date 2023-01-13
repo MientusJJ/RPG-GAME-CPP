@@ -4,16 +4,6 @@
 #include <vector>
 #include "Names.h"
 #include <iostream>
-class Observer
-{
-
-public:
-	//void add(shared_ptr<Chamber>);
-	void setTrue();
-	bool check();
-private:
-	bool endik{false};
-	bool getEndik();
-};
+#include "Character.h"
 
 #endif
