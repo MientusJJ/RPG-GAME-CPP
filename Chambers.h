@@ -1,10 +1,7 @@
 #pragma once
 #ifndef CHAMBER_H
 #define CHAMBER_H
-#include "items.h"
-#include "Character.h"
 #include "Events.h"
-#include "Strategy.h"
 
 class ActionVisitor;
 

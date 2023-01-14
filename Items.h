@@ -6,6 +6,7 @@
 #include <string>
 #include <ctime>
 #include "Names.h"
+#include "Views.h"
 using namespace std;
 
 enum Profession

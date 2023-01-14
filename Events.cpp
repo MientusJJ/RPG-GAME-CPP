@@ -58,6 +58,7 @@ void Chest::openBox(shared_ptr<Hero>& h) {
 }
 
 
+// do dopisania w TXTView
 void DescriptionVisitor::visitEndPoint(EndPoint event) {
     cout << "Get out of the room" << endl;
 }
@@ -238,7 +239,6 @@ void EnterToPotionRoom::Action(shared_ptr<Hero> &h) {
 
 void DrinkPotion::DisplayDescription(DescriptionVisitor visitor) {
     visitor.visitDrinkPotion(*this);
-    cout << "Drink the potion" << endl;
 }
 void DrinkPotion::Action(shared_ptr<Hero> &h) {
     int drawn_num = static_cast<int>(round(makeRand(0, 1)));
@@ -400,7 +400,7 @@ bool SeeItems::buyOneItem(shared_ptr<Hero> &h, shared_ptr<Item> &item) {
     {
         char player_decision;
 
-    	cout << "Do you still want to negotiate price of this item: " << _buyingItem->getName() << "? (Y/N)" << endl;
+    	cout << "Do you want to negotiate price of this item? (Y/N)" << endl;
         while (true) {
             cin >> player_decision;
             player_decision = makeBig(player_decision);
@@ -413,7 +413,7 @@ bool SeeItems::buyOneItem(shared_ptr<Hero> &h, shared_ptr<Item> &item) {
         {
             break;
         }
-        cout << "Enter the price at which you want to buy item: " << endl;
+        cout << "Enter the price at which you would like to buy item: " << endl;
         int price;
         cin >> price;
         _flag = _buyingStrategy->buyingProcess(price);
@@ -436,7 +436,7 @@ void EnterToEmptyRoom::Action(shared_ptr<Hero> &h) {
 
 
 void EnterToStartingRoom::DisplayDescription(DescriptionVisitor visitor) {
-    cout << "" << endl;
+    visitor.visitEnterToStartingRoom(*this);
 }
 void EnterToStartingRoom::Action(shared_ptr<Hero> &h) {
     cout << "Your adventure begins here" << endl;
@@ -465,11 +465,8 @@ void BossFight::Action(shared_ptr<Hero> &h) {
     h->fight(ch, 0);
     if (h->getcurrentHealth() > 0)
     {
-        cout << "You have defeated a monster" << endl;
-        cout << "Remaining health points: " << h->getcurrentHealth() << endl << endl;
-        h->levelup();
-        cout << "You have leveled up. Your current level is: " << h->getlevel() << endl;
-        cout << "Your current health is: " << h->getcurrentHealth() << "/" << h->getmaxHealth() << endl << endl;
+        cout << "Congratulations. You have defeated a boss!" << endl;
+        cout << "Game is over" << endl;
     }
 }
 

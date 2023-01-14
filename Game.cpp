@@ -21,7 +21,7 @@ shared_ptr<ChamberNode> Game::prepareMap()
 {
 	shared_ptr<ChamberNode> start = make_shared<ChamberNode>(make_shared<StartingRoom>());
 	shared_ptr<ChamberNode> n1 = make_shared<ChamberNode>(make_shared<MonsterRoom>());
-	shared_ptr<ChamberNode> n2 = make_shared<ChamberNode>(make_shared<TrapRoom>());
+	shared_ptr<ChamberNode> n2 = make_shared<ChamberNode>(make_shared<PotionRoom>());
 	shared_ptr<ChamberNode> n3 = make_shared<ChamberNode>(make_shared<TraderRoom>());
 	shared_ptr<ChamberNode> n4 = make_shared<ChamberNode>(make_shared<EmptyRoom>());
 	shared_ptr<ChamberNode> n5 = make_shared<ChamberNode>(make_shared<TreasureRoom>());

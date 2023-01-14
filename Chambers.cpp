@@ -201,10 +201,11 @@ shared_ptr<EventNode> PotionRoom::prepareEventsGraph() {
     shared_ptr<Hero> h = Hero::getInstance();
 
     shared_ptr<EventNode> start = make_shared<EventNode>(make_shared<EnterToPotionRoom>());
-    start->AllNexts.reserve(1);
+    start->AllNexts.reserve(2);
     shared_ptr<EventNode> potion = make_shared<EventNode>(make_shared<DrinkPotion>());
     potion->AllNexts.reserve(1);
     start->AllNexts.emplace_back(potion);
+    start->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>()));
     potion->AllNexts.emplace_back(make_shared<EventNode>(make_shared<EndPoint>()));
 
     return start;

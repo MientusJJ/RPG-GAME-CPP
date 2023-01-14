@@ -2,8 +2,6 @@
 #ifndef CHARACTER_H
 #define CHARACTER_H
 
-#include <string>
-#include <iostream>
 #include <cmath>
 #include <stdlib.h>
 #include <memory>

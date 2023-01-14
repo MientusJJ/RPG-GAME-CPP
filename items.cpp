@@ -210,10 +210,6 @@ unique_ptr<Item>  ItemFactory::createItem(int level, ItemType type, Profession p
            cout << "wrong class value" << endl;
        }
    }
-   else
-   {
-       cout << "wrong item type value" << endl;
-   }
 
 
    return item;
