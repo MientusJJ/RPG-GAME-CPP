@@ -3,7 +3,6 @@
 #define EVENTS_H
 #include "Character.h"
 #include <vector>
-
 #include "Strategy.h"
 
 ItemType getRandomItemType( shared_ptr<Hero>&h);

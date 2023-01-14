@@ -1,8 +1,6 @@
 #include <iostream>
 #include "Chambers.h"
 using namespace std;
-int chambersWithoutMonsters;
-int chambersWithoutTrader;
 
 Chest::Chest(shared_ptr<Hero>& h) {
 	const ItemType itemType = getRandomItemType(h);
@@ -142,19 +140,9 @@ void ActionVisitor::visitBossRoom(BossChamber room)
 
 
 
-Chamber::Chamber(shared_ptr<Hero>&h)
-{
-	chamber_ID = static_cast<int>(makeRand(1,1000));
-	hero = h->getInstance();
-}
-
-
-BossChamber::BossChamber(shared_ptr<Hero>&h) : Chamber(h) {};
-
 void BossChamber::action(ActionVisitor visitor) {
     visitor.visitBossRoom(*this);
 }
-
 shared_ptr<EventNode> BossChamber::prepareEventsGraph() {
     shared_ptr<Hero> h = Hero::getInstance();
 
@@ -169,23 +157,9 @@ shared_ptr<EventNode> BossChamber::prepareEventsGraph() {
 }
 
 
-PassageChamber::PassageChamber(shared_ptr<Hero>&h) : Chamber(h) {}
-
-NormalChamber::NormalChamber(shared_ptr<Hero>&h) : PassageChamber(h) {}
-
-SafeChamber::SafeChamber(shared_ptr<Hero>&h) : PassageChamber(h) {}
-
-
-MonsterRoom::MonsterRoom(shared_ptr<Hero>&h) : NormalChamber(h) {
-    chambersWithoutMonsters = 0;
-    chambersWithoutTrader++;
-}
-
-
 void MonsterRoom::action(ActionVisitor visitor) {
     visitor.visitMonsterRoom(*this);
 }
-
 shared_ptr<EventNode> MonsterRoom::prepareEventsGraph() {
     shared_ptr<Hero> h = Hero::getInstance();
 
@@ -208,15 +182,9 @@ shared_ptr<EventNode> MonsterRoom::prepareEventsGraph() {
 }
 
 
-TrapRoom::TrapRoom(shared_ptr<Hero>&h) : NormalChamber(h) {
-    chambersWithoutMonsters++;
-    chambersWithoutTrader++;
-}
-
 void TrapRoom::action(ActionVisitor visitor) {
     visitor.visitTrapRoom(*this);
 }
-
 shared_ptr<EventNode> TrapRoom::prepareEventsGraph() {
     shared_ptr<Hero> h = Hero::getInstance();
 
@@ -231,16 +199,9 @@ shared_ptr<EventNode> TrapRoom::prepareEventsGraph() {
 }
 
 
-
-PotionRoom::PotionRoom(shared_ptr<Hero>&h) : NormalChamber(h) {
-    chambersWithoutMonsters++;
-    chambersWithoutTrader++;
-}
-
 void PotionRoom::action(ActionVisitor visitor) {
     visitor.visitPotionRoom(*this);
 }
-
 shared_ptr<EventNode> PotionRoom::prepareEventsGraph() {
     shared_ptr<Hero> h = Hero::getInstance();
 
@@ -255,15 +216,9 @@ shared_ptr<EventNode> PotionRoom::prepareEventsGraph() {
 }
 
 
-TreasureRoom::TreasureRoom(shared_ptr<Hero>&h) : SafeChamber(h) {
-    chambersWithoutMonsters++;
-    chambersWithoutTrader++;
-}
-
 void TreasureRoom::action(ActionVisitor visitor) {
     visitor.visitTreasureRoom(*this);
 }
-
 shared_ptr<EventNode> TreasureRoom::prepareEventsGraph() {
     shared_ptr<Hero> h = Hero::getInstance();
 
@@ -279,15 +234,9 @@ shared_ptr<EventNode> TreasureRoom::prepareEventsGraph() {
 }
 
 
-HealthRoom::HealthRoom(shared_ptr<Hero>&h) : SafeChamber(h) {
-    chambersWithoutMonsters++;
-    chambersWithoutTrader++;
-}
-
 void HealthRoom::action(ActionVisitor visitor) {
     visitor.visitHealthRoom(*this);
 }
-
 shared_ptr<EventNode> HealthRoom::prepareEventsGraph() {
     shared_ptr<Hero> h = Hero::getInstance();
 
@@ -303,15 +252,9 @@ shared_ptr<EventNode> HealthRoom::prepareEventsGraph() {
 }
 
 
-TraderRoom::TraderRoom(shared_ptr<Hero>&h) : SafeChamber(h) {chambersWithoutMonsters++;
-	chambersWithoutTrader = 0;
-};
-
-
 void TraderRoom::action(ActionVisitor visitor) {
     visitor.visitTraderRoom(*this);
 }
-
 shared_ptr<EventNode> TraderRoom::prepareEventsGraph() {
     shared_ptr<Hero> h = Hero::getInstance();
 
@@ -328,15 +271,9 @@ shared_ptr<EventNode> TraderRoom::prepareEventsGraph() {
 }
 
 
-EmptyRoom::EmptyRoom(shared_ptr<Hero>&h) : SafeChamber(h) {
-    chambersWithoutMonsters++;
-    chambersWithoutTrader++;
-}
-
 void EmptyRoom::action(ActionVisitor visitor) {
     visitor.visitEmptyRoom(*this);
 }
-
 shared_ptr<EventNode> EmptyRoom::prepareEventsGraph() {
     shared_ptr<Hero> h = Hero::getInstance();
 
@@ -348,15 +285,9 @@ shared_ptr<EventNode> EmptyRoom::prepareEventsGraph() {
 }
 
 
-StartingRoom::StartingRoom(shared_ptr<Hero>&h) : SafeChamber(h) {
-    chambersWithoutMonsters = 0;
-    chambersWithoutTrader = 0;
-}
-
 void StartingRoom::action(ActionVisitor visitor) {
     visitor.visitStartingRoom(*this);
 }
-
 shared_ptr<EventNode> StartingRoom::prepareEventsGraph() {
     shared_ptr<Hero> h = Hero::getInstance();
 

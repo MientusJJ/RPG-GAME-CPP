@@ -12,7 +12,7 @@ public:
 	~Game();
 	void play();
     unique_ptr<TXTView> ViewInterface;
-	shared_ptr<ChamberNode> prepareMap(shared_ptr<Hero>& hero);
+	shared_ptr<ChamberNode> prepareMap();
 	void chamberTransitionFunction(shared_ptr<ChamberNode>& start);
 private:
 	shared_ptr<Hero> hero;

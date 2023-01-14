@@ -10,89 +10,65 @@ class ActionVisitor;
 
 
 class Chamber {
-protected:
-    int chamber_ID;
-    shared_ptr<Hero> hero;
-
 public:
-	Chamber(shared_ptr<Hero>& h);
     virtual void action(ActionVisitor visitor) = 0;
 	void eventTransitionFunction(shared_ptr<EventNode>& start, shared_ptr<Hero>& h);
 };
 
 class BossChamber : public Chamber {
 public:
-	BossChamber(shared_ptr<Hero>&h);
     void action(ActionVisitor visitor);
     shared_ptr<EventNode> prepareEventsGraph();
 };
 
-class PassageChamber : public Chamber {
-public:
-	PassageChamber(shared_ptr<Hero>& h);
-};
-
-class NormalChamber : public PassageChamber {
-public:
-	NormalChamber(shared_ptr<Hero>&h);
-};
-class SafeChamber : public PassageChamber {
-public:
-	SafeChamber(shared_ptr<Hero>&h);
-};
+class PassageChamber : public Chamber {};
+class NormalChamber : public PassageChamber {};
+class SafeChamber : public PassageChamber {};
 
 class MonsterRoom : public NormalChamber {
 public:
-	MonsterRoom(shared_ptr<Hero>&h);
     void action(ActionVisitor visitor);
     shared_ptr<EventNode> prepareEventsGraph();
 };
 
 class TrapRoom : public NormalChamber {
 public:
-	TrapRoom(shared_ptr<Hero>&h);
     void action(ActionVisitor visitor);
     shared_ptr<EventNode> prepareEventsGraph();
 };
 
 class PotionRoom : public NormalChamber {
 public:
-	PotionRoom(shared_ptr<Hero>&h);
     void action(ActionVisitor visitor);
     shared_ptr<EventNode> prepareEventsGraph();
 };
 
 class TreasureRoom : public SafeChamber {
 public:
-	TreasureRoom(shared_ptr<Hero>&h);
     void action(ActionVisitor visitor);
     shared_ptr<EventNode> prepareEventsGraph();
 };
 
 class HealthRoom : public SafeChamber {
 public:
-	HealthRoom(shared_ptr<Hero>&h);
     void action(ActionVisitor visitor);
     shared_ptr<EventNode> prepareEventsGraph();
 };
 
 class TraderRoom : public SafeChamber {
 public:
-	TraderRoom(shared_ptr<Hero>&h);
     void action(ActionVisitor visitor);
     shared_ptr<EventNode> prepareEventsGraph();
 };
 
 class EmptyRoom : public SafeChamber {
 public:
-	EmptyRoom(shared_ptr<Hero>&h);
     void action(ActionVisitor visitor);
     shared_ptr<EventNode> prepareEventsGraph();
 };
 
 class StartingRoom : public SafeChamber {
 public:
-	StartingRoom(shared_ptr<Hero>&h);
     void action(ActionVisitor visitor);
     shared_ptr<EventNode> prepareEventsGraph();
 };

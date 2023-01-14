@@ -2,7 +2,7 @@
 #include <chrono>
 #include <thread>
 
-ItemType getRandomItemType( shared_ptr<Hero>&h) {
+ItemType getRandomItemType(shared_ptr<Hero>&h) {
     int type = static_cast<int>(round(makeRand(0, 3)));
 
     if (h->getProf() == warrior) {
@@ -26,7 +26,7 @@ ItemType getRandomItemType( shared_ptr<Hero>&h) {
 
 void Chest::openBox(shared_ptr<Hero>& h) {
     int coins = static_cast<int>(round(makeRand(0, h->getlevel() * 100)));
-    //viewTxtOpenBox
+
     cout << "You found " << coins << " gold in the chest" << endl;
     h->setMoney(h->getMoney() + coins);
 
@@ -151,7 +151,6 @@ void EnterToMonsterRoom::Action(shared_ptr<Hero> &h) {
 void Fight::DisplayDescription(DescriptionVisitor visitor) {
     visitor.visitFight(*this);
 }
-// zrobić fight dla walki z bossem
 void Fight::Action(shared_ptr<Hero> &h) {
     shared_ptr<monster> normal_monster = make_shared<monster>(h->getlevel(), 0);
     shared_ptr<Character> ch(normal_monster);
@@ -456,7 +455,6 @@ void EnterToBossRoom::Action(shared_ptr<Hero> &h) {
 void BossFight::DisplayDescription(DescriptionVisitor visitor) {
     visitor.visitBossFight(*this);
 }
-
 void BossFight::Action(shared_ptr<Hero> &h) {
     shared_ptr<monster> boss_monster = make_shared<monster>(h->getlevel(), 1);
     shared_ptr<Character> ch(boss_monster);

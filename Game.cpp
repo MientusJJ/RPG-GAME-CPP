@@ -9,28 +9,28 @@ void Game::play()
 	hero = Hero::getInstance();
 	o = make_shared<Observer>(hero);
 	o->addToObserver();
-	shared_ptr<ChamberNode> start = prepareMap(hero);
+	shared_ptr<ChamberNode> start = prepareMap();
 	chamberTransitionFunction(start);
 }
 
-shared_ptr<ChamberNode> Game::prepareMap(shared_ptr<Hero>& hero)
+shared_ptr<ChamberNode> Game::prepareMap()
 {
-	shared_ptr<ChamberNode> start = make_shared<ChamberNode>(make_shared<StartingRoom>(hero));
-	shared_ptr<ChamberNode> n1 = make_shared<ChamberNode>(make_shared<MonsterRoom>(hero));
-	shared_ptr<ChamberNode> n2 = make_shared<ChamberNode>(make_shared<TrapRoom>(hero));
-	shared_ptr<ChamberNode> n3 = make_shared<ChamberNode>(make_shared<TraderRoom>(hero));
-	shared_ptr<ChamberNode> n4 = make_shared<ChamberNode>(make_shared<EmptyRoom>(hero));
-	shared_ptr<ChamberNode> n5 = make_shared<ChamberNode>(make_shared<TreasureRoom>(hero));
-	shared_ptr<ChamberNode> n6 = make_shared<ChamberNode>(make_shared<HealthRoom>(hero));
-	shared_ptr<ChamberNode> n7 = make_shared<ChamberNode>(make_shared<TreasureRoom>(hero));
-	shared_ptr<ChamberNode> n8 = make_shared<ChamberNode>(make_shared<MonsterRoom>(hero));
-	shared_ptr<ChamberNode> n9 = make_shared<ChamberNode>(make_shared<MonsterRoom>(hero));
-	shared_ptr<ChamberNode> n10 = make_shared<ChamberNode>(make_shared<TrapRoom>(hero));
-	shared_ptr<ChamberNode> n11 = make_shared<ChamberNode>(make_shared<TraderRoom>(hero));
-	shared_ptr<ChamberNode> n12 = make_shared<ChamberNode>(make_shared<PotionRoom>(hero));
-	shared_ptr<ChamberNode> n13 = make_shared<ChamberNode>(make_shared<HealthRoom>(hero));
-	shared_ptr<ChamberNode> n14 = make_shared<ChamberNode>(make_shared<TraderRoom>(hero));
-	shared_ptr<ChamberNode> boss = make_shared<ChamberNode>(make_shared<BossChamber>(hero));
+	shared_ptr<ChamberNode> start = make_shared<ChamberNode>(make_shared<StartingRoom>());
+	shared_ptr<ChamberNode> n1 = make_shared<ChamberNode>(make_shared<MonsterRoom>());
+	shared_ptr<ChamberNode> n2 = make_shared<ChamberNode>(make_shared<TrapRoom>());
+	shared_ptr<ChamberNode> n3 = make_shared<ChamberNode>(make_shared<TraderRoom>());
+	shared_ptr<ChamberNode> n4 = make_shared<ChamberNode>(make_shared<EmptyRoom>());
+	shared_ptr<ChamberNode> n5 = make_shared<ChamberNode>(make_shared<TreasureRoom>());
+	shared_ptr<ChamberNode> n6 = make_shared<ChamberNode>(make_shared<HealthRoom>());
+	shared_ptr<ChamberNode> n7 = make_shared<ChamberNode>(make_shared<TreasureRoom>());
+	shared_ptr<ChamberNode> n8 = make_shared<ChamberNode>(make_shared<MonsterRoom>());
+	shared_ptr<ChamberNode> n9 = make_shared<ChamberNode>(make_shared<MonsterRoom>());
+	shared_ptr<ChamberNode> n10 = make_shared<ChamberNode>(make_shared<TrapRoom>());
+	shared_ptr<ChamberNode> n11 = make_shared<ChamberNode>(make_shared<TraderRoom>());
+	shared_ptr<ChamberNode> n12 = make_shared<ChamberNode>(make_shared<PotionRoom>());
+	shared_ptr<ChamberNode> n13 = make_shared<ChamberNode>(make_shared<HealthRoom>());
+	shared_ptr<ChamberNode> n14 = make_shared<ChamberNode>(make_shared<TraderRoom>());
+	shared_ptr<ChamberNode> boss = make_shared<ChamberNode>(make_shared<BossChamber>());
 	start->option1 = n1;
 	start->option2 = n2;
 	n1->option1 = n3;
