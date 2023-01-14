@@ -2,11 +2,6 @@
 #include "Chambers.h"
 using namespace std;
 
-Chest::Chest(shared_ptr<Hero>& h) {
-	const ItemType itemType = getRandomItemType(h);
-	item = ItemFactory::createItem(h->getlevel(), itemType, h->getProf());
-}
-
 
 template<typename Derived, typename T>
 inline bool instanceof(const shared_ptr<T> ptr) {

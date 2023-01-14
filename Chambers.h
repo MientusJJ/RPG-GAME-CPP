@@ -8,7 +8,7 @@
 
 class ActionVisitor;
 
-
+// Part of Controller
 class Chamber {
 public:
     virtual void action(ActionVisitor visitor) = 0;
@@ -82,7 +82,7 @@ public:
 };
 
 
-// Controller
+// Part of Controller
 class IVisitor {
 public:
     virtual ~IVisitor() {}
@@ -97,7 +97,7 @@ public:
     virtual void visitBossRoom(BossChamber room) = 0;
 };
 
-// Controller
+// Part of Controller
 class ActionVisitor : public IVisitor {
 public:
     ActionVisitor(shared_ptr<Hero> h);

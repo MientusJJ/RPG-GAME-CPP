@@ -17,5 +17,7 @@ public:
 private:
 	shared_ptr<Hero> hero;
 	shared_ptr<Observer> o;
+    void heroSetClass();
+    void heroSetName();
 };
 #endif

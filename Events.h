@@ -7,18 +7,15 @@
 
 ItemType getRandomItemType( shared_ptr<Hero>&h);
 
+// Part of Controller
 class Chest {
-protected:
-    shared_ptr<Item> item;
-
 public:
-    Chest(shared_ptr<Hero>& hero);
     void openBox(shared_ptr<Hero>& hero);
 };
 
 class DescriptionVisitor;
 
-// Controller
+// Part of Controller
 class Event {
 public:
     Event();
@@ -147,7 +144,7 @@ public:
     vector <shared_ptr<EventNode>> AllNexts;
 };
 
-// Controller
+// Part of Controller
 class DescriptionVisitor {
 public:
     void visitEndPoint(EndPoint event);

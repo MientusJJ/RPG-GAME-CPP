@@ -363,8 +363,8 @@ shared_ptr<Hero>& Hero::getInstance()
 }
 Hero::Hero()
 {
-	this->setName();
-	this->chooseClass();
+	//this->setName("xxx");
+	this->chooseClass(1);
 	this->setlevel(1);
 	this->setMoney(100);
 	EQ = make_unique<Equipment>(this->getlevel(), this->Class->getProf());
@@ -400,34 +400,15 @@ void Hero::Notify()
 	}
 
 }
-// do kontrolera + instancja hero jak pole + heroSetClass() + heroSetName()
-void Hero::chooseClass()
-{
-	cout << "Choose class of " << this->getName() << " \nWrite 1 if you want warrior \nWrite 2 if you want scout \nWrite 3 if you want mage \n";
-	string  ch;
-	cin >> ch;
-	while (ch != "1" && ch != "2" && ch != "3")
-	{
-		cout << "Bad Number. Choose number between 1 and 3\n";
-		cin >> ch;
-	}
-	cout << "Your class for the whole game is: ";
-	if (ch == "1")
-	{
-		this->Class = make_unique<Warrior>();
-		cout << "Warrior\n";
-	}
-	else if (ch == "2")
-	{
-		this->Class = make_unique<Scout>();
-		cout << "Scout\n";
-	}
-	else
-	{
-		this->Class = make_unique<Mage>();
-		cout << "Mage\n";
-	}
 
+void Hero::chooseClass(int ch)
+{
+    if (ch == 1)
+		this->Class = make_unique<Warrior>();
+	else if (ch == 2)
+		this->Class = make_unique<Scout>();
+	else
+		this->Class = make_unique<Mage>();
 }
 void Hero::setlevel(int s)
 {
@@ -444,11 +425,8 @@ void Hero::setmaximalAttack(int s)
 	this->maximalAttack = (s + defaultAttackMax * this->getlevel())*this->Class->getattackModifier();
 	return;
 }
-void Hero::setName()
+void Hero::setName(string n)
 {
-	cout << "Write name of your hero:" << endl;
-	string n;
-	cin >> n;
 	this->name = n;
 	return;
 }
@@ -461,7 +439,6 @@ void Hero::levelup()
 }
 void Hero::showStatistics()
 {
-	
 	cout << endl << "Statistics of your hero:" << endl;
 	cout << "Name: " << this->getName() << endl;
 	cout << "Class: " << this->Class->getProfName() << endl;

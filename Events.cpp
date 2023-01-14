@@ -24,7 +24,11 @@ ItemType getRandomItemType(shared_ptr<Hero>&h) {
     return itemType;
 }
 
+
 void Chest::openBox(shared_ptr<Hero>& h) {
+    const ItemType itemType = getRandomItemType(h);
+    shared_ptr<Item> item = ItemFactory::createItem(h->getlevel(), itemType, h->getProf());
+
     int coins = static_cast<int>(round(makeRand(0, h->getlevel() * 100)));
 
     cout << "You found " << coins << " gold in the chest" << endl;
@@ -186,7 +190,7 @@ void CheckChest::DisplayDescription(DescriptionVisitor visitor) {
     visitor.visitCheckChest(*this);
 }
 void CheckChest::Action(shared_ptr<Hero> &h) {
-    shared_ptr<Chest> chest = make_unique<Chest>(h);
+    shared_ptr<Chest> chest = make_unique<Chest>();
 
     char decision;
     while (true) {

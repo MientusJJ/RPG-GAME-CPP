@@ -118,7 +118,7 @@ public:
 	void showEQ();
 	void showOneItem(ItemType,Profession);
 	void setAllStats();
-	void chooseClass();
+	void chooseClass(int c);
 	void setmaxHealth(int);
 	void setdefense(int);
 	void setcurrentHealth(int);
@@ -126,7 +126,7 @@ public:
 	void setminimalAttack(int);
 	void setmaximalAttack(int);
 	void setAttack(int, int,int);
-	void setName();
+	void setName(string n);
 	void levelup();
 	void setBlockChance();
 	void setMoney(int);
