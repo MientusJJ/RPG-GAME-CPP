@@ -292,34 +292,108 @@ void TXTView::BlockedHit(string ch1, string ch2) {
     cout << ch1 << " blocked the hit from " << ch2 << endl;
 };
 
-void TXTView::ShowPossibleClassesToChoose() {
-
+void TXTView::ShowPossibleClassesToChoose(string name) {
+    cout << "Choose class of " << name << " \nWrite 1 if you want warrior \nWrite 2 if you want scout \nWrite 3 if you want mage \n";
 };
 
-void TXTView::IncorrectNumber() {
-
+void TXTView::IncorrectNumber(int min,int max) {
+    cout << "Bad Number. Choose number between " << min << " and " << max << endl;
 };
 
-void TXTView::ShowChoosenClass() {
-
+void TXTView::ShowChoosenClass(int ch) {
+    cout << "Your class for the whole game is: ";
+    if (ch == 1)
+        cout << "Warrior\n";
+    else if (ch == 2)
+        cout << "Scout\n";
+    else if(ch==3)
+        cout << "Mage\n";
 };
 
 void TXTView::WriteHeroName() {
-
+    cout << "Write name of your hero:" << endl;
 };
 
-void TXTView::ShowEqiupment() {
-
+void TXTView::ShowEqiupment(string prof,string weaponName,int minDamage,int maxDamage,string mainStateName,int weaponMainStat,int weaponValue
+    ,string talismanName,string talismanMainStatName,int talismanMainStat,int talismanCrit,int talismanValue
+    ,string armorName,int armorDef,int armorHealth,int armorValue
+	,string headGearName,int headGearDef,int headGearVal,int headgearValue,string headGearMainstat
+    ,string shieldName,int shieldDef,int shieldBlockChance,int shieldValue) {
+    cout << endl << "Equipment of your hero:" << endl;
+    this->ShowOneItem("weapon", prof, weaponValue, weaponName, minDamage, maxDamage, weaponMainStat, mainStateName);
+    this->ShowOneItem("talisman", prof, talismanValue, talismanName, talismanMainStat, talismanCrit,0,talismanMainStatName);
+    if(prof=="warrior")
+    {
+        this->ShowOneItem("shield", prof, shieldValue, shieldName, shieldDef, shieldBlockChance);
+    }
+    this->ShowOneItem("armor", prof, armorValue, armorName, armorDef, armorHealth);
+    this->ShowOneItem("headgear", prof, headgearValue, headGearName, headGearDef, headGearVal, 0, headGearMainstat);
 };
 
-void TXTView::ShowStatistics() {
-
+void TXTView::ShowStatistics(string name,string prof,string mainStatName,string skill,int level,int mainStat,int maxHealth,int currHealth,int minAttack,int maxAttack,double crit,int def,int money,double block) {
+    cout << endl << "Statistics of your hero:" << endl;
+    cout << "Name: " << name << endl;
+    cout << "Class: " << prof << endl;
+    cout << "Main Stat name: " << mainStatName << endl;
+    cout << "Skill: " << skill << endl;
+    cout << "Level: " << level << endl;
+    cout << "Main Stat: " << mainStat;
+    cout << "Max health: " << maxHealth << endl;
+    cout << "Current health: " << currHealth << endl;
+    cout << "Minimal damage: " << maxHealth << endl;
+    cout << "Maximal damage: " << maxAttack << endl;
+    cout << "Critical chance: " << crit << "%" << endl;
+    cout << "Defense: " << def << endl;
+    if (prof == "warrior")
+    {
+        cout << "Block Chance: " << block << "%" << endl;
+    }
+    cout << "Amount of money: " << money << endl;
+    return;
 };
 
-void TXTView::ShowOneItem() {
-
+void TXTView::ShowOneItem(string type,string prof,int value,string name,int val1,int val2,int val3,string mainStatName) {
+    if (type == "weapon")
+    {
+        cout << "Weapon:\n\t name: " << name << "\n\t minimal Damage: " << val1
+    	<< "\n\t maximal Damage: " << val2
+    	<< "\n\t " << mainStatName << ": " << val3
+    	<< "\n\t value: " << value << endl;
+    }
+    else if (type == "talisman")
+    {
+        cout << "Talisman:\n\t name: " << name << "\n\t " << mainStatName
+    	<< ": " << val1 << "\n\t Critical Chance: " << val2
+    	<< "\n\t value: " << value << endl;
+    }
+    else if (type == "shield")
+    {
+        cout << "Shield:\n\t name: " << name << "\n\t Defense: "
+    	<< val1 << "\n\t Block Chance: " << val2
+    	<< "\n\t value: " << value << endl;
+    }
+    else if (type == "armor")
+    {
+        cout << "Armor:\n\t name: " << name << "\n\t Defense: "
+    	<< val1 << "\n\t Health: " << val2
+    	<< "\n\t value: " << value << endl;
+    }
+    else if (type == "headgear")
+    {
+        cout << "Headgear:\n\t name: " << name
+            << "\n\t Defense: " << val1;
+        if (prof == "mage")
+        {
+            cout << "\n\t " << mainStatName << ": " << val2;
+        }
+        else
+        {
+            cout << ":\n\t Health: " << val2;
+        }
+        cout << "\n\t value: " << value << endl;
+    }
 };
 
 void TXTView::CompletedEqChanging() {
-
+    cout << "Changing equipment completed" << endl;
 };

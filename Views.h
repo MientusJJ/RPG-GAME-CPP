@@ -103,16 +103,21 @@ public:
     virtual void DodgedHit(string ch1, string ch2);
     virtual void BlockedHit(string ch1, string ch2);
 
-    virtual void ShowPossibleClassesToChoose();
-    virtual void IncorrectNumber();
-    virtual void ShowChoosenClass();
+    virtual void ShowPossibleClassesToChoose(string name);
+    virtual void IncorrectNumber(int min, int max);
+    virtual void ShowChoosenClass(int ch);
 
     virtual void WriteHeroName();
 
-    virtual void ShowEqiupment();
-    virtual void ShowStatistics();
+    virtual void ShowEqiupment(string prof, string weaponName, int minDamage, int maxDamage, string mainStateName, int weaponMainStat, int weaponValue
+        , string talismanName, string talismanMainStatName, int talismanMainStat, int talismanCrit, int talismanValue
+        , string armorName, int armorDef, int armorHealth, int armorValue
+        , string headGearName, int headGearDef, int headGearVal, int headgearValue, string headGearMainstat
+        , string shieldName, int shieldDef, int shieldBlockChance, int shieldValue);
+    virtual void ShowStatistics(string name, string prof, string mainStatName, string skill, int level, int mainStat, int maxHealth, int currHealth, int minAttack,
+        int maxAttack, double crit, int def, int money, double block = 0.);
 
-    virtual void ShowOneItem();
+    virtual void ShowOneItem(string type, string prof, int value, string name, int val1, int val2, int val3,string mainStatName);
 
     virtual void CompletedEqChanging();
 };
@@ -216,16 +221,21 @@ public:
     void DodgedHit(string ch1, string ch2) override;
     void BlockedHit(string ch1, string ch2) override;
 
-    void ShowPossibleClassesToChoose() override;
-    void IncorrectNumber() override;
-    void ShowChoosenClass() override;
+    void ShowPossibleClassesToChoose(string name) override;
+    void IncorrectNumber(int min, int max) override;
+    void ShowChoosenClass(int ch) override;
 
     void WriteHeroName() override;
 
-    void ShowEqiupment() override;
-    void ShowStatistics() override;
+    void ShowEqiupment(string prof, string weaponName, int minDamage, int maxDamage, string mainStateName, int weaponMainStat, int weaponValue,
+        string talismanName, string talismanMainStatName, int talismanMainStat, int talismanCrit, int talismanValue,
+        string armorName, int armorDef, int armorHealth, int armorValue,
+        string headGearName, int headGearDef, int headGearVal, int headgearValue, string headGearMainstat="",
+        string shieldName="", int shieldDef = 0, int shieldBlockChance = 0, int shieldValue = 0) override;
+    void ShowStatistics(string name, string prof, string mainStatName, string skill, int level, int mainStat, int maxHealth, int currHealth, int minAttack,
+        int maxAttack, double crit, int def, int money, double block = 0.) override;
 
-    void ShowOneItem() override;
+    void ShowOneItem(string type, string prof, int value, string name, int val1=0, int val2=0, int val3=0, string mainStatName="") override;
 
     void CompletedEqChanging() override;
 };

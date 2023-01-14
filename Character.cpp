@@ -216,9 +216,13 @@ string CharacterClass::getProfName()
 	{
 		return "Scout";
 	}
-	else
+	else if(this->getProf()==mage)
 	{
 		return "Mage";
+	}
+	else
+	{
+		return "undefined";
 	}
 }
 

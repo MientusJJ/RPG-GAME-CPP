@@ -13,7 +13,8 @@ enum Profession
 {
     warrior = 1,
     scout = 2,
-    mage = 3
+    mage = 3,
+    undefined = 4
 };
 
 enum ItemType
