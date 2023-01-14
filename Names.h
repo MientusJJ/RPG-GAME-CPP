@@ -4,7 +4,7 @@
 #include <random>
 #include <string>
 #include <memory>
-
+#include <ranges>
 using namespace std;
 
 static mt19937 gen{ random_device{}() };
@@ -63,9 +63,14 @@ static double chance()
     return makeRand(1, 100);
 }
 constexpr double dodge{ 33.0 };
-static char makeBig(char c)
+static string makeBig(string str)
 {
-    return  std::toupper(c);
+    std::ranges::transform(str.begin(), str.end(), str.begin(), toupper);
+    return str;
+}
+static char makeBig(char str)
+{
+    return toupper(str);
 }
 #endif
 

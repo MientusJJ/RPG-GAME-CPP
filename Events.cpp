@@ -326,15 +326,24 @@ void SeeItems::Action(shared_ptr<Hero> &h) {
 }
 void SeeItems::BuyItems(shared_ptr<Hero> &h, shared_ptr<Item> &i1, shared_ptr<Item> &i2, shared_ptr<Item> &i3) {
     bool wantToBuy = true;
-    int num;
+    string l_playerDecision{};
     char player_decision;
     bool bought1 = false, bought2 = false, bought3 = false;
 
     while (wantToBuy)
     {
         cout << "Enter the number of the item you want to buy:" << endl;
-        cin >> num;
-        num = makeBig(num);
+        cin >> l_playerDecision;
+        l_playerDecision=makeBig(l_playerDecision);
+        int num{ 0 };
+        try
+        {
+            num = stoi(l_playerDecision);
+        }
+        catch(exception &e)
+        {
+	        
+        }
         if (num == 1) {
             if (!bought1) {
                 showItemDetails(i1, h->getProf());
@@ -462,7 +471,7 @@ void BossFight::DisplayDescription(DescriptionVisitor visitor) {
 void BossFight::Action(shared_ptr<Hero> &h) {
     shared_ptr<monster> boss_monster = make_shared<monster>(h->getlevel(), 1);
     shared_ptr<Character> ch(boss_monster);
-    h->fight(ch, 0);
+    h->fight(ch, 1);
     if (h->getcurrentHealth() > 0)
     {
         cout << "Congratulations. You have defeated a boss!" << endl;
