@@ -8,33 +8,23 @@
 
 class ActionVisitor;
 
-// Controller
+
 class Chamber {
 protected:
     int chamber_ID;
-	string name;
     shared_ptr<Hero> hero;
 
 public:
 	Chamber(shared_ptr<Hero>& h);
     virtual void action(ActionVisitor visitor) = 0;
-
-	string getName();
 	void eventTransitionFunction(shared_ptr<EventNode>& start, shared_ptr<Hero>& h);
 };
 
 class BossChamber : public Chamber {
-protected:
-	shared_ptr<monster> boss_monster;
-
 public:
 	BossChamber(shared_ptr<Hero>&h);
-    shared_ptr<monster> getMonster();
     void action(ActionVisitor visitor);
     shared_ptr<EventNode> prepareEventsGraph();
-
-private:
-	void finalFight(shared_ptr<Hero>&h);
 };
 
 class PassageChamber : public Chamber {
@@ -52,14 +42,8 @@ public:
 };
 
 class MonsterRoom : public NormalChamber {
-protected:
-	shared_ptr<monster> normal_monster;
-    shared_ptr<Chest> chest;
-
 public:
 	MonsterRoom(shared_ptr<Hero>&h);
-    shared_ptr<Chest> getChest();
-    shared_ptr<monster> getMonster();
     void action(ActionVisitor visitor);
     shared_ptr<EventNode> prepareEventsGraph();
 };
@@ -79,12 +63,8 @@ public:
 };
 
 class TreasureRoom : public SafeChamber {
-protected:
-    shared_ptr<Chest> chest;
-
 public:
 	TreasureRoom(shared_ptr<Hero>&h);
-    shared_ptr<Chest> getChest();
     void action(ActionVisitor visitor);
     shared_ptr<EventNode> prepareEventsGraph();
 };
@@ -97,17 +77,8 @@ public:
 };
 
 class TraderRoom : public SafeChamber {
-protected:
-	shared_ptr<Item> item1;
-	shared_ptr<Item> item2;
-	shared_ptr<Item> item3;
-    shared_ptr<Strategy> _buyingstrategy;
 public:
 	TraderRoom(shared_ptr<Hero>&h);
-    shared_ptr<Item> getItem1();
-    shared_ptr<Item> getItem2();
-    shared_ptr<Item> getItem3();
-    shared_ptr<Strategy> getStrategy();
     void action(ActionVisitor visitor);
     shared_ptr<EventNode> prepareEventsGraph();
 };

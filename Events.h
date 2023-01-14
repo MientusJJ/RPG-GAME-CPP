@@ -6,6 +6,8 @@
 
 #include "Strategy.h"
 
+ItemType getRandomItemType( shared_ptr<Hero>&h);
+
 class Chest {
 protected:
     shared_ptr<Item> item;
@@ -19,152 +21,123 @@ class DescriptionVisitor;
 
 // Controller
 class Event {
-protected:
-    shared_ptr<Hero> h;
-    string description; //do przeniesienia (?)
 public:
+    Event();
     virtual void DisplayDescription(DescriptionVisitor visitor) = 0;
-    virtual void Action();
+    virtual void Action(shared_ptr<Hero> &h);
 };
 
 class EndPoint : public Event {
 public:
-    EndPoint(shared_ptr<Hero>& h);
     void DisplayDescription(DescriptionVisitor visitor);
-    void Action();
+    void Action(shared_ptr<Hero> &h);
 };
 
 class EnterToMonsterRoom : public Event {
 public:
-    EnterToMonsterRoom(shared_ptr<Hero>& h);
     void DisplayDescription(DescriptionVisitor visitor);
-    void Action();
+    void Action(shared_ptr<Hero> &h);
 };
 
 class Fight : public Event {
-protected:
-    shared_ptr<monster> _monster;
 public:
-    Fight(shared_ptr<Hero>& hero, shared_ptr<monster> m);
     void DisplayDescription(DescriptionVisitor visitor);
-    void Action();
+    void Action(shared_ptr<Hero> &h);
 };
 
 class RunAway : public Event {
 public:
-    RunAway(shared_ptr<Hero>& h);
     void DisplayDescription(DescriptionVisitor visitor);
-    void Action();
+    void Action(shared_ptr<Hero> &h);
 };
 
 class CheckChest : public Event {
-protected:
-    shared_ptr<Chest> _chest;
 public:
-    CheckChest(shared_ptr<Hero>& hero, shared_ptr<Chest>& chest);
     void DisplayDescription(DescriptionVisitor visitor);
-    void Action();
+    void Action(shared_ptr<Hero> &h);
 };
 
 class EnterToTrapRoom : public Event {
 public:
-    EnterToTrapRoom(shared_ptr<Hero>& h);
     void DisplayDescription(DescriptionVisitor visitor);
-    void Action();
+    void Action(shared_ptr<Hero> &h);
 };
 
 class ActiveTheTrap : public Event {
 public:
-    ActiveTheTrap(shared_ptr<Hero>& h);
     void DisplayDescription(DescriptionVisitor visitor);
-    void Action();
+    void Action(shared_ptr<Hero> &h);
 };
 
 class EnterToPotionRoom : public Event {
 public:
-    EnterToPotionRoom(shared_ptr<Hero>& h);
     void DisplayDescription(DescriptionVisitor visitor);
-    void Action();
+    void Action(shared_ptr<Hero> &h);
 };
 
 class DrinkPotion : public Event {
 public:
-    DrinkPotion(shared_ptr<Hero>& h);
     void DisplayDescription(DescriptionVisitor visitor);
-    void Action();
+    void Action(shared_ptr<Hero> &h);
 };
 
 class EnterToTreasureRoom : public Event {
 public:
-    EnterToTreasureRoom(shared_ptr<Hero>& h);
     void DisplayDescription(DescriptionVisitor visitor);
-    void Action();
+    void Action(shared_ptr<Hero> &h);
 };
 
 class EnterToHealthRoom : public Event {
 public:
-    EnterToHealthRoom(shared_ptr<Hero>& h);
     void DisplayDescription(DescriptionVisitor visitor);
-    void Action();
+    void Action(shared_ptr<Hero> &h);
 };
 
 class HealthYourself : public Event {
 public:
-    HealthYourself(shared_ptr<Hero>& h);
     void DisplayDescription(DescriptionVisitor visitor);
-    void Action();
+    void Action(shared_ptr<Hero> &h);
 };
 
 class EnterToTraderRoom : public Event {
 public:
-    EnterToTraderRoom(shared_ptr<Hero>& h);
     void DisplayDescription(DescriptionVisitor visitor);
-    void Action();
+    void Action(shared_ptr<Hero> &h);
 };
 
 class SeeItems : public Event {
 public:
-    SeeItems(shared_ptr<Hero>& h, shared_ptr<Item>& i1, shared_ptr<Item>& i2, shared_ptr<Item>& i3);
     void DisplayDescription(DescriptionVisitor visitor);
-    void Action();
-private:
-    shared_ptr<Item> _item1;
-    shared_ptr<Item> _item2;
-    shared_ptr<Item> _item3;
+    void Action(shared_ptr<Hero> &h);
+
+protected:
+    void BuyItems(shared_ptr<Hero> &h, shared_ptr<Item>& i1, shared_ptr<Item>& i2, shared_ptr<Item>& i3);
+    bool buyOneItem(shared_ptr<Hero> &h, shared_ptr<Item>& item);
 };
 
-class BuyItems : public Event {
-public:
-    BuyItems(shared_ptr<Hero>& h, shared_ptr<Item>& i1, shared_ptr<Item>& i2, shared_ptr<Item>& i3,shared_ptr<Strategy>& p_strategy);
-    void DisplayDescription(DescriptionVisitor visitor);
-    void Action();
-private:
-    bool buyOneItem(int num);
-    shared_ptr<Strategy> _buyingStrategy;
-    shared_ptr<Item> _item1;
-    shared_ptr<Item> _item2;
-    shared_ptr<Item> _item3;
-};
 
 class EnterToEmptyRoom : public Event {
 public:
-    EnterToEmptyRoom(shared_ptr<Hero>& h);
     void DisplayDescription(DescriptionVisitor visitor);
-    void Action();
+    void Action(shared_ptr<Hero> &h);
 };
 
 class EnterToStartingRoom : public Event {
 public:
-    EnterToStartingRoom(shared_ptr<Hero>& h);
     void DisplayDescription(DescriptionVisitor visitor);
-    void Action();
+    void Action(shared_ptr<Hero> &h);
 };
 
 class EnterToBossRoom : public Event {
 public:
-    EnterToBossRoom(shared_ptr<Hero>& h);
     void DisplayDescription(DescriptionVisitor visitor);
-    void Action();
+    void Action(shared_ptr<Hero> &h);
+};
+
+class BossFight : public Event {
+public:
+    void DisplayDescription(DescriptionVisitor visitor);
+    void Action(shared_ptr<Hero> &h);
 };
 
 
@@ -192,10 +165,10 @@ public:
     void visitHealthYourself(HealthYourself event);
     void visitEnterToTraderRoom(EnterToTraderRoom event);
     void visitSeeItems(SeeItems event);
-    void visitBuyItems(BuyItems event);
     void visitEnterToEmptyRoom(EnterToEmptyRoom event);
     void visitEnterToStartingRoom(EnterToStartingRoom event);
     void visitEnterToBossRoom(EnterToBossRoom event);
+    void visitBossFight(BossFight event);
 
 private:
     void eventTransitionFunction(shared_ptr<EventNode>& start, shared_ptr<Hero>& h);

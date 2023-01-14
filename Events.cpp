@@ -2,6 +2,28 @@
 #include <chrono>
 #include <thread>
 
+ItemType getRandomItemType( shared_ptr<Hero>&h) {
+    int type = static_cast<int>(round(makeRand(0, 3)));
+
+    if (h->getProf() == warrior) {
+        type += static_cast<int>(round(makeRand(0, 1)));
+    }
+
+    ItemType itemType;
+    if (type == 0)
+        itemType = weapon;
+    else if (type == 1)
+        itemType = armor;
+    else if (type == 2)
+        itemType = headgear;
+    else if (type == 3)
+        itemType = talisman;
+    else
+        itemType = shield;
+
+    return itemType;
+}
+
 void Chest::openBox(shared_ptr<Hero>& h) {
     int coins = static_cast<int>(round(makeRand(0, h->getlevel() * 100)));
     //viewTxtOpenBox
@@ -74,9 +96,6 @@ void DescriptionVisitor::visitEnterToTraderRoom(EnterToTraderRoom event) {
 void DescriptionVisitor::visitSeeItems(SeeItems event) {
     cout << "See items" << endl;
 }
-void DescriptionVisitor::visitBuyItems(BuyItems event) {
-    cout << "Buy some items" << endl;
-}
 void DescriptionVisitor::visitEnterToEmptyRoom(EnterToEmptyRoom event) {
     cout << "" << endl;
 }
@@ -86,19 +105,20 @@ void DescriptionVisitor::visitEnterToStartingRoom(EnterToStartingRoom event) {
 void DescriptionVisitor::visitEnterToBossRoom(EnterToBossRoom event) {
     cout << "" << endl;
 }
-
-
-void Event::Action() {}
-
-
-EndPoint::EndPoint(shared_ptr<Hero>& hero) {
-    h = hero;
+void DescriptionVisitor::visitBossFight(BossFight event) {
+    cout << "Final fight with BOSS" << endl;
 }
+
+
+void Event::Action(shared_ptr<Hero> &h) {}
+
+Event::Event() {}
+
+
 void EndPoint::DisplayDescription(DescriptionVisitor visitor) {
     visitor.visitEndPoint(*this);
 }
-
-void EndPoint::Action() {
+void EndPoint::Action(shared_ptr<Hero> &h) {
     char decision;
     while (true) {
         cout << "Do you want to check your Statistics (S), Equipment (E), or do nothing (N)?" << endl;
@@ -118,26 +138,23 @@ void EndPoint::Action() {
     }
 }
 
-EnterToMonsterRoom::EnterToMonsterRoom(shared_ptr<Hero>& hero) {
-    h = hero;
-}
+
 void EnterToMonsterRoom::DisplayDescription(DescriptionVisitor visitor) {
     visitor.visitEnterToMonsterRoom(*this);
 }
-void EnterToMonsterRoom::Action() {
+void EnterToMonsterRoom::Action(shared_ptr<Hero> &h) {
     cout << "You have entered the room with the monster" << endl;
     cout << "Your current health is: " << h->getcurrentHealth() << "/" << h->getmaxHealth() << endl;
 }
 
-Fight::Fight(shared_ptr<Hero>& hero, shared_ptr<monster> monster) {
-    h = hero;
-    _monster = monster;
-}
+
 void Fight::DisplayDescription(DescriptionVisitor visitor) {
     visitor.visitFight(*this);
 }
-void Fight::Action() {
-    shared_ptr<Character> ch(_monster);
+// zrobić fight dla walki z bossem
+void Fight::Action(shared_ptr<Hero> &h) {
+    shared_ptr<monster> normal_monster = make_shared<monster>(h->getlevel(), 0);
+    shared_ptr<Character> ch(normal_monster);
 	h->fight(ch, 0);
     if (h->getcurrentHealth() > 0)
     {
@@ -149,13 +166,11 @@ void Fight::Action() {
     }
 }
 
-RunAway::RunAway(shared_ptr<Hero>& hero) {
-    h = hero;
-}
+
 void RunAway::DisplayDescription(DescriptionVisitor visitor) {
     visitor.visitRunAway(*this);
 }
-void RunAway::Action() {
+void RunAway::Action(shared_ptr<Hero> &h) {
     int chance = static_cast<int>(round(makeRand(0, 10)));
 
     if (chance < 3) {
@@ -167,21 +182,20 @@ void RunAway::Action() {
         cout << "You escaped the monster" << endl;
 }
 
-CheckChest::CheckChest(shared_ptr<Hero>& hero, shared_ptr<Chest>& chest) {
-    h = hero;
-    _chest = move(chest);
-}
+
 void CheckChest::DisplayDescription(DescriptionVisitor visitor) {
     visitor.visitCheckChest(*this);
 }
-void CheckChest::Action() {
+void CheckChest::Action(shared_ptr<Hero> &h) {
+    shared_ptr<Chest> chest = make_unique<Chest>(h);
+
     char decision;
     while (true) {
         cout << "You found mystery box. Do you want to open it? (Y/N)" << endl;
         cin >> decision;
         decision = makeBig(decision);
         if (decision == 'Y') {
-            _chest->openBox(h);
+            chest->openBox(h);
             break;
         }
         else if (decision == 'N')
@@ -191,47 +205,39 @@ void CheckChest::Action() {
     }
 }
 
-EnterToTrapRoom::EnterToTrapRoom(shared_ptr<Hero>& hero) {
-    h = hero;
-}
+
 void EnterToTrapRoom::DisplayDescription(DescriptionVisitor visitor) {
     visitor.visitEnterToTrapRoom(*this);
 }
-void EnterToTrapRoom::Action() {
+void EnterToTrapRoom::Action(shared_ptr<Hero> &h) {
     cout << "You enter a chamber that appears to be empty..." << endl;
 }
 
-ActiveTheTrap::ActiveTheTrap(shared_ptr<Hero>& hero) {
-    h = hero;
-}
+
 void ActiveTheTrap::DisplayDescription(DescriptionVisitor visitor) {
     visitor.visitActiveTheTrap(*this);
     cout << "Active the trap" << endl;
 }
-void ActiveTheTrap::Action() {
+void ActiveTheTrap::Action(shared_ptr<Hero> &h) {
     cout << "There was a trap in the room that has hurted you" << endl;
     h->getDamage(static_cast<int>(h->getmaxHealth() * 0.2));
     cout << "Your current health is: " << h->getcurrentHealth() << "/" << h->getmaxHealth() << endl;
 }
 
-EnterToPotionRoom::EnterToPotionRoom(shared_ptr<Hero>& hero) {
-    h = hero;
-}
+
 void EnterToPotionRoom::DisplayDescription(DescriptionVisitor visitor) {
     visitor.visitEnterToPotionRoom(*this);
 }
-void EnterToPotionRoom::Action() {
+void EnterToPotionRoom::Action(shared_ptr<Hero> &h) {
     cout << "You have entered to room and saw a mysterious potion on the table" << endl;
 }
 
-DrinkPotion::DrinkPotion(shared_ptr<Hero>& hero) {
-    h = hero;
-}
+
 void DrinkPotion::DisplayDescription(DescriptionVisitor visitor) {
     visitor.visitDrinkPotion(*this);
     cout << "Drink the potion" << endl;
 }
-void DrinkPotion::Action() {
+void DrinkPotion::Action(shared_ptr<Hero> &h) {
     int drawn_num = static_cast<int>(round(makeRand(0, 1)));
 
     if (drawn_num == 0) {
@@ -246,86 +252,76 @@ void DrinkPotion::Action() {
     }
 }
 
-EnterToTreasureRoom::EnterToTreasureRoom(shared_ptr<Hero>& hero) {
-    h = hero;
-}
+
 void EnterToTreasureRoom::DisplayDescription(DescriptionVisitor visitor) {
     visitor.visitEnterToTreasureRoom(*this);
 }
-void EnterToTreasureRoom::Action() {
+void EnterToTreasureRoom::Action(shared_ptr<Hero> &h) {
     cout << "You have entered to room and saw a chest by the wall" << endl;
 }
 
-EnterToHealthRoom::EnterToHealthRoom(shared_ptr<Hero>& hero) {
-    h = hero;
-}
+
 void EnterToHealthRoom::DisplayDescription(DescriptionVisitor visitor) {
     visitor.visitEnterToHealthRoom(*this);
 }
-void EnterToHealthRoom::Action() {
+void EnterToHealthRoom::Action(shared_ptr<Hero> &h) {
     cout << "Upon entering the room, the Ancient Fountain of Life appeared before your eyes" << endl;
 }
 
-HealthYourself::HealthYourself(shared_ptr<Hero>& hero) {
-    h = hero;
-}
+
 void HealthYourself::DisplayDescription(DescriptionVisitor visitor) {
     visitor.visitHealthYourself(*this);
 }
-void HealthYourself::Action() {
+void HealthYourself::Action(shared_ptr<Hero> &h) {
     cout << "After drinking the magic water you regain all health points" << endl;
     h->setcurrentHealth(h->getmaxHealth());
     cout << "Your current health is: " << h->getcurrentHealth() << "/" << h->getmaxHealth() << endl;
 }
 
-EnterToTraderRoom::EnterToTraderRoom(shared_ptr<Hero>& hero) {
-    h = hero;
-}
+
 void EnterToTraderRoom::DisplayDescription(DescriptionVisitor visitor) {
     visitor.visitEnterToTraderRoom(*this);
 }
-void EnterToTraderRoom::Action() {
+void EnterToTraderRoom::Action(shared_ptr<Hero> &h) {
     cout << "You have enter the room and saw the stand of a traveling trader who wants to offer you his items" << endl;
 }
 
-SeeItems::SeeItems(shared_ptr<Hero>& hero, shared_ptr<Item>& i1, shared_ptr<Item>& i2, shared_ptr<Item>& i3) {
-    h = hero;
-    _item1 = i1;
-    _item2 = i2;
-    _item3 = i3;
-}
+
 void SeeItems::DisplayDescription(DescriptionVisitor visitor) {
     visitor.visitSeeItems(*this);
 }
-void SeeItems::Action() {
+void SeeItems::Action(shared_ptr<Hero> &h) {
+    shared_ptr<Item> item1 = ItemFactory::createItem(h->getlevel(), getRandomItemType(h), h->getProf());
+    shared_ptr<Item> item2 = ItemFactory::createItem(h->getlevel(), getRandomItemType(h), h->getProf());
+    shared_ptr<Item> item3 = ItemFactory::createItem(h->getlevel(), getRandomItemType(h), h->getProf());
+
     h->showEQ();
     cout << endl;
+
     cout << "Merchant items:" << endl;
     cout << "item 1:" << endl;
-    showItemDetails(_item1, h->getProf());
-    cout << "price: " << _item1->getValue() << endl << endl;
+    showItemDetails(item1, h->getProf());
+    cout << "price: " << item1->getValue() << endl << endl;
 
     cout << "item 2:" << endl;
-    showItemDetails(_item2, h->getProf());
-    cout << "price: " << _item2->getValue() << endl << endl;
+    showItemDetails(item2, h->getProf());
+    cout << "price: " << item2->getValue() << endl << endl;
 
     cout << "item 3:" << endl;
-    showItemDetails(_item3, h->getProf());
-    cout << "price: " << _item3->getValue() << endl << endl;
-    cout << "Your balance: " << h->getMoney() << endl;
-}
+    showItemDetails(item3, h->getProf());
+    cout << "price: " << item3->getValue() << endl << endl;
 
-BuyItems::BuyItems(shared_ptr<Hero>& hero, shared_ptr<Item>& i1, shared_ptr<Item>& i2, shared_ptr<Item>& i3, shared_ptr<Strategy>& p_strategy) {
-    h = hero;
-    _item1 = i1;
-    _item2 = i2;
-    _item3 = i3;
-    _buyingStrategy = p_strategy;
+    cout << "Your balance: " << h->getMoney() << endl;
+
+    char wantToBuy;
+    cout << "Do you want to buy something? (Y/N)" << endl;
+    cin >> wantToBuy;
+    wantToBuy = makeBig(wantToBuy);
+
+    if (wantToBuy == 'Y')
+        BuyItems(h, item1, item2, item3);
 }
-void BuyItems::DisplayDescription(DescriptionVisitor visitor) {
-    visitor.visitBuyItems(*this);
-}
-void BuyItems::Action() {
+void SeeItems::BuyItems(shared_ptr<Hero> &h, shared_ptr<Item> &i1, shared_ptr<Item> &i2, shared_ptr<Item> &i3) {
     bool wantToBuy = true;
     int num;
     char player_decision;
@@ -338,8 +334,8 @@ void BuyItems::Action() {
         num = makeBig(num);
         if (num == 1) {
             if (!bought1) {
-                showItemDetails(_item1, h->getProf());
-                bought1 = buyOneItem(1);
+                showItemDetails(i1, h->getProf());
+                bought1 = buyOneItem(h, i1);
             }
             else {
                 cout << "You have already bought this item" << endl;
@@ -347,8 +343,8 @@ void BuyItems::Action() {
         }
         else if (num == 2) {
             if (!bought2) {
-                showItemDetails(_item2, h->getProf());
-                bought2=buyOneItem(2);
+                showItemDetails(i2, h->getProf());
+                bought2 = buyOneItem(h, i2);
             }
             else {
                 cout << "You have already bought this item" << endl;
@@ -356,8 +352,8 @@ void BuyItems::Action() {
         }
         else if (num == 3) {
             if (!bought3) {
-                showItemDetails(_item3, h->getProf());
-                bought3=buyOneItem(3);
+                showItemDetails(i3, h->getProf());
+                bought3 = buyOneItem(h, i3);
                
             }
             else {
@@ -390,22 +386,11 @@ void BuyItems::Action() {
         }
     }
 }
-bool BuyItems::buyOneItem(int num)
-{
-    shared_ptr<Item> _buyingItem;
+bool SeeItems::buyOneItem(shared_ptr<Hero> &h, shared_ptr<Item> &item) {
+    shared_ptr<Item> _buyingItem = item;
     bool _flag = false;
-    if(num==1)
-    {
-        _buyingItem = _item1;
-    }
-    else if(num==2)
-    {
-        _buyingItem = _item2;
-    }
-    else if (num==3)
-    {
-        _buyingItem = _item3;
-    }
+
+    shared_ptr<Strategy> _buyingStrategy = make_unique<StandardStrategy>(h);
     _buyingStrategy->setStartingPrice(_buyingItem->getValue());
 
     while (!_flag)
@@ -437,39 +422,53 @@ bool BuyItems::buyOneItem(int num)
     return _flag;
 	
 }
-EnterToEmptyRoom::EnterToEmptyRoom(shared_ptr<Hero>& hero) {
-    h = hero;
-}
+
+
 void EnterToEmptyRoom::DisplayDescription(DescriptionVisitor visitor) {
     visitor.visitEnterToEmptyRoom(*this);
 }
-void EnterToEmptyRoom::Action() {
+void EnterToEmptyRoom::Action(shared_ptr<Hero> &h) {
     cout << "The room is completely empty, you have nothing to do here, so keep walking" << endl;
 }
 
-EnterToStartingRoom::EnterToStartingRoom(shared_ptr<Hero>& hero) {
-    h = hero;
-}
+
 void EnterToStartingRoom::DisplayDescription(DescriptionVisitor visitor) {
     cout << "" << endl;
 }
-void EnterToStartingRoom::Action() {
+void EnterToStartingRoom::Action(shared_ptr<Hero> &h) {
     cout << "Your adventure begins here" << endl;
 }
 
-EnterToBossRoom::EnterToBossRoom(shared_ptr<Hero>& hero) {
-    h = hero;
-}
+
 void EnterToBossRoom::DisplayDescription(DescriptionVisitor visitor) {
     visitor.visitEnterToBossRoom(*this);
 }
-void EnterToBossRoom::Action() {
+void EnterToBossRoom::Action(shared_ptr<Hero> &h) {
     chrono::milliseconds timespan(1000);
     this_thread::sleep_for(timespan);
     cout << "You have entered the boss's chamber" << endl;
     this_thread::sleep_for(timespan);
     cout << "The last and hardest fight is ahead of you" << endl;
     this_thread::sleep_for(timespan);
+}
+
+
+void BossFight::DisplayDescription(DescriptionVisitor visitor) {
+    visitor.visitBossFight(*this);
+}
+
+void BossFight::Action(shared_ptr<Hero> &h) {
+    shared_ptr<monster> boss_monster = make_shared<monster>(h->getlevel(), 1);
+    shared_ptr<Character> ch(boss_monster);
+    h->fight(ch, 0);
+    if (h->getcurrentHealth() > 0)
+    {
+        cout << "You have defeated a monster" << endl;
+        cout << "Remaining health points: " << h->getcurrentHealth() << endl << endl;
+        h->levelup();
+        cout << "You have leveled up. Your current level is: " << h->getlevel() << endl;
+        cout << "Your current health is: " << h->getcurrentHealth() << "/" << h->getmaxHealth() << endl << endl;
+    }
 }
 
 
