@@ -2,9 +2,10 @@
 #ifndef NAMES_H
 #define NAMES_H
 #include <random>
-#include <string>
 #include <memory>
 #include <ranges>
+#include <algorithm>
+#include <string>
 using namespace std;
 
 static mt19937 gen{ random_device{}() };
@@ -65,7 +66,7 @@ static double chance()
 constexpr double dodge{ 33.0 };
 static string makeBig(string str)
 {
-    std::ranges::transform(str.begin(), str.end(), str.begin(), toupper);
+    std::transform(str.begin(), str.end(),str.begin(), ::toupper);
     return str;
 }
 static char makeBig(char str)
