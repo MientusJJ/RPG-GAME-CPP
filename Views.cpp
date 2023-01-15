@@ -3,6 +3,8 @@ using namespace std;
 #include <iostream>
 #include <thread>
 
+TXTView::TXTView() {}
+
 void TXTView::OneOptionToMoveOn() {
     cout << "There is only one way out of this room..." << endl;
     cout << "Type L or R to go next" << endl;

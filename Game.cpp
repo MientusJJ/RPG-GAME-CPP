@@ -6,15 +6,17 @@ Game::Game()
 
 void Game::play()
 {
+    view = make_unique<TXTView>();
+
 	hero = Hero::getInstance();
-    heroSetName();
-    heroSetClass();
+    heroSetName(view);
+    heroSetClass(view);
 
 	o = make_shared<Observer>(hero);
 	o->addToObserver();
 	shared_ptr<ChamberNode> start = prepareMap();
 
-	chamberTransitionFunction(start);
+	chamberTransitionFunction(start, view);
 }
 
 shared_ptr<ChamberNode> Game::prepareMap()
@@ -59,7 +61,7 @@ shared_ptr<ChamberNode> Game::prepareMap()
 	return start;
 }
 
-void Game::chamberTransitionFunction(shared_ptr<ChamberNode>& start)
+void Game::chamberTransitionFunction(shared_ptr<ChamberNode>& start, shared_ptr<View> view)
 {
 	shared_ptr<ChamberNode> curr = start;
     shared_ptr<ActionVisitor> visitor(new ActionVisitor(hero));
@@ -77,28 +79,26 @@ void Game::chamberTransitionFunction(shared_ptr<ChamberNode>& start)
 			break;
 		else if (curr->option2 == nullptr)
 		{
-			cout << "There is only one way out of this room..." << endl;
-			cout << "Type L or R to go next" << endl;
+			view->OneOptionToMoveOn();
+
 			char choice;
 			cin >> choice;
 			choice = makeBig(choice);
 			while (choice != 'L' && choice != 'R') {
-				cout << "Character not recognized, please retype" << endl;
+				view->NotRecognizedCharacter();
 				cin >> choice;
 				choice = makeBig(choice);
 			}
 			curr = curr->option1;
 		}
 		else {
-			cout << "You see two passages - which way do you want to go?" << endl;
-			cout << "[L] left" << endl;
-			cout << "[R] right" << endl;
+			view->TwoOpitonsToMoveOn();
 
 			char choice;
 			cin >> choice;
 			choice = makeBig(choice);
 			while (choice != 'L' && choice != 'R') {
-				cout << "Character not recognized, please retype" << endl;
+                view->NotRecognizedCharacter();
 				cin >> choice;
 				choice = makeBig(choice);
 			}
@@ -113,30 +113,24 @@ void Game::chamberTransitionFunction(shared_ptr<ChamberNode>& start)
 	}
 }
 
-void Game::heroSetClass() {
-    cout << "Choose class of " << hero->getName() << " \nWrite 1 if you want warrior \nWrite 2 if you want scout \nWrite 3 if you want mage \n";
+void Game::heroSetClass(shared_ptr<View> view) {
+    view->ShowPossibleClassesToChoose(hero->getName());
     char c;
     cin >> c;
     while (c != '1' && c != '2' && c != '3')
     {
-        cout << "Bad Number. Choose number between 1 and 3\n";
+        view->IncorrectNumber(1, 3);
         cin >> c;
     }
 
     int ch = (int)c - 48;
     hero->chooseClass(ch);
 
-    cout << "Your class for the whole game is: ";
-    if (ch == 1)
-        cout << "Warrior\n";
-    else if (ch == 2)
-        cout << "Scout\n";
-    else
-        cout << "Mage\n";
+    view->ShowChoosenClass(ch);
 }
 
-void Game::heroSetName() {
-    cout << "Write name of your hero:" << endl;
+void Game::heroSetName(shared_ptr<View> view) {
+    view->WriteHeroName();
     string n;
     cin >> n;
     hero->setName(n);

@@ -10,13 +10,13 @@ public:
 	Game();
 	~Game();
 	void play();
-    unique_ptr<TXTView> ViewInterface;
+    shared_ptr<View> view;
 	shared_ptr<ChamberNode> prepareMap();
-	void chamberTransitionFunction(shared_ptr<ChamberNode>& start);
+	void chamberTransitionFunction(shared_ptr<ChamberNode>& start, shared_ptr<View> view);
 private:
 	shared_ptr<Hero> hero;
 	shared_ptr<Observer> o;
-    void heroSetClass();
-    void heroSetName();
+    void heroSetClass(shared_ptr<View> view);
+    void heroSetName(shared_ptr<View> view);
 };
 #endif
