@@ -87,10 +87,10 @@ public:
 	virtual void chooseClass() {}
 	string getName();
 	virtual void setName() {}
-	bool useSpecialEffect(shared_ptr<Character>& opponent);
+	bool useSpecialEffect(shared_ptr<Character>& opponent, shared_ptr<View> view);
 	int useSpecialAttack();
 	Profession getProf();
-	void attackOpponent(shared_ptr<Character>& opponent);
+	void attackOpponent(shared_ptr<Character>& opponent, shared_ptr<View> view);
 protected:
 	
 	int minimalAttack;
@@ -112,9 +112,9 @@ public:
 	static shared_ptr<Hero>& getInstance();
 	Hero(Hero &other) = delete;
 	void operator=(const Hero &) = delete;
-	void showStatistics();
-	void showEQ();
-	void showOneItem(ItemType,Profession);
+	void showStatistics(shared_ptr<View> view);
+	void showEQ(shared_ptr<View> view);
+	void showOneItem(ItemType, Profession, shared_ptr<View> view);
 	void setAllStats();
 	void chooseClass(int c);
 	void setmaxHealth(int);
@@ -129,8 +129,8 @@ public:
 	void setBlockChance();
 	void setMoney(int);
 	int getMoney();
-	void ChangeEQ(shared_ptr<Item>&);
-	bool fight(shared_ptr<Character>&,bool);
+	void ChangeEQ(shared_ptr<Item>&, shared_ptr<View> view);
+	bool fight(shared_ptr<Character>&,bool, shared_ptr<View> view);
 	void AddObserver(shared_ptr<Observer>);
 	void DeleteObserver(shared_ptr<Observer>);
 	
@@ -147,7 +147,7 @@ class Observer : public enable_shared_from_this<Observer>
 
 public:
 	void setTrue();
-	bool check();
+	bool check(shared_ptr<View> view);
 	Observer(shared_ptr<Hero> hero): h(hero){}
 	void removeFromObserver();
 	void addToObserver();

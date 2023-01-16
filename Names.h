@@ -57,7 +57,7 @@ static string namesForShields[]
 {
         "Primal Tower Shield","Undead Heavy Shield","Wretched Heavy Shield","Ritual Tower Shield","Mercenary Shield","Bandit's Bronzed Shield","Demonic Glass Shield"
 };
-static string endGameMessage{ "Your hero has died. The Game is over" };
+//static string endGameMessage{ "Your hero has died. The Game is over" };
 constexpr int namesTableSize{ 7 };
 static double chance()
 {

@@ -12,6 +12,8 @@ public:
     //chambers
     virtual void OptionsForGoNext(int i) = 0;
     virtual void NotRecognizedCharacter() = 0;
+    virtual void GameSuccesfullFinished() = 0;
+    virtual void GameAlmostFinished() = 0;
 
 
     //events
@@ -120,6 +122,8 @@ public:
     virtual void ShowOneItem(string type, string prof, int value, string name, int val1, int val2, int val3,string mainStatName) = 0;
 
     virtual void CompletedEqChanging() = 0;
+    virtual void BreakLine() = 0;
+    virtual void EndGameMessage() = 0;
 };
 
 class TXTView : public View {
@@ -134,6 +138,8 @@ public:
     //chambers
     void OptionsForGoNext(int i);
     void NotRecognizedCharacter();
+    void GameSuccesfullFinished() ;
+    void GameAlmostFinished();
 
 
     //events
@@ -240,5 +246,7 @@ public:
     void ShowOneItem(string type, string prof, int value, string name, int val1=0, int val2=0, int val3=0, string mainStatName="");
 
     void CompletedEqChanging();
+    void BreakLine();
+    void EndGameMessage();
 };
 #endif

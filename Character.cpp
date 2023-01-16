@@ -95,9 +95,9 @@ Profession Character::getProf()
 {
 	return this->Class->getProf();
 }
-void Character::attackOpponent(shared_ptr<Character>& opponent)
+void Character::attackOpponent(shared_ptr<Character>& opponent, shared_ptr<View> view)
 {
-	if (!this->useSpecialEffect(opponent))
+	if (!this->useSpecialEffect(opponent, view))
 	{
 		return;
 	}
@@ -105,11 +105,12 @@ void Character::attackOpponent(shared_ptr<Character>& opponent)
 	damage = damage * this->useSpecialAttack() - opponent->getdefense();
 	if (damage < 1) damage = 1;
 	opponent->getDamage(damage);
-	cout << this->getName() << " dealt " << damage << " damage to " << opponent->getName() << endl;
-	cout << "Current health of " << opponent->getName() << " is " << opponent->getcurrentHealth() << endl;
+
+    view->ShowCourseOfRound(this->getName(), opponent->getName(), damage);
+    view->ShowCurrentHealthAfterRound(opponent->getName(), opponent->getcurrentHealth());
 	return;
 }
-bool Character::useSpecialEffect(shared_ptr<Character>& opponent)
+bool Character::useSpecialEffect(shared_ptr<Character>& opponent, shared_ptr<View> view)
 {
 	if (this->Class->getProf() == mage || opponent->Class->getProf() == mage)
 	{
@@ -119,7 +120,7 @@ bool Character::useSpecialEffect(shared_ptr<Character>& opponent)
 	{
 		if (chance() <= dodge)
 		{
-			cout << opponent->getName() << " dodged the hit from " << this->getName() << endl;
+            view->DodgedHit(opponent->getName(), this->getName());
 			return false;
 		}
 		return true;
@@ -128,7 +129,7 @@ bool Character::useSpecialEffect(shared_ptr<Character>& opponent)
 	{
 		if (chance() <= opponent->getBlockChance())
 		{
-			cout << opponent->getName() << " blocked the hit from " << this->getName() << endl;
+            view->BlockedHit(opponent->getName(), this->getName());
 			return false;
 		}
 		return true;
@@ -441,72 +442,134 @@ void Hero::levelup()
 	this->setcurrentHealth(this->getcurrentHealth() + double(this->getmaxHealth()*0.3));
 	return;
 }
-void Hero::showStatistics()
+void Hero::showStatistics(shared_ptr<View> view)
 {
-	cout << endl << "Statistics of your hero:" << endl;
-	cout << "Name: " << this->getName() << endl;
-	cout << "Class: " << this->Class->getProfName() << endl;
-	cout << "Main Stat name: " << this->Class->getmainStatName() << endl;
-	cout << "Skill: " << this->Class->getspecialAbility() << endl;
-	cout << "Level: " << this->getlevel() << endl;
-	cout << "Main Stat: " << this->EQ->weapon_slot->getMainStat() + this->EQ->headgear_slot->getMainStat() + this->Class->getmainStat() + this->EQ->talisman_slot->getMainStat() << endl;
-	cout << "Max health: " << this->getmaxHealth() << endl;
-	cout << "Current health: " << this->getcurrentHealth() << endl;
-	cout << "Minimal damage: " << this->getminimalAttack() << endl;
-	cout << "Maximal damage: " << this->getmaximalAttack() << endl;
-	cout << "Critical chance: " << this->getcriticalChance() << "%" << endl;
-	cout << "Defense: " << this->getdefense() << endl;
-	if (this->Class->getProf() == warrior)
-	{
-		cout << "Block Chance: " << this->getBlockChance() << "%" << endl;
-	}
-	cout << "Amount of money: " << this->getMoney() << endl;
+    int mainStat = this->EQ->weapon_slot->getMainStat() + this->EQ->headgear_slot->getMainStat() + this->Class->getmainStat() + this->EQ->talisman_slot->getMainStat();
+
+    view->ShowStatistics(this->getName(), this->Class->getProfName(), this->Class->getmainStatName(),
+                         this->Class->getspecialAbility(), this->getlevel(), mainStat, this->getmaxHealth(),
+                         this->getcurrentHealth(), this->getminimalAttack(), this->getmaximalAttack(),
+                         this->getcriticalChance(), this->getdefense(), this->getMoney(), this->getBlockChance());
+
 	return;
 }
-void Hero::showOneItem(ItemType it, Profession p)
+void Hero::showOneItem(ItemType it, Profession p, shared_ptr<View> view)
 {
+    int val1, val2, val3;
+    string mainStat, name, type;
+    int value;
+
 	if (it == weapon)
 	{
-		cout << "Weapon:\n\t name: " << this->EQ->weapon_slot->getName() << "\n\t minimal Damage: " << this->EQ->weapon_slot->getMinDamage() << "\n\t maximal Damage: " << this->EQ->weapon_slot->getMaxDamage() << "\n\t " << this->EQ->weapon_slot->getMainStatName() << ": " << this->EQ->weapon_slot->getMainStat() << "\n\t value: " << this->EQ->weapon_slot->getValue() << endl;
+        type = "weapon";
+        name = this->EQ->weapon_slot->getName();
+        val1 = this->EQ->weapon_slot->getMinDamage();
+        val2 = this->EQ->weapon_slot->getMaxDamage();
+        val3 = this->EQ->weapon_slot->getMainStat();
+        mainStat = this->EQ->weapon_slot->getMainStatName();
+        value = this->EQ->weapon_slot->getValue();
 	}
 	else if (it == talisman)
 	{
-		cout << "Talisman:\n\t name: " << this->EQ->talisman_slot->getName() << "\n\t " << this->EQ->talisman_slot->getMainStatName() << ": " << this->EQ->talisman_slot->getMainStat() << "\n\t Critical Chance: " << this->EQ->talisman_slot->getCriticalChance() << "\n\t value: " << this->EQ->talisman_slot->getValue() << endl;
+        type = "talisman";
+        name = this->EQ->talisman_slot->getName();
+        val1 = this->EQ->talisman_slot->getMainStat();
+        val2 = this->EQ->talisman_slot->getCriticalChance();
+        mainStat = this->EQ->talisman_slot->getMainStat();
+        value = this->EQ->talisman_slot->getValue();
 	}
 	else if (it == shield)
 	{
-		cout << "Shield:\n\t name: " << this->EQ->shield_slot->getName() << "\n\t Defense: " << this->EQ->shield_slot->getDefense() << "\n\t Block Chance: " << this->EQ->shield_slot->getBlockChance() << "\n\t value: " << this->EQ->shield_slot->getValue() << endl;
+        type = "shield";
+        name = this->EQ->shield_slot->getName();
+        val1 = this->EQ->shield_slot->getDefense();
+        val2 = this->EQ->shield_slot->getBlockChance();
+        value = this->EQ->shield_slot->getValue();
 	}
 	else if (it == armor)
 	{
-		cout << "Armor:\n\t name: " << this->EQ->armor_slot->getName() << "\n\t Defense: " << this->EQ->armor_slot->getDefense() << "\n\t Health: " << this->EQ->armor_slot->getHealth() << "\n\t value: " << this->EQ->armor_slot->getValue() << endl;
+        type = "armor";
+        name = this->EQ->armor_slot->getName();
+        val1 = this->EQ->armor_slot->getDefense();
+        val2 = this->EQ->armor_slot->getHealth();
+        value = this->EQ->armor_slot->getValue();
 	}
 	else if (it == headgear)
 	{
-		cout << "Headgear:\n\t name: " << this->EQ->headgear_slot->getName() << "\n\t Defense: " << this->EQ->headgear_slot->getDefense();
-		if (p == mage)
-		{
-			cout << "\n\t " << this->EQ->headgear_slot->getMainStatName() << ": " << this->EQ->headgear_slot->getMainStat();
-		}
-		else
-		{
-			cout << ":\n\t Health: " << this->EQ->headgear_slot->getHealth();
-		}
-		cout << "\n\t value: " << this->EQ->headgear_slot->getValue() << endl;
+        type = "headgear";
+        name = this->EQ->headgear_slot->getName();
+        val1 = this->EQ->headgear_slot->getDefense();
+
+        if (p == mage)
+        {
+            val2 = this->EQ->headgear_slot->getMainStat();
+            mainStat = this->EQ->headgear_slot->getMainStatName();
+        }
+        else
+            val2 = this->EQ->headgear_slot->getHealth();
+
+        value = this->EQ->headgear_slot->getValue();
 	}
+
+    string proff;
+    if (p == warrior)
+        proff = "Warrior";
+    else if (p == scout)
+        proff = "Scout";
+    else if (p == mage)
+        proff = "Mage";
+
+    view->ShowOneItem(type, proff, value, name, val1, val2, val3, mainStat);
 	return;
 }
-void Hero::showEQ()
+void Hero::showEQ(shared_ptr<View> view)
 {
-	cout << endl << "Equipment of your hero:" << endl;
-	this->showOneItem(weapon, this->getProf());
-	this->showOneItem(armor, this->getProf());
-	if (this->Class->getProf() == warrior)
-	{
-		this->showOneItem(shield, this->getProf());
-	}
-	this->showOneItem(talisman, this->getProf());
-	this->showOneItem(headgear, this->getProf());
+    string prof = this->Class->getProfName();
+    string weaponName = this->EQ->weapon_slot->getName();
+    int minDamage = this->EQ->weapon_slot->getMinDamage();
+    int maxDamage = this->EQ->weapon_slot->getMaxDamage();
+    string mainStateName =this->EQ->weapon_slot->getMainStatName();
+    int weaponMainStat = this->EQ->weapon_slot->getMainStat();
+    int weaponValue = this->EQ->weapon_slot->getValue();
+    string talismanName = this->EQ->talisman_slot->getName();
+    string talismanMainStatName = this->EQ->headgear_slot->getMainStatName();
+    int talismanMainStat = this->EQ->talisman_slot->getMainStat();
+    int talismanCrit = this->EQ->talisman_slot->getCriticalChance();
+    int talismanValue = this->EQ->talisman_slot->getValue();
+    string armorName = this->EQ->armor_slot->getName();
+    int armorDef = this->EQ->armor_slot->getDefense();
+    int armorHealth = this->EQ->armor_slot->getHealth();
+    int armorValue = this->EQ->armor_slot->getValue();
+    string headGearName = this->EQ->headgear_slot->getName();
+    int headGearDef = this->EQ->headgear_slot->getDefense();
+    int headGearVal;
+    int headgearValue = this->EQ->headgear_slot->getValue();
+    string headGearMainstat;
+    string shieldName;
+    int shieldDef;
+    int shieldBlockChance;
+    int shieldValue;
+
+    if (this->getProf() == mage)
+    {
+        headGearVal = this->EQ->headgear_slot->getMainStat();
+        headGearMainstat = this->EQ->headgear_slot->getMainStatName();
+    }
+    if (this->getProf() == warrior)
+    {
+        shieldName = this->EQ->shield_slot->getName();
+        shieldDef = this->EQ->shield_slot->getDefense();
+        shieldBlockChance = this->EQ->shield_slot->getBlockChance();
+        shieldValue = this->EQ->shield_slot->getValue();
+    }
+
+    view->ShowEqiupment(prof, weaponName, minDamage, maxDamage, mainStateName,
+                        weaponMainStat, weaponValue, talismanName, talismanMainStatName,
+                        talismanMainStat, talismanCrit, talismanValue, armorName, armorDef,
+                        armorHealth, armorValue, headGearName, headGearDef, headGearVal,
+                        headgearValue, headGearMainstat, shieldName, shieldDef,
+                        shieldBlockChance, shieldValue);
+
 	return;
 }
 void Hero::setAllStats()
@@ -562,29 +625,29 @@ int Hero::getMoney()
 {
 	return this->money;
 }
-void Hero::ChangeEQ(shared_ptr<Item>&i)
+void Hero::ChangeEQ(shared_ptr<Item>&i, shared_ptr<View> view)
 {
 	this->EQ->ChangeItem(i);
 	this->setAllStats();
 
-	cout << "Changing equipment completed" << endl;
+	view->CompletedEqChanging();
 	return;
 }
-bool Hero::fight(shared_ptr<Character>& opponent,bool boss)
+bool Hero::fight(shared_ptr<Character>& opponent,bool boss, shared_ptr<View> view)
 {
 	bool whoIsAttacking = true;
 	chrono::milliseconds timespan(1000);
 	while (this->getcurrentHealth() != 0 && opponent->getcurrentHealth() != 0)
 	{
-        cout << endl;
+        view->BreakLine();
 		if (whoIsAttacking)
 		{
-			this->attackOpponent(opponent);
+			this->attackOpponent(opponent, view);
 		}
 		else
 		{
 			shared_ptr<Character> h = this->getInstance();
-			opponent->attackOpponent(h);
+			opponent->attackOpponent(h, view);
 		}
 		whoIsAttacking = !whoIsAttacking;
 
@@ -593,7 +656,7 @@ bool Hero::fight(shared_ptr<Character>& opponent,bool boss)
 			this_thread::sleep_for(timespan);
 		}
 	}
-	cout << endl;
+    view->BreakLine();
 	return this->getcurrentHealth() != 0;
 }
 void Observer::setTrue()
@@ -604,11 +667,11 @@ bool Observer::getEndik()
 {
 	return this->endik;
 }
-bool Observer::check()
+bool Observer::check(shared_ptr<View> view)
 {
 	if (this->getEndik())
 	{
-		cout << endGameMessage << endl;
+        view->EndGameMessage();
 		return true;
 	}
 	else

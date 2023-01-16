@@ -1,32 +1,32 @@
 #include "Strategy.h"
 #include <iostream>
 
-bool StandardStrategy::makeNewPrice(int p_heroPrice)
+bool StandardStrategy::makeNewPrice(int p_heroPrice, shared_ptr<View> view)
 {
 	bool l_flag{ false };
 	if(p_heroPrice>h->getMoney())
 	{
-		std::cout << "You don't have that amount of money" << std::endl;
+		view->NotEnoughtGoldToBuyItem();
 	}
 	else if(p_heroPrice<this->getStartPrice()/2)
 	{
-		std::cout << "I won't sell this item for nothing!!!!" << std::endl;
+		view->MuchTooLowOfferForItem();
 	}
 	else if(p_heroPrice>=this->getCurrentPrice())
 	{
 		l_flag = true;
-		std::cout << "This price is fair. I can sell you this item" << std::endl;
+		view->FairPriceOfferForItem();
 		this->setCurrentPrice(p_heroPrice);
 	}
 	else
 	{
 		int l_newPrice{ (this->getCurrentPrice() + p_heroPrice) / 2 };
-		std::cout << "This price is too low, but I can propose: " << l_newPrice << std::endl;
+        view->AlmostFairPriceOfferForItem(l_newPrice);
 		this->setCurrentPrice(l_newPrice);
 	}
 	if (!l_flag)
 	{
-		std::cout << "Current price: " << this->getCurrentPrice() << endl;
+		view->ShowFinalPrice(this->getCurrentPrice());
 	}
 	return l_flag;
 }
@@ -36,9 +36,9 @@ void Strategy::takeMoney()
 {
 	h->setMoney(h->getMoney() - this->getCurrentPrice());
 }
-bool Strategy::buyingProcess(int price)
+bool Strategy::buyingProcess(int price, shared_ptr<View> view)
 {
-	if(this->makeNewPrice(price))
+	if(this->makeNewPrice(price, view))
 	{
 		this->takeMoney();
 		return true;

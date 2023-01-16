@@ -68,13 +68,13 @@ void Game::chamberTransitionFunction(shared_ptr<ChamberNode>& start, shared_ptr<
 
 	while (true)
 	{
-        curr->current->action(*visitor);
+        curr->current->action(*visitor, view);
 
-		if (this->o->check())
+		if (this->o->check(view))
 		{
 			break;
 		}
-		cout << endl;
+		view->BreakLine();
 		if (curr->option1 == nullptr)
 			break;
 		else if (curr->option2 == nullptr)
@@ -109,7 +109,7 @@ void Game::chamberTransitionFunction(shared_ptr<ChamberNode>& start, shared_ptr<
 				curr = curr->option2;
 		}
 
-		cout << endl;
+		view->BreakLine();
 	}
 }
 

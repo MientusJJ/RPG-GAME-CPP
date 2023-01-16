@@ -25,306 +25,299 @@ ItemType getRandomItemType(shared_ptr<Hero>&h) {
 }
 
 
-void Chest::openBox(shared_ptr<Hero>& h) {
+void Chest::openBox(shared_ptr<Hero>& h, shared_ptr<View> view) {
     const ItemType itemType = getRandomItemType(h);
     shared_ptr<Item> item = ItemFactory::createItem(h->getlevel(), itemType, h->getProf());
 
     int coins = static_cast<int>(round(makeRand(0, h->getlevel() * 100)));
 
-    cout << "You found " << coins << " gold in the chest" << endl;
+    view->GoldFoundInChest(coins);
     h->setMoney(h->getMoney() + coins);
 
-    cout << "There is also an item in chest: " << endl;
-    showItemDetails(item, h->getProf());
-    cout << endl;
-    cout << "Your current item: " << endl;
-    h->showOneItem(item->getType(), h->getProf());
-    cout << endl;
+    view->ItemFoundInChest();
+    showItemDetails(item, h->getProf(), view);
 
-    cout << "Do you want to replace your item with a new found one? (Y/N)" << endl;
+    view->ShowItemToChange();
+    h->showOneItem(item->getType(), h->getProf(), view);
+
+    view->DecisiontToReplaceItem();
 
     char decision;
     while (true) {
         cin >> decision;
         decision = makeBig(decision);
         if (decision == 'Y')
-            h->ChangeEQ(item);
+            h->ChangeEQ(item, view);
 
         if (decision == 'Y' || decision == 'N')
             break;
         else
-            cout << "Character not recognized, please retype" << endl;
+            view->NotRecognizedCharacter();
     }
 }
 
 
-// do dopisania w TXTView
-void DescriptionVisitor::visitEndPoint(EndPoint event) {
-    cout << "Get out of the room" << endl;
+void DescriptionVisitor::visitEndPoint(EndPoint event, shared_ptr<View> view) {
+    view->DescriptionEndPoint();
 }
-void DescriptionVisitor::visitEnterToMonsterRoom(EnterToMonsterRoom event) {
-    cout << "" << endl;
+void DescriptionVisitor::visitEnterToMonsterRoom(EnterToMonsterRoom event, shared_ptr<View> view) {
+    view->DescriptionEnterToMonsterRoom();
 }
-void DescriptionVisitor::visitFight(Fight event) {
-    cout << "Fight with the monster" << endl;
+void DescriptionVisitor::visitFight(Fight event, shared_ptr<View> view) {
+    view->DescriptionFight();
 }
-void DescriptionVisitor::visitRunAway(RunAway event) {
-    cout << "Run away" << endl;
+void DescriptionVisitor::visitRunAway(RunAway event, shared_ptr<View> view) {
+    view->DescriptionRunAway();
 }
-void DescriptionVisitor::visitCheckChest(CheckChest event) {
-    cout << "Check the chest" << endl;
+void DescriptionVisitor::visitCheckChest(CheckChest event, shared_ptr<View> view) {
+    view->DescriptionCheckChest();
 }
-void DescriptionVisitor::visitEnterToTrapRoom(EnterToTrapRoom event) {
-    cout << "" << endl;
+void DescriptionVisitor::visitEnterToTrapRoom(EnterToTrapRoom event, shared_ptr<View> view) {
+    view->DescriptionEnterToTrapRoom();
 }
-void DescriptionVisitor::visitActiveTheTrap(ActiveTheTrap event) {
-    cout << "Active the trap" << endl;
+void DescriptionVisitor::visitActiveTheTrap(ActiveTheTrap event, shared_ptr<View> view) {
+    view->DescriptionActiveTheTrap();
 }
-void DescriptionVisitor::visitEnterToPotionRoom(EnterToPotionRoom event) {
-    cout << "" << endl;
+void DescriptionVisitor::visitEnterToPotionRoom(EnterToPotionRoom event, shared_ptr<View> view) {
+    view->DescriptionEnterToPotionRoom();
 }
-void DescriptionVisitor::visitDrinkPotion(DrinkPotion event) {
-    cout << "Drink the potion" << endl;
+void DescriptionVisitor::visitDrinkPotion(DrinkPotion event, shared_ptr<View> view) {
+    view->DescriptionDrinkPotion();
 }
-void DescriptionVisitor::visitEnterToTreasureRoom(EnterToTreasureRoom event) {
-    cout << "" << endl;
+void DescriptionVisitor::visitEnterToTreasureRoom(EnterToTreasureRoom event, shared_ptr<View> view) {
+    view->DescriptionEnterToTreasureRoom();
 }
-void DescriptionVisitor::visitEnterToHealthRoom(EnterToHealthRoom event) {
-    cout << "" << endl;
+void DescriptionVisitor::visitEnterToHealthRoom(EnterToHealthRoom event, shared_ptr<View> view) {
+    view->DescriptionEnterToHealthRoom();
 }
-void DescriptionVisitor::visitHealthYourself(HealthYourself event) {
-    cout << "Drink some water from the Fountain" << endl;
+void DescriptionVisitor::visitHealthYourself(HealthYourself event, shared_ptr<View> view) {
+    view->DescriptionHealthYourself();
 }
-void DescriptionVisitor::visitEnterToTraderRoom(EnterToTraderRoom event) {
-    cout << "" << endl;
+void DescriptionVisitor::visitEnterToTraderRoom(EnterToTraderRoom event, shared_ptr<View> view) {
+    view->DescriptionEnterToTraderRoom();
 }
-void DescriptionVisitor::visitSeeItems(SeeItems event) {
-    cout << "See items" << endl;
+void DescriptionVisitor::visitSeeItems(SeeItems event, shared_ptr<View> view) {
+    view->DescriptionSeeItems();
 }
-void DescriptionVisitor::visitEnterToEmptyRoom(EnterToEmptyRoom event) {
-    cout << "" << endl;
+void DescriptionVisitor::visitEnterToEmptyRoom(EnterToEmptyRoom event, shared_ptr<View> view) {
+    view->DescriptionEnterToEmptyRoom();
 }
-void DescriptionVisitor::visitEnterToStartingRoom(EnterToStartingRoom event) {
-    cout << "" << endl;
+void DescriptionVisitor::visitEnterToStartingRoom(EnterToStartingRoom event, shared_ptr<View> view) {
+    view->DescriptionEnterToStartingRoom();
 }
-void DescriptionVisitor::visitEnterToBossRoom(EnterToBossRoom event) {
-    cout << "" << endl;
+void DescriptionVisitor::visitEnterToBossRoom(EnterToBossRoom event, shared_ptr<View> view) {
+    view->DescriptionEnterToBossRoom();
 }
-void DescriptionVisitor::visitBossFight(BossFight event) {
-    cout << "Final fight with BOSS" << endl;
+void DescriptionVisitor::visitBossFight(BossFight event, shared_ptr<View> view) {
+    view->DescriptionBossFight();
 }
 
 
-void Event::Action(shared_ptr<Hero> &h) {}
+void Event::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {}
 
 Event::Event() {}
 
 
-void EndPoint::DisplayDescription(DescriptionVisitor visitor) {
-    visitor.visitEndPoint(*this);
+void EndPoint::DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) {
+    visitor.visitEndPoint(*this, view);
 }
-void EndPoint::Action(shared_ptr<Hero> &h) {
+void EndPoint::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {
     char decision;
     while (true) {
-        cout << "Do you want to check your Statistics (S), Equipment (E), or do nothing (N)?" << endl;
+        view->CheckStatisticsOrEquipment();
         cin >> decision;
         decision = makeBig(decision);
         if (decision == 'E') {
-            h->showEQ();
+            h->showEQ(view);
         }
         else if(decision == 'S')
         {
-            h->showStatistics();
+            h->showStatistics(view);
         }
         else if (decision == 'N')
             break;
         else
-            cout << "Character not recognized, please retype" << endl;
+            view->NotRecognizedCharacter();
     }
 }
 
 
-void EnterToMonsterRoom::DisplayDescription(DescriptionVisitor visitor) {
-    visitor.visitEnterToMonsterRoom(*this);
+void EnterToMonsterRoom::DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) {
+    visitor.visitEnterToMonsterRoom(*this, view);
 }
-void EnterToMonsterRoom::Action(shared_ptr<Hero> &h) {
-    cout << "You have entered the room with the monster" << endl;
-    cout << "Your current health is: " << h->getcurrentHealth() << "/" << h->getmaxHealth() << endl;
+void EnterToMonsterRoom::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {
+    view->EnteredToMonsterRoom();
+    view->ShowCurrentHealth(h->getcurrentHealth(), h->getmaxHealth());
 }
 
 
-void Fight::DisplayDescription(DescriptionVisitor visitor) {
-    visitor.visitFight(*this);
+void Fight::DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) {
+    visitor.visitFight(*this, view);
 }
-void Fight::Action(shared_ptr<Hero> &h) {
+void Fight::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {
     shared_ptr<monster> normal_monster = make_shared<monster>(h->getlevel(), 0);
     shared_ptr<Character> ch(normal_monster);
-	h->fight(ch, 0);
+	h->fight(ch, 0, view);
     if (h->getcurrentHealth() > 0)
     {
-        cout << "You have defeated a monster" << endl;
-        cout << "Remaining health points: " << h->getcurrentHealth() << endl << endl;
+        view->MonsterDefeated();
+        view->RemainingHealth(h->getcurrentHealth());
         h->levelup();
-        cout << "You have leveled up. Your current level is: " << h->getlevel() << endl;
-        cout << "Your current health is: " << h->getcurrentHealth() << "/" << h->getmaxHealth() << endl << endl;
+        view->LevelUp(h->getlevel());
+        view->ShowCurrentHealth(h->getcurrentHealth(), h->getmaxHealth());
     }
 }
 
 
-void RunAway::DisplayDescription(DescriptionVisitor visitor) {
-    visitor.visitRunAway(*this);
+void RunAway::DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) {
+    visitor.visitRunAway(*this, view);
 }
-void RunAway::Action(shared_ptr<Hero> &h) {
+void RunAway::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {
     int chance = static_cast<int>(round(makeRand(0, 10)));
 
     if (chance < 3) {
-        cout << "While escaping you got hit by a monster" << endl;
+        view->EscapeWithBeingHit();
         h->getDamage(static_cast<int>(h->getcurrentHealth() * 0.2));
-        cout << "Your current health is: " << h->getcurrentHealth() << "/" << h->getmaxHealth() << endl;
+        view->ShowCurrentHealth(h->getcurrentHealth(), h->getmaxHealth());
     }
     else
-        cout << "You escaped the monster" << endl;
+        view->EscapeWithoutBeingHit();
 }
 
 
-void CheckChest::DisplayDescription(DescriptionVisitor visitor) {
-    visitor.visitCheckChest(*this);
+void CheckChest::DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) {
+    visitor.visitCheckChest(*this, view);
 }
-void CheckChest::Action(shared_ptr<Hero> &h) {
+void CheckChest::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {
     shared_ptr<Chest> chest = make_unique<Chest>();
 
     char decision;
     while (true) {
-        cout << "You found mystery box. Do you want to open it? (Y/N)" << endl;
+        view->ChestFound();
         cin >> decision;
         decision = makeBig(decision);
         if (decision == 'Y') {
-            chest->openBox(h);
+            chest->openBox(h, view);
             break;
         }
         else if (decision == 'N')
             break;
         else
-            cout << "Character not recognized, please retype" << endl;
+            view->NotRecognizedCharacter();
     }
 }
 
 
-void EnterToTrapRoom::DisplayDescription(DescriptionVisitor visitor) {
-    visitor.visitEnterToTrapRoom(*this);
+void EnterToTrapRoom::DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) {
+    visitor.visitEnterToTrapRoom(*this, view);
 }
-void EnterToTrapRoom::Action(shared_ptr<Hero> &h) {
-    cout << "You enter a chamber that appears to be empty..." << endl;
+void EnterToTrapRoom::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {
+    view->DescriptionEnterToTrapRoom();
 }
 
 
-void ActiveTheTrap::DisplayDescription(DescriptionVisitor visitor) {
-    visitor.visitActiveTheTrap(*this);
-    cout << "Active the trap" << endl;
+void ActiveTheTrap::DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) {
+    visitor.visitActiveTheTrap(*this, view);
 }
-void ActiveTheTrap::Action(shared_ptr<Hero> &h) {
-    cout << "There was a trap in the room that has hurted you" << endl;
+void ActiveTheTrap::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {
+    view->HurtedByTrap();
     h->getDamage(static_cast<int>(h->getmaxHealth() * 0.2));
-    cout << "Your current health is: " << h->getcurrentHealth() << "/" << h->getmaxHealth() << endl;
+    view->ShowCurrentHealth(h->getcurrentHealth(), h->getmaxHealth());
 }
 
 
-void EnterToPotionRoom::DisplayDescription(DescriptionVisitor visitor) {
-    visitor.visitEnterToPotionRoom(*this);
+void EnterToPotionRoom::DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) {
+    visitor.visitEnterToPotionRoom(*this, view);
 }
-void EnterToPotionRoom::Action(shared_ptr<Hero> &h) {
-    cout << "You have entered to room and saw a mysterious potion on the table" << endl;
+void EnterToPotionRoom::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {
+    view->EnteredToPotionRoom();
 }
 
 
-void DrinkPotion::DisplayDescription(DescriptionVisitor visitor) {
-    visitor.visitDrinkPotion(*this);
+void DrinkPotion::DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) {
+    visitor.visitDrinkPotion(*this, view);
 }
-void DrinkPotion::Action(shared_ptr<Hero> &h) {
+void DrinkPotion::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {
     int drawn_num = static_cast<int>(round(makeRand(0, 1)));
 
     if (drawn_num == 0) {
         h->setcurrentHealth(h->getmaxHealth());
-        cout << "Your health has been restored" << endl;
-        cout << "Your current health is: " << h->getcurrentHealth() << "/" << h->getmaxHealth() << endl;
+        view->HealthRestoredByPotion();
+        view->ShowCurrentHealth(h->getcurrentHealth(), h->getmaxHealth());
     }
     else {
-        h->getDamage(static_cast<int>(h->getmaxHealth() * 0.3));
-        cout << "The potion was poisoned. You lost " << int(h->getmaxHealth() * 0.3) << " health" << endl;
-        cout << "Your current health is: " << h->getcurrentHealth() << "/" << h->getmaxHealth() << endl;
+        int poison = h->getmaxHealth() * 0.3;
+        h->getDamage(poison);
+        view->HealthLostByPoisonedPotion(poison);
+        view->ShowCurrentHealth(h->getcurrentHealth(), h->getmaxHealth());
     }
 }
 
 
-void EnterToTreasureRoom::DisplayDescription(DescriptionVisitor visitor) {
-    visitor.visitEnterToTreasureRoom(*this);
+void EnterToTreasureRoom::DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) {
+    visitor.visitEnterToTreasureRoom(*this, view);
 }
-void EnterToTreasureRoom::Action(shared_ptr<Hero> &h) {
-    cout << "You have entered to room and saw a chest by the wall" << endl;
-}
-
-
-void EnterToHealthRoom::DisplayDescription(DescriptionVisitor visitor) {
-    visitor.visitEnterToHealthRoom(*this);
-}
-void EnterToHealthRoom::Action(shared_ptr<Hero> &h) {
-    cout << "Upon entering the room, the Ancient Fountain of Life appeared before your eyes" << endl;
+void EnterToTreasureRoom::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {
+    view->EnteredToTreasureRoom();
 }
 
 
-void HealthYourself::DisplayDescription(DescriptionVisitor visitor) {
-    visitor.visitHealthYourself(*this);
+void EnterToHealthRoom::DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) {
+    visitor.visitEnterToHealthRoom(*this, view);
 }
-void HealthYourself::Action(shared_ptr<Hero> &h) {
-    cout << "After drinking the magic water you regain all health points" << endl;
+void EnterToHealthRoom::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {
+    view->EnteredToHealthRoom();
+}
+
+
+void HealthYourself::DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) {
+    visitor.visitHealthYourself(*this, view);
+}
+void HealthYourself::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {
+    view->HealthRestoredByMagicFountain();
     h->setcurrentHealth(h->getmaxHealth());
-    cout << "Your current health is: " << h->getcurrentHealth() << "/" << h->getmaxHealth() << endl;
+    view->ShowCurrentHealth(h->getcurrentHealth(), h->getmaxHealth());
 }
 
 
-void EnterToTraderRoom::DisplayDescription(DescriptionVisitor visitor) {
-    visitor.visitEnterToTraderRoom(*this);
+void EnterToTraderRoom::DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) {
+    visitor.visitEnterToTraderRoom(*this, view);
 }
-void EnterToTraderRoom::Action(shared_ptr<Hero> &h) {
-    cout << "You have enter the room and saw the stand of a traveling trader who wants to offer you his items" << endl;
+void EnterToTraderRoom::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {
+    view->EnteredToTraderRoom();
 }
 
 
-void SeeItems::DisplayDescription(DescriptionVisitor visitor) {
-    visitor.visitSeeItems(*this);
+void SeeItems::DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) {
+    visitor.visitSeeItems(*this, view);
 }
-void SeeItems::Action(shared_ptr<Hero> &h) {
+void SeeItems::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {
     shared_ptr<Item> item1 = ItemFactory::createItem(h->getlevel(), getRandomItemType(h), h->getProf());
     shared_ptr<Item> item2 = ItemFactory::createItem(h->getlevel(), getRandomItemType(h), h->getProf());
     shared_ptr<Item> item3 = ItemFactory::createItem(h->getlevel(), getRandomItemType(h), h->getProf());
 
-    h->showEQ();
-    cout << endl;
+    h->showEQ(view);
 
-    cout << "Merchant items:" << endl;
-    cout << "item 1:" << endl;
-    showItemDetails(item1, h->getProf());
-    cout << "price: " << item1->getValue() << endl << endl;
+    view->ShowMerchantItemWithPrice(1, item1->getValue());
+    showItemDetails(item1, h->getProf(), view);
 
-    cout << "item 2:" << endl;
-    showItemDetails(item2, h->getProf());
-    cout << "price: " << item2->getValue() << endl << endl;
+    view->ShowMerchantItemWithPrice(2, item2->getValue());
+    showItemDetails(item2, h->getProf(), view);
 
-    cout << "item 3:" << endl;
-    showItemDetails(item3, h->getProf());
-    cout << "price: " << item3->getValue() << endl << endl;
+    view->ShowMerchantItemWithPrice(3, item3->getValue());
+    showItemDetails(item3, h->getProf(), view);
 
-    cout << "Your balance: " << h->getMoney() << endl;
+    view->ShowGoldBalance(h->getMoney());
 
     char wantToBuy;
-    cout << "Do you want to buy something? (Y/N)" << endl;
+    view->DecisionToBuySomething();
     cin >> wantToBuy;
     wantToBuy = makeBig(wantToBuy);
 
     if (wantToBuy == 'Y')
-        BuyItems(h, item1, item2, item3);
+        BuyItems(h, item1, item2, item3, view);
 }
-void SeeItems::BuyItems(shared_ptr<Hero> &h, shared_ptr<Item> &i1, shared_ptr<Item> &i2, shared_ptr<Item> &i3) {
+void SeeItems::BuyItems(shared_ptr<Hero> &h, shared_ptr<Item> &i1, shared_ptr<Item> &i2, shared_ptr<Item> &i3, shared_ptr<View> view) {
     bool wantToBuy = true;
     string l_playerDecision{};
     char player_decision;
@@ -332,7 +325,7 @@ void SeeItems::BuyItems(shared_ptr<Hero> &h, shared_ptr<Item> &i1, shared_ptr<It
 
     while (wantToBuy)
     {
-        cout << "Enter the number of the item you want to buy:" << endl;
+        view->SelectNumberOfItemToBuy();
         cin >> l_playerDecision;
         l_playerDecision=makeBig(l_playerDecision);
         int num{ 0 };
@@ -346,39 +339,38 @@ void SeeItems::BuyItems(shared_ptr<Hero> &h, shared_ptr<Item> &i1, shared_ptr<It
         }
         if (num == 1) {
             if (!bought1) {
-                showItemDetails(i1, h->getProf());
-                bought1 = buyOneItem(h, i1);
+                showItemDetails(i1, h->getProf(), view);
+                bought1 = buyOneItem(h, i1, view);
             }
             else {
-                cout << "You have already bought this item" << endl;
+                view->SelectedItemHasAlreadyBeenBought();
             }
         }
         else if (num == 2) {
             if (!bought2) {
-                showItemDetails(i2, h->getProf());
-                bought2 = buyOneItem(h, i2);
+                showItemDetails(i2, h->getProf(), view);
+                bought2 = buyOneItem(h, i2, view);
             }
             else {
-                cout << "You have already bought this item" << endl;
+                view->SelectedItemHasAlreadyBeenBought();
             }
         }
         else if (num == 3) {
             if (!bought3) {
-                showItemDetails(i3, h->getProf());
-                bought3 = buyOneItem(h, i3);
-               
+                showItemDetails(i3, h->getProf(), view);
+                bought3 = buyOneItem(h, i3, view);
             }
             else {
-                cout << "You have already bought this item" << endl;
+                view->SelectedItemHasAlreadyBeenBought();
             }
         }
         else {
-            cout << "Invalid item number, try again" << endl;
+            view->InvalidItemNumber();
         }
 
         if (!bought1 || !bought2 || !bought3) {
-            cout << "Your balance: " << h->getMoney() << endl;
-            cout << "Do you want to buy anything else? (Y/N)" << endl;
+            view->ShowGoldBalance(h->getMoney());
+            view->DecisionToBuyingAnotherItem();
 
             while (true) {
                 cin >> player_decision;
@@ -389,16 +381,16 @@ void SeeItems::BuyItems(shared_ptr<Hero> &h, shared_ptr<Item> &i1, shared_ptr<It
                 if (player_decision == 'Y' || player_decision == 'N')
                     break;
                 else
-                    cout << "Character not recognized, please retype" << endl;
+                    view->NotRecognizedCharacter();
             }
         }
         else {
-            cout << "You already bought all items from the merchant..." << endl;
+            view->AllItemsHaveAlreadyBeenBought();
             wantToBuy = false;
         }
     }
 }
-bool SeeItems::buyOneItem(shared_ptr<Hero> &h, shared_ptr<Item> &item) {
+bool SeeItems::buyOneItem(shared_ptr<Hero> &h, shared_ptr<Item> &item, shared_ptr<View> view) {
     shared_ptr<Item> _buyingItem = item;
     bool _flag = false;
 
@@ -409,74 +401,66 @@ bool SeeItems::buyOneItem(shared_ptr<Hero> &h, shared_ptr<Item> &item) {
     {
         char player_decision;
 
-    	cout << "Do you want to negotiate price of this item? (Y/N)" << endl;
+    	view->DecisionToNegotiateItemPrice();
         while (true) {
             cin >> player_decision;
             player_decision = makeBig(player_decision);
             if (player_decision == 'Y' || player_decision == 'N')
                 break;
             else
-                cout << "Character not recognized, please retype" << endl;
+                view->NotRecognizedCharacter();
         }
         if(player_decision=='N')
         {
             break;
         }
-        cout << "Enter the price at which you would like to buy item: " << endl;
+        view->PriceOfferForItem();
         int price;
         cin >> price;
-        _flag = _buyingStrategy->buyingProcess(price);
+        _flag = _buyingStrategy->buyingProcess(price, view);
     }
     if(_flag)
     {
-        h->ChangeEQ(_buyingItem);
+        h->ChangeEQ(_buyingItem, view);
     }
     return _flag;
 	
 }
 
 
-void EnterToEmptyRoom::DisplayDescription(DescriptionVisitor visitor) {
-    visitor.visitEnterToEmptyRoom(*this);
+void EnterToEmptyRoom::DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) {
+    visitor.visitEnterToEmptyRoom(*this, view);
 }
-void EnterToEmptyRoom::Action(shared_ptr<Hero> &h) {
-    cout << "The room is completely empty, you have nothing to do here, so keep walking" << endl;
-}
-
-
-void EnterToStartingRoom::DisplayDescription(DescriptionVisitor visitor) {
-    visitor.visitEnterToStartingRoom(*this);
-}
-void EnterToStartingRoom::Action(shared_ptr<Hero> &h) {
-    cout << "Your adventure begins here" << endl;
+void EnterToEmptyRoom::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {
+    view->EnteredToEmptyRoom();
 }
 
 
-void EnterToBossRoom::DisplayDescription(DescriptionVisitor visitor) {
-    visitor.visitEnterToBossRoom(*this);
+void EnterToStartingRoom::DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) {
+    visitor.visitEnterToStartingRoom(*this, view);
 }
-void EnterToBossRoom::Action(shared_ptr<Hero> &h) {
-    chrono::milliseconds timespan(1000);
-    this_thread::sleep_for(timespan);
-    cout << "You have entered the boss's chamber" << endl;
-    this_thread::sleep_for(timespan);
-    cout << "The last and hardest fight is ahead of you" << endl;
-    this_thread::sleep_for(timespan);
+void EnterToStartingRoom::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {
+    view->EnteredToStartingRoom();
 }
 
 
-void BossFight::DisplayDescription(DescriptionVisitor visitor) {
-    visitor.visitBossFight(*this);
+void EnterToBossRoom::DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) {
+    visitor.visitEnterToBossRoom(*this, view);
 }
-void BossFight::Action(shared_ptr<Hero> &h) {
+void EnterToBossRoom::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {
+    view->EnteredToBossRoom();
+}
+
+
+void BossFight::DisplayDescription(DescriptionVisitor visitor, shared_ptr<View> view) {
+    visitor.visitBossFight(*this, view);
+}
+void BossFight::Action(shared_ptr<Hero> &h, shared_ptr<View> view) {
     shared_ptr<monster> boss_monster = make_shared<monster>(h->getlevel(), 1);
     shared_ptr<Character> ch(boss_monster);
-    h->fight(ch, 1);
+    h->fight(ch, 1, view);
     if (h->getcurrentHealth() > 0)
-    {
-        cout << "Congratulations. You have defeated a boss!" << endl;
-        cout << "Game is over" << endl;
-    }
+        view->BossDefeated();
 }
 
 

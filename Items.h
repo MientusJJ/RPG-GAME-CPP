@@ -186,37 +186,32 @@ public:
     static unique_ptr<Item> createItem(int level, ItemType type, Profession profession);
 };
 
-static void showItemDetails(shared_ptr<Item>& item, Profession prof)
+static void showItemDetails(shared_ptr<Item>& item, Profession prof, shared_ptr<View> view)
 {
+    //cout << "Item details: type=" << to_string(item->getType()) << ", prof=" << to_string(prof) << endl;
+
+    string type, proff;
+
     if (item->getType() == weapon)
-    {
-        cout << "Weapon:\n\t name: " << item->getName() << "\n\t minimal Damage: " << item->getMinDamage() << "\n\t maximal Damage: " << item->getMaxDamage() << "\n\t " << item->getMainStatName() << ": " << item->getMainStat() << "\n\t value: " << item->getValue() << endl;
-    }
-    else if (item->getType() == talisman)
-    {
-        cout << "Talisman:\n\t name: " << item->getName() << "\n\t " << item->getMainStatName() << ": " << item->getMainStat() << "\n\t Critical Chance: " << item->getCriticalChance() << "\n\t value: " << item->getValue() << endl;
-    }
-    else if (item->getType() == shield)
-    {
-        cout << "Shield:\n\t name: " << item->getName() << "\n\t Defense: " << item->getDefense() << "\n\t Block Chance: " << item->getBlockChance() << "\n\t value: " << item->getValue() << endl;
-    }
+        type = "weapon";
     else if (item->getType() == armor)
-    {
-        cout << "Armor:\n\t name: " << item->getName() << "\n\t Defense: " << item->getDefense() << "\n\t Health: " << item->getHealth() << "\n\t value: " << item->getValue() << endl;
-    }
+        type = "armor";
     else if (item->getType() == headgear)
-    {
-        cout << "Headgear:\n\t name: " << item->getName() << "\n\t Defense: " << item->getDefense();
-        if (prof == mage)
-        {
-            cout << "\n\t " << item->getMainStatName() << ": " << item->getMainStat();
-        }
-        else
-        {
-            cout << "\n\t Health: " << item->getHealth();
-        }
-        cout << "\n\t value: " << item->getValue() << endl;
-    }
+        type = "headgear";
+    else if (item->getType() == talisman)
+        type = "talisman";
+    else if (item->getType() == shield)
+        type = "shield";
+
+    if (prof == warrior)
+        proff = "Warrior";
+    else if (prof == scout)
+        proff = "Scout";
+    else if (prof == mage)
+        proff = "Mage";
+
+
+    view->ShowOneItem(type, proff, item->getValue(), item->getName(), item->getMinDamage(), item->getMaxDamage(), item->getMainStat(), item->getMainStatName());
     return;
 }
 

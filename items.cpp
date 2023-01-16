@@ -1,4 +1,4 @@
-#include "items.h"
+#include "Items.h"
 
 using namespace std;
 
@@ -164,9 +164,6 @@ unique_ptr<Item>  ItemFactory::createItem(int level, ItemType type, Profession p
        else if (profession == mage) {
            item = make_unique<MagicStick>(level);
        }
-       else {
-           cout << "wrong class value" << endl;
-       }
    }
    else if (type == armor)
    {
@@ -183,9 +180,6 @@ unique_ptr<Item>  ItemFactory::createItem(int level, ItemType type, Profession p
        else if (profession == mage) {
            item = make_unique<MagicHat>(level);
        }
-       else {
-           cout << "wrong class value" << endl;
-       }
    }
    else if (type == talisman)
    {
@@ -198,17 +192,11 @@ unique_ptr<Item>  ItemFactory::createItem(int level, ItemType type, Profession p
        else if (profession == mage) {
            item = make_unique<MageTalisman>(level);
        }
-       else {
-           cout << "wrong class value" << endl;
-       }
    }
    else if (type == shield)
    {
        if (profession == warrior)
            item = make_unique<Shield>(level);
-       else {
-           cout << "wrong class value" << endl;
-       }
    }
 
 

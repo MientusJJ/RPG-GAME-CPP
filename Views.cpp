@@ -24,6 +24,14 @@ void TXTView::NotRecognizedCharacter() {
     cout << "Character not recognized, please retype" << endl;
 };
 
+void TXTView::GameSuccesfullFinished() {
+    cout << "Congratulations! You finished the game" << endl;
+}
+
+void TXTView::GameAlmostFinished() {
+    cout << "It was very close..." << endl;
+}
+
 void TXTView::DescriptionEndPoint () {
     cout << "Get out of the room" << endl;
 };
@@ -188,8 +196,8 @@ void TXTView::ShowMerchantItemWithPrice(int num, int price) {
     if (num == 1)
         cout << "Merchant items:" << endl;
 
-    cout << "item " << num << ":" << endl;
-    cout << "price: " << price << endl << endl;
+    cout << "price: " << price << endl;
+    cout << "item " << num << ":" << endl << endl;
 };
 
 void TXTView::ShowGoldBalance(int bal) {
@@ -320,11 +328,12 @@ void TXTView::ShowEqiupment(string prof,string weaponName,int minDamage,int maxD
     ,string talismanName,string talismanMainStatName,int talismanMainStat,int talismanCrit,int talismanValue
     ,string armorName,int armorDef,int armorHealth,int armorValue
 	,string headGearName,int headGearDef,int headGearVal,int headgearValue,string headGearMainstat
-    ,string shieldName,int shieldDef,int shieldBlockChance,int shieldValue) {
+    ,string shieldName,int shieldDef,int shieldBlockChance,int shieldValue)
+{
     cout << endl << "Equipment of your hero:" << endl;
     this->ShowOneItem("weapon", prof, weaponValue, weaponName, minDamage, maxDamage, weaponMainStat, mainStateName);
     this->ShowOneItem("talisman", prof, talismanValue, talismanName, talismanMainStat, talismanCrit,0,talismanMainStatName);
-    if(prof=="warrior")
+    if(prof == "Warrior")
     {
         this->ShowOneItem("shield", prof, shieldValue, shieldName, shieldDef, shieldBlockChance);
     }
@@ -339,14 +348,14 @@ void TXTView::ShowStatistics(string name,string prof,string mainStatName,string 
     cout << "Main Stat name: " << mainStatName << endl;
     cout << "Skill: " << skill << endl;
     cout << "Level: " << level << endl;
-    cout << "Main Stat: " << mainStat;
+    cout << "Main Stat: " << mainStat << endl;
     cout << "Max health: " << maxHealth << endl;
     cout << "Current health: " << currHealth << endl;
-    cout << "Minimal damage: " << maxHealth << endl;
+    cout << "Minimal damage: " << minAttack << endl;
     cout << "Maximal damage: " << maxAttack << endl;
     cout << "Critical chance: " << crit << "%" << endl;
     cout << "Defense: " << def << endl;
-    if (prof == "warrior")
+    if (prof == "Warrior")
     {
         cout << "Block Chance: " << block << "%" << endl;
     }
@@ -354,7 +363,9 @@ void TXTView::ShowStatistics(string name,string prof,string mainStatName,string 
     return;
 };
 
-void TXTView::ShowOneItem(string type,string prof,int value,string name,int val1,int val2,int val3,string mainStatName) {
+void TXTView::ShowOneItem(string type,string prof,int value,string name,
+                          int val1,int val2,int val3,string mainStatName)
+{
     if (type == "weapon")
     {
         cout << "Weapon:\n\t name: " << name << "\n\t minimal Damage: " << val1
@@ -384,7 +395,7 @@ void TXTView::ShowOneItem(string type,string prof,int value,string name,int val1
     {
         cout << "Headgear:\n\t name: " << name
             << "\n\t Defense: " << val1;
-        if (prof == "mage")
+        if (prof == "Mage")
         {
             cout << "\n\t " << mainStatName << ": " << val2;
         }
@@ -399,3 +410,11 @@ void TXTView::ShowOneItem(string type,string prof,int value,string name,int val1
 void TXTView::CompletedEqChanging() {
     cout << "Changing equipment completed" << endl;
 };
+
+void TXTView::BreakLine() {
+    cout << endl;
+}
+
+void TXTView::EndGameMessage() {
+    cout << "Your hero has died. The Game is over" << endl;
+}

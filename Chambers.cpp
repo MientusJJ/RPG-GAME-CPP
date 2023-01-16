@@ -13,13 +13,13 @@ ActionVisitor::ActionVisitor(shared_ptr<Hero> h)
     this->obs = make_shared<Observer>(h);
     this->obs->addToObserver();
 }
-void ActionVisitor::eventTransitionFunction(shared_ptr<EventNode> &start, shared_ptr<Hero> &h) {
+void ActionVisitor::eventTransitionFunction(shared_ptr<EventNode> &start, shared_ptr<Hero> &h, shared_ptr<View> view) {
     shared_ptr<EventNode> curr = start;
     while (true)
     {
-        curr->current->Action(h);
+        curr->current->Action(h, view);
 
-        if (this->obs->check())
+        if (this->obs->check(view))
             break;
 
         int numOfNexts = curr->AllNexts.size();
@@ -32,15 +32,15 @@ void ActionVisitor::eventTransitionFunction(shared_ptr<EventNode> &start, shared
             shared_ptr<DescriptionVisitor> visitor(new DescriptionVisitor());
 
             for (vector <shared_ptr<EventNode>>::iterator it = options.begin(); it != options.end(); it++) {
-                cout << "Option [" << i << "]: ";
-                (*it)->current->DisplayDescription(*visitor);
+                view->OptionsForGoNext(i);
+                (*it)->current->DisplayDescription(*visitor, view);
                 i++;
             }
 
             int choice;
             cin >> choice;
             while (choice < 1 || choice > numOfNexts) {
-                cout << "Character not recognized, please retype" << endl;
+                view->NotRecognizedCharacter();
                 cin >> choice;
 
             }
@@ -50,93 +50,93 @@ void ActionVisitor::eventTransitionFunction(shared_ptr<EventNode> &start, shared
 
         if (instanceof<EndPoint>(curr->current))
         {
-            curr->current->Action(h);
+            curr->current->Action(h, view);
             break;
         }
 
     }
 }
 
-void ActionVisitor::visitMonsterRoom(MonsterRoom room) {
+void ActionVisitor::visitMonsterRoom(MonsterRoom room, shared_ptr<View> view) {
     shared_ptr<Hero> h = Hero::getInstance();
     shared_ptr<EventNode> start = room.prepareEventsGraph();
 
-    eventTransitionFunction(start, h);
+    eventTransitionFunction(start, h, view);
 }
 
-void ActionVisitor::visitTrapRoom(TrapRoom room)
+void ActionVisitor::visitTrapRoom(TrapRoom room, shared_ptr<View> view)
 {
     shared_ptr<Hero> h = Hero::getInstance();
     shared_ptr<EventNode> start = room.prepareEventsGraph();
 
-    eventTransitionFunction(start, h);
+    eventTransitionFunction(start, h, view);
 }
 
-void ActionVisitor::visitPotionRoom(PotionRoom room)
+void ActionVisitor::visitPotionRoom(PotionRoom room, shared_ptr<View> view)
 {
     shared_ptr<Hero> h = Hero::getInstance();
     shared_ptr<EventNode> start = room.prepareEventsGraph();
 
-    eventTransitionFunction(start, h);
+    eventTransitionFunction(start, h, view);
 }
 
-void ActionVisitor::visitTreasureRoom(TreasureRoom room)
+void ActionVisitor::visitTreasureRoom(TreasureRoom room, shared_ptr<View> view)
 {
     shared_ptr<Hero> h = Hero::getInstance();
     shared_ptr<EventNode> start = room.prepareEventsGraph();
 
-    eventTransitionFunction(start, h);
+    eventTransitionFunction(start, h, view);
 }
 
-void ActionVisitor::visitHealthRoom(HealthRoom room)
+void ActionVisitor::visitHealthRoom(HealthRoom room, shared_ptr<View> view)
 {
     shared_ptr<Hero> h = Hero::getInstance();
     shared_ptr<EventNode> start = room.prepareEventsGraph();
 
-    eventTransitionFunction(start, h);
+    eventTransitionFunction(start, h, view);
 }
 
-void ActionVisitor::visitTraderRoom(TraderRoom room)
+void ActionVisitor::visitTraderRoom(TraderRoom room, shared_ptr<View> view)
 {
     shared_ptr<Hero> h = Hero::getInstance();
     shared_ptr<EventNode> start = room.prepareEventsGraph();
 
-    eventTransitionFunction(start, h);
+    eventTransitionFunction(start, h, view);
 }
 
-void ActionVisitor::visitEmptyRoom(EmptyRoom room)
+void ActionVisitor::visitEmptyRoom(EmptyRoom room, shared_ptr<View> view)
 {
     shared_ptr<Hero> h = Hero::getInstance();
     shared_ptr<EventNode> start = room.prepareEventsGraph();
 
-    eventTransitionFunction(start, h);
+    eventTransitionFunction(start, h, view);
 }
 
-void ActionVisitor::visitStartingRoom(StartingRoom room)
+void ActionVisitor::visitStartingRoom(StartingRoom room, shared_ptr<View> view)
 {
     shared_ptr<Hero> h = Hero::getInstance();
     shared_ptr<EventNode> start = room.prepareEventsGraph();
 
-    eventTransitionFunction(start, h);
+    eventTransitionFunction(start, h, view);
 }
 
-void ActionVisitor::visitBossRoom(BossChamber room)
+void ActionVisitor::visitBossRoom(BossChamber room, shared_ptr<View> view)
 {
     shared_ptr<Hero> h = Hero::getInstance();
     shared_ptr<EventNode> start = room.prepareEventsGraph();
 
-    eventTransitionFunction(start, h);
+    eventTransitionFunction(start, h, view);
 
     if (h->getcurrentHealth() > 0)
-        cout << "Congratulations! You finished the game" << endl;
+        view->GameSuccesfullFinished();
     else
-        cout << "It was very close..." << endl;
+        view->GameAlmostFinished();
 }
 
 
 
-void BossChamber::action(ActionVisitor visitor) {
-    visitor.visitBossRoom(*this);
+void BossChamber::action(ActionVisitor visitor, shared_ptr<View> view) {
+    visitor.visitBossRoom(*this, view);
 }
 shared_ptr<EventNode> BossChamber::prepareEventsGraph() {
     shared_ptr<Hero> h = Hero::getInstance();
@@ -152,8 +152,8 @@ shared_ptr<EventNode> BossChamber::prepareEventsGraph() {
 }
 
 
-void MonsterRoom::action(ActionVisitor visitor) {
-    visitor.visitMonsterRoom(*this);
+void MonsterRoom::action(ActionVisitor visitor, shared_ptr<View> view) {
+    visitor.visitMonsterRoom(*this, view);
 }
 shared_ptr<EventNode> MonsterRoom::prepareEventsGraph() {
     shared_ptr<Hero> h = Hero::getInstance();
@@ -177,8 +177,8 @@ shared_ptr<EventNode> MonsterRoom::prepareEventsGraph() {
 }
 
 
-void TrapRoom::action(ActionVisitor visitor) {
-    visitor.visitTrapRoom(*this);
+void TrapRoom::action(ActionVisitor visitor, shared_ptr<View> view) {
+    visitor.visitTrapRoom(*this, view);
 }
 shared_ptr<EventNode> TrapRoom::prepareEventsGraph() {
     shared_ptr<Hero> h = Hero::getInstance();
@@ -194,8 +194,8 @@ shared_ptr<EventNode> TrapRoom::prepareEventsGraph() {
 }
 
 
-void PotionRoom::action(ActionVisitor visitor) {
-    visitor.visitPotionRoom(*this);
+void PotionRoom::action(ActionVisitor visitor, shared_ptr<View> view) {
+    visitor.visitPotionRoom(*this, view);
 }
 shared_ptr<EventNode> PotionRoom::prepareEventsGraph() {
     shared_ptr<Hero> h = Hero::getInstance();
@@ -212,8 +212,8 @@ shared_ptr<EventNode> PotionRoom::prepareEventsGraph() {
 }
 
 
-void TreasureRoom::action(ActionVisitor visitor) {
-    visitor.visitTreasureRoom(*this);
+void TreasureRoom::action(ActionVisitor visitor, shared_ptr<View> view) {
+    visitor.visitTreasureRoom(*this, view);
 }
 shared_ptr<EventNode> TreasureRoom::prepareEventsGraph() {
     shared_ptr<Hero> h = Hero::getInstance();
@@ -230,8 +230,8 @@ shared_ptr<EventNode> TreasureRoom::prepareEventsGraph() {
 }
 
 
-void HealthRoom::action(ActionVisitor visitor) {
-    visitor.visitHealthRoom(*this);
+void HealthRoom::action(ActionVisitor visitor, shared_ptr<View> view) {
+    visitor.visitHealthRoom(*this, view);
 }
 shared_ptr<EventNode> HealthRoom::prepareEventsGraph() {
     shared_ptr<Hero> h = Hero::getInstance();
@@ -248,8 +248,8 @@ shared_ptr<EventNode> HealthRoom::prepareEventsGraph() {
 }
 
 
-void TraderRoom::action(ActionVisitor visitor) {
-    visitor.visitTraderRoom(*this);
+void TraderRoom::action(ActionVisitor visitor, shared_ptr<View> view) {
+    visitor.visitTraderRoom(*this, view);
 }
 shared_ptr<EventNode> TraderRoom::prepareEventsGraph() {
     shared_ptr<Hero> h = Hero::getInstance();
@@ -267,8 +267,8 @@ shared_ptr<EventNode> TraderRoom::prepareEventsGraph() {
 }
 
 
-void EmptyRoom::action(ActionVisitor visitor) {
-    visitor.visitEmptyRoom(*this);
+void EmptyRoom::action(ActionVisitor visitor, shared_ptr<View> view) {
+    visitor.visitEmptyRoom(*this, view);
 }
 shared_ptr<EventNode> EmptyRoom::prepareEventsGraph() {
     shared_ptr<Hero> h = Hero::getInstance();
@@ -281,8 +281,8 @@ shared_ptr<EventNode> EmptyRoom::prepareEventsGraph() {
 }
 
 
-void StartingRoom::action(ActionVisitor visitor) {
-    visitor.visitStartingRoom(*this);
+void StartingRoom::action(ActionVisitor visitor, shared_ptr<View> view) {
+    visitor.visitStartingRoom(*this, view);
 }
 shared_ptr<EventNode> StartingRoom::prepareEventsGraph() {
     shared_ptr<Hero> h = Hero::getInstance();
