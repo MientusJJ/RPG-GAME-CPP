@@ -113,9 +113,9 @@ public:
 
     virtual void ShowEqiupment(string prof, string weaponName, int minDamage, int maxDamage, string mainStateName, int weaponMainStat, int weaponValue
         , string talismanName, string talismanMainStatName, int talismanMainStat, int talismanCrit, int talismanValue
-        , string armorName, int armorDef, int armorHealth, int armorValue
-        , string headGearName, int headGearDef, int headGearVal, int headgearValue, string headGearMainstat
-        , string shieldName, int shieldDef, int shieldBlockChance, int shieldValue) = 0;
+        , string armorName, int armorDef, int armorHealth, int armorValue,
+        string headGearName, int headGearDef, int headGearVal, int headgearValue, string headGearMainstat,
+        string shieldName, int shieldDef, int shieldBlockChance, int shieldValue) = 0;
     virtual void ShowStatistics(string name, string prof, string mainStatName, string skill, int level, int mainStat, int maxHealth, int currHealth, int minAttack,
         int maxAttack, double crit, int def, int money, double block = 0.) = 0;
 
@@ -238,7 +238,7 @@ public:
     void ShowEqiupment(string prof, string weaponName, int minDamage, int maxDamage, string mainStateName, int weaponMainStat, int weaponValue,
         string talismanName, string talismanMainStatName, int talismanMainStat, int talismanCrit, int talismanValue,
         string armorName, int armorDef, int armorHealth, int armorValue,
-        string headGearName, int headGearDef, int headGearVal, int headgearValue, string headGearMainstat="",
+        string headGearName, int headGearDef, int headGearVal=0, int headgearValue=0, string headGearMainstat="",
         string shieldName="", int shieldDef = 0, int shieldBlockChance = 0, int shieldValue = 0);
     void ShowStatistics(string name, string prof, string mainStatName, string skill, int level, int mainStat, int maxHealth, int currHealth, int minAttack,
         int maxAttack, double crit, int def, int money, double block = 0.);

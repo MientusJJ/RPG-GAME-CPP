@@ -401,7 +401,7 @@ void TXTView::ShowOneItem(string type,string prof,int value,string name,
         }
         else
         {
-            cout << ":\n\t Health: " << val2;
+            cout << "\n\t Health: " << val2;
         }
         cout << "\n\t value: " << value << endl;
     }

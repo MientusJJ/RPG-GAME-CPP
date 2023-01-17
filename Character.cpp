@@ -445,19 +445,24 @@ void Hero::levelup()
 void Hero::showStatistics(shared_ptr<View> view)
 {
     int mainStat = this->EQ->weapon_slot->getMainStat() + this->EQ->headgear_slot->getMainStat() + this->Class->getmainStat() + this->EQ->talisman_slot->getMainStat();
-
-    view->ShowStatistics(this->getName(), this->Class->getProfName(), this->Class->getmainStatName(),
-                         this->Class->getspecialAbility(), this->getlevel(), mainStat, this->getmaxHealth(),
-                         this->getcurrentHealth(), this->getminimalAttack(), this->getmaximalAttack(),
-                         this->getcriticalChance(), this->getdefense(), this->getMoney(), this->getBlockChance());
-
+	if (this->getProf())
+	{
+		view->ShowStatistics(this->getName(), this->Class->getProfName(), this->Class->getmainStatName(),
+			this->Class->getspecialAbility(), this->getlevel(), mainStat, this->getmaxHealth(),
+			this->getcurrentHealth(), this->getminimalAttack(), this->getmaximalAttack(),
+			this->getcriticalChance(), this->getdefense(), this->getMoney(), this->getBlockChance());
+	}
+	else
+	{
+		
+	}
 	return;
 }
 void Hero::showOneItem(ItemType it, Profession p, shared_ptr<View> view)
 {
-    int val1, val2, val3;
-    string mainStat, name, type;
-    int value;
+    int val1=0, val2=0, val3=0;
+    string mainStat="", name="", type="";
+    int value=0;
 
 	if (it == weapon)
 	{
@@ -542,13 +547,13 @@ void Hero::showEQ(shared_ptr<View> view)
     int armorValue = this->EQ->armor_slot->getValue();
     string headGearName = this->EQ->headgear_slot->getName();
     int headGearDef = this->EQ->headgear_slot->getDefense();
-    int headGearVal;
+	int headGearVal = this->getProf() == mage ? this->EQ->headgear_slot->getMainStat() : this->EQ->headgear_slot->getHealth();
     int headgearValue = this->EQ->headgear_slot->getValue();
-    string headGearMainstat;
-    string shieldName;
-    int shieldDef;
-    int shieldBlockChance;
-    int shieldValue;
+    string headGearMainstat= this->getProf() == mage ? this->EQ->headgear_slot->getMainStatName() : "";
+    string shieldName = this->getProf() == warrior ? this->EQ->shield_slot->getName() : "";
+    int shieldDef= this->getProf() == warrior ? this->EQ->shield_slot->getDefense() : 0;
+    int shieldBlockChance= this->getProf() == warrior ? this->EQ->shield_slot->getBlockChance() : 0;
+    int shieldValue= this->getProf() == warrior ? this->EQ->shield_slot->getValue() : 0;
 
     if (this->getProf() == mage)
     {
