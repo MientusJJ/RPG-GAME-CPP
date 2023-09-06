@@ -6,9 +6,19 @@ To be able to create new room, user has to inherit from abstract class "chamber"
 ## creating event
 To be able to create new event, user has to inherit from abstract class "event", located in file "event.h" and define it in file "events.cpp"
 ## preparing order of events in room
-to achieve a given configuration of room, user must overload function "prepareEventsGraph" for given chamber and connect events in the room using "EventNode" and return first event in the order.
+To achieve a given configuration of room, user must overload function "prepareEventsGraph" for given chamber and connect events in the room using "EventNode" and return first event in the order.
 ![prepareEventsGraph](https://github.com/MientusJJ/RPG-GAME-CPP/tree/main/photos/prepareEventsGraph.png?raw=true)
 ## preparing map of rooms
-
+To prepare map user has to use function "prepareMap" in file "Game.h". User connects chambers using ChamberNode and return first chamber of the map, similar like in "prepareEventsGraph"
 ![prepareMap](https://github.com/MientusJJ/RPG-GAME-CPP/tree/main/photos/prepareMap.png?raw=true)
+## changing output
+In the project user the display method by implementing own method in "Views.h", console is default output.
+## Example game
 As an example we created turn-bsen rpg game, where player impersonate a hero, whose goal is to kill the final boss
+User can become one of three heros: warrior, scout or mage.
+### warrior
+warrior has the highest level of health and highest defense. He is able to block opponents' attacks
+### scout
+scout has decent damage and decent health. He is also able to avoid opponents' attacks
+### mage
+highest damage. Mage's attacks can't be avoided.
