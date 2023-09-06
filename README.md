@@ -31,3 +31,8 @@ Highest damage. Mage's attacks can't be avoided.
 - empty room - nothing to do here, just go forward
 - treasure room - room with chest, where player can find item and some amount of gold
 ![game](https://github.com/MientusJJ/RPG-GAME-CPP/tree/main/photos/game.png?raw=true)
+### Design patterns in game
+1. "Singleton" in class "Hero" to be sure, that we have only one instance of our hero, because the game is single-player and having more than one instance would be an error.
+2. "Abstract" Factory in file "items.h" and "items.cpp" to simplify the process of creating hero's equipment
+3. "Observer" in class "Observer", to watch player's health and if health equals 0, to send message that game is over
+4. Strategy 
