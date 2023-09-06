@@ -13,12 +13,21 @@ To prepare map user has to use function "prepareMap" in file "Game.h". User conn
 ![prepareMap](https://github.com/MientusJJ/RPG-GAME-CPP/tree/main/photos/prepareMap.png?raw=true)
 ## changing output
 In the project user the display method by implementing own method in "Views.h", console is default output.
-## Example game
+## example game
 As an example we created turn-bsen rpg game, where player impersonate a hero, whose goal is to kill the final boss
+Player walks through rooms, where he defeats monsters, finds items and has some other events as well. In the final room "The Boss" waits for him.
 User can become one of three heros: warrior, scout or mage.
 ### warrior
-warrior has the highest level of health and highest defense. He is able to block opponents' attacks
+Warrior has the highest level of health and highest defense. He is able to block opponents' attacks
 ### scout
-scout has decent damage and decent health. He is also able to avoid opponents' attacks
+Scout has decent damage and decent health. He is also able to avoid opponents' attacks
 ### mage
-highest damage. Mage's attacks can't be avoided.
+Highest damage. Mage's attacks can't be avoided.
+### type of rooms:
+- health room - player can restore his health to 100% in this room
+- merchant room - player if he has enough money, can but up to 3 items from the merchant
+- trap room - room with trap, where player loses part of his health
+- monster room - room with monster, player has to slay it. After fight there is a chest with the item and some amount of gold. After every victorious fight player gets level up and increases his stats
+- empty room - nothing to do here, just go forward
+- treasure room - room with chest, where player can find item and some amount of gold
+
