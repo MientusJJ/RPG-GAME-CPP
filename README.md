@@ -30,4 +30,4 @@ Highest damage. Mage's attacks can't be avoided.
 - monster room - room with monster, player has to slay it. After fight there is a chest with the item and some amount of gold. After every victorious fight player gets level up and increases his stats
 - empty room - nothing to do here, just go forward
 - treasure room - room with chest, where player can find item and some amount of gold
-
+![game](https://github.com/MientusJJ/RPG-GAME-CPP/tree/main/photos/game.png?raw=true)
