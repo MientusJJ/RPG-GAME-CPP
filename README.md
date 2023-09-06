@@ -7,6 +7,7 @@ To be able to create new room, user has to inherit from abstract class "chamber"
 To be able to create new event, user has to inherit from abstract class "event", located in file "event.h" and define it in file "events.cpp"
 ## preparing order of events in room
 to achieve a given configuration of room, user must overload function "prepareEventsGraph" for given chamber and connect events in the room using "EventNode" and return first event in the order.
+![alt text](https://github.com/MientusJJ/RPG-GAME-CPP/tree/main/photos/prepareEventsGraph.png?raw=true)
 ## preparing map of rooms
 
 As an example we created turn-bsen rpg game, where player impersonate a hero, whose goal is to kill the final boss
