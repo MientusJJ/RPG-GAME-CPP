@@ -35,4 +35,8 @@ Highest damage. Mage's attacks can't be avoided.
 1. "Singleton" in class "Hero" to be sure, that we have only one instance of our hero, because the game is single-player and having more than one instance would be an error.
 2. "Abstract" Factory in file "items.h" and "items.cpp" to simplify the process of creating hero's equipment
 3. "Observer" in class "Observer", to watch player's health and if health equals 0, to send message that game is over
-4. Strategy 
+4. "Strategy" in class "Strategy" to set how merchant negotiate the price of his items with the player
+5. "Visitor in class "iVisitor" to define how game uses rooms and how they work
+6. "Iterator" in function "eventTransitionFunction", iterator built into vector, to show the options, which player has in particular moment
+7. Decorator in class "Chamber", to show informations about particular room
+8. MVC - to divide the code for three parts to keep clean code and SOLID rules 
