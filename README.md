@@ -10,4 +10,5 @@ to achieve a given configuration of room, user must overload function "prepareEv
 ![prepareEventsGraph](https://github.com/MientusJJ/RPG-GAME-CPP/tree/main/photos/prepareEventsGraph.png?raw=true)
 ## preparing map of rooms
 
+![prepareMap](https://github.com/MientusJJ/RPG-GAME-CPP/tree/main/photos/prepareMap.png?raw=true)
 As an example we created turn-bsen rpg game, where player impersonate a hero, whose goal is to kill the final boss
